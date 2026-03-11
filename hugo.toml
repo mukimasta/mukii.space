@@ -1,0 +1,16 @@
+baseURL = 'https://mukimasta.github.io/'
+languageCode = 'en-us'
+title = 'MUKIMASTA'
+mainSections = []
+
+theme = 'dario'
+
+[markup.goldmark.renderer]
+hardWraps = true
+relativeURLs = true
+
+[markup.goldmark.extensions.passthrough]
+enable = true
+[markup.goldmark.extensions.passthrough.delimiters]
+block = [['$$', '$$']]
+inline = [['$', '$']]

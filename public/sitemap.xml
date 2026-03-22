@@ -41,10 +41,13 @@
     <loc>http://localhost:1313/</loc>
     <lastmod>2026-03-03T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/</loc>
+    <loc>http://localhost:1313/professional/</loc>
     <lastmod>2026-03-03T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/dp_zh/</loc>
+    <loc>http://localhost:1313/professional/algorithm/dp_zh/</loc>
+    <lastmod>2026-03-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/professional/algorithm/</loc>
     <lastmod>2026-03-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/qingyeshu/postface/</loc>
@@ -62,8 +65,22 @@
     <loc>http://localhost:1313/qingyeshu/part3-chuzhong/</loc>
     <lastmod>2018-07-01T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/professional/distributed/distributed-system-blog-01--exactly-once-rpc/</loc>
+  </url><url>
+    <loc>http://localhost:1313/professional/distributed/distributed-system-blog-03--paxos/</loc>
+  </url><url>
+    <loc>http://localhost:1313/professional/distributed/distributed-system-blog--dynamo/</loc>
+  </url><url>
+    <loc>http://localhost:1313/professional/distributed/distributed-system-blog--google-file-system/</loc>
+  </url><url>
+    <loc>http://localhost:1313/professional/distributed/distributed-system-blog--tensorflow/</loc>
+  </url><url>
+    <loc>http://localhost:1313/professional/distributed/distributed-system--consistency/</loc>
+  </url><url>
     <loc>http://localhost:1313/categories/</loc>
   </url><url>
     <loc>http://localhost:1313/tags/</loc>
+  </url><url>
+    <loc>http://localhost:1313/professional/distributed/</loc>
   </url>
 </urlset>

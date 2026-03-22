@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en-us" dir="ltr" class="kind-page">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Distributed System Blog 01 – Exactly-Once RPC# 在不可靠网络上实现 Exactly-Once RPC 0 前言# 0.1 分布式系统# 我们每天都在用分布式系统： 打开微信 → 你的手机连接到腾讯的服务器 刷抖音 → 视频从字节的服务器传给你 网购 →  …">
+    <title>MUKIMASTA</title>
+    <link rel="canonical" href="http://localhost:1313/professional/distributed/distributed-system-blog-01--exactly-once-rpc/">
+
+
+
+<meta property="og:title" content="MUKIMASTA">
+<meta property="og:description" content="Distributed System Blog 01 – Exactly-Once RPC# 在不可靠网络上实现 Exactly-Once RPC 0 前言# 0.1 分布式系统# 我们每天都在用分布式系统： 打开微信 → 你的手机连接到腾讯的服务器 刷抖音 → 视频从字节的服务器传给你 网购 →  …">
+<meta property="og:image" content="http://localhost:1313/og/og-image-cb0c4119b6483ba1193eecbb2ea7173f.svg">
+<meta property="og:image:type" content="image/svg+xml">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="website">
+<meta property="og:url" content="http://localhost:1313/professional/distributed/distributed-system-blog-01--exactly-once-rpc/">
+<meta property="og:locale" content="en-us">
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MUKIMASTA">
+<meta name="twitter:description" content="Distributed System Blog 01 – Exactly-Once RPC# 在不可靠网络上实现 Exactly-Once RPC 0 前言# 0.1 分布式系统# 我们每天都在用分布式系统： 打开微信 → 你的手机连接到腾讯的服务器 刷抖音 → 视频从字节的服务器传给你 网购 →  …">
+<meta name="twitter:image" content="http://localhost:1313/og/og-image-cb0c4119b6483ba1193eecbb2ea7173f.svg">
+
+    <link rel="preload" href="/fonts/Newsreader.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/default.min.fb89c3008d933d5ac0e46af0bee4acd14efae3a00fca1ebbeb11e373ecaf3a64.css" integrity="sha256-&#43;4nDAI2TPVrA5GrwvuSs0U7646APyh676xHjc&#43;yvOmQ=">
+    <script src="/js/darkmode.min.9211af6d380489c7cf64d4b18a1e49e75be2bebf92031d2165eb6c20bc59c6a2.js" integrity="sha256-khGvbTgEicfPZNSxih5J51vivr&#43;SAx0hZetsILxZxqI=" defer></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <style>
+    :root { --font-size-base: 18px; --content-max-inline-size: 680px; }
+    h1 { font-size: 2em; }
+    .katex { font-size: 0.95em; }
+    pre code {
+    background: var(--code-bg) !important;
+    color: var(--text-color);
+    padding: 1em;
+    border-radius: var(--radius);
+    }
+    </style><script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+
+
+<body>
+<header>
+    <div>
+        <h1>
+            <a href="http://localhost:1313/">MUKIMASTA</a>
+        </h1>
+        <div class="header-controls">
+            <div class="toggle-switch">
+                <input type="checkbox" id="darkModeToggle" class="toggle-input" aria-label="Toggle dark mode">
+                <label for="darkModeToggle" class="toggle-label">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <main class="content-wrapper">
+        <article class="content-container">
+
+
+    <h1></h1>
+    <h4></h4>
+
+<h1 id="distributed-system-blog-01--exactly-once-rpc">Distributed System Blog 01 – Exactly-Once RPC<a class="anchor" aria-hidden="true" href="#distributed-system-blog-01--exactly-once-rpc">#</a></h1>
+<p><strong>在不可靠网络上实现 Exactly-Once RPC</strong></p>
+<h2 id="0--前言">0  前言<a class="anchor" aria-hidden="true" href="#0--%e5%89%8d%e8%a8%80">#</a></h2>
+<h3 id="01--分布式系统">0.1  分布式系统<a class="anchor" aria-hidden="true" href="#01--%e5%88%86%e5%b8%83%e5%bc%8f%e7%b3%bb%e7%bb%9f">#</a></h3>
+<p>我们每天都在用分布式系统：</p>
+<ul>
+<li>打开微信 →  你的手机连接到腾讯的服务器</li>
+<li>刷抖音     →  视频从字节的服务器传给你</li>
+<li>网购         →  订单信息存在阿里的数据库里</li>
+</ul>
+<p><strong>分布式系统 = 多个独立计算节点通过网络协作实现共同的目标</strong></p>
+<p><strong>为什么需要分布式系统？</strong></p>
+<ul>
+<li>单机装不下： Facebook 有 30 亿用户，一台机器存不下所有数据</li>
+<li>单机扛不住： 双十一每秒几十万订单，一台机器处理不过来</li>
+<li>单机会挂掉： 服务器会坏，硬盘会烧，需要备份</li>
+</ul>
+<p>但多台机器带来了新的问题：它们之间如何通过网络通信协作？</p>
+<h3 id="02--remote-procedure-call-rpc">0.2  Remote Procedure Call (RPC)<a class="anchor" aria-hidden="true" href="#02--remote-procedure-call-rpc">#</a></h3>
+<p>你平时用 app：</p>
+<pre tabindex="0"><code>点击朋友头像 → 看到个人资料
+刷新朋友圈 → 看到最新动态
+发送消息 → 对方收到
+</code></pre><p>这些操作背后就像调用了一个远程函数。</p>
+<p>想象你在写代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 本地函数调用</span>
+</span></span><span style="display:flex;"><span>profile <span style="color:#f92672">=</span> get_profile(user_id)
+</span></span></code></pre></div><p>这个函数在你的程序里执行，读取本地内存的数据。</p>
+<p>但如果数据在另一台机器上呢？</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 远程函数调用（RPC）</span>
+</span></span><span style="display:flex;"><span>profile <span style="color:#f92672">=</span> remote_get_profile(user_id)
+</span></span></code></pre></div><p>这个函数：</p>
+<ol>
+<li>把请求通过网络发给服务器</li>
+<li>服务器执行函数</li>
+<li>把结果通过网络发回来</li>
+</ol>
+<p>看起来只是加了个 “remote”，但加入了网络，一切都变了。</p>
+<h3 id="03--一个转账的故事">0.3  一个转账的故事<a class="anchor" aria-hidden="true" href="#03--%e4%b8%80%e4%b8%aa%e8%bd%ac%e8%b4%a6%e7%9a%84%e6%95%85%e4%ba%8b">#</a></h3>
+<p>想象这个场景：</p>
+<pre tabindex="0"><code>你打开手机 app，给朋友转账 100 元
+点击&#34;确认转账&#34;
+loading...
+loading...
+10 秒过去了，还在 loading
+</code></pre><p>你会怎么做？</p>
+<ul>
+<li>再点一次？万一第一次成功了呢？那就转了 200 元</li>
+<li>放弃？万一根本没转成功呢？</li>
+<li>等着？等到什么时候？</li>
+</ul>
+<p><strong>这就是分布式系统的核心困境：网络是不可靠的</strong></p>
+<h3 id="04--网络有多不可靠">0.4  网络有多不可靠？<a class="anchor" aria-hidden="true" href="#04--%e7%bd%91%e7%bb%9c%e6%9c%89%e5%a4%9a%e4%b8%8d%e5%8f%af%e9%9d%a0">#</a></h3>
+<p>发送&quot;转账 100 元&quot;后，没收到回复。发生了什么？</p>
+<pre tabindex="0"><code>情况1：请求在路上丢了
+Client ----X---&gt; Server
+(Server 根本没收到)
+
+情况2：Server 执行了，但回复丢了
+Client --------&gt; Server ✔️
+Client &lt;---X---- Server
+(钱转了，但你不知道)
+
+情况3：网络很慢
+Client ----😴---&gt; Server 🕒
+(还在路上，看起来像丢了)
+</code></pre><p><strong>关键困境：你无法区分这些情况，也无法保证消息到达的顺序。</strong></p>
+<h3 id="05--我们的目标exactly-once-rpc">0.5  我们的目标：Exactly-Once RPC<a class="anchor" aria-hidden="true" href="#05--%e6%88%91%e4%bb%ac%e7%9a%84%e7%9b%ae%e6%a0%87exactly-once-rpc">#</a></h3>
+<p>不管网络环境如何，我们想要保证：每个操作恰好执行一次（Exactly-Once）。</p>
+<p>“Exactly-Once”怎么实现？</p>
+<p><strong>Exactly-Once = At-Least-Once + At-Most-Once</strong></p>
+<p>拆开来看：</p>
+<ul>
+<li><strong>不能是 0 次</strong> → 至少执行 1 次（At-Least-Once）</li>
+<li><strong>不能是 2+ 次</strong> → 至多执行 1 次（At-Most-Once）</li>
+</ul>
+<h2 id="1--at-least-once-rpc">1  At-Least-Once RPC<a class="anchor" aria-hidden="true" href="#1--at-least-once-rpc">#</a></h2>
+<p>我们先来实现 At-Least-Once RPC，也就是先保证每个操作被 Server 至少执行一次，并且 Client 总会收到执行结果。</p>
+<p>At-Least-Once 在 Client 层级上实现。</p>
+<h3 id="11--重试机制">1.1  重试机制<a class="anchor" aria-hidden="true" href="#11--%e9%87%8d%e8%af%95%e6%9c%ba%e5%88%b6">#</a></h3>
+<p>我们先来解决第一种情况：请求可能丢失，也就是 Server 没有收到请求：</p>
+<pre tabindex="0"><code>  Client    ----X---&gt;    Server
+转账 100 元  (网络丢包)  (根本没收到)
+
+结果: 0 次执行
+</code></pre><p>怎么办？</p>
+<p>一个很直觉的想法是：重试</p>
+<p>我们每间隔一段时间，就重新发送一次请求，直到成功收到回复为止。</p>
+<pre tabindex="0"><code>  Client    ----X---&gt;    Server
+转账 100 元  (网络丢包)  (根本没收到)
+
+  Client    --------&gt;    Server
+转账 100 元    (重试)    (成功执行)
+
+  Client    &lt;--------    Server
+ (收到回复)              (回复结果)
+
+结果: 1 次执行
+</code></pre><p>看起来很合理，但是，这样会带来一个问题。</p>
+<p>考虑这个场景：</p>
+<pre tabindex="0"><code>时刻 T1: Client 发送 &#34;转账 100&#34;
+时刻 T2: (超时，没回复)
+时刻 T3: Client 重试，再次发送 &#34;转账 100&#34;
+时刻 T4: Server 回复 &#34;成功&#34;
+时刻 T5: Client 发送新命令 &#34;查询余额&#34;
+时刻 T6: Server 回复 &#34;成功&#34;
+
+问题: 这个 &#34;成功&#34; 是哪个命令的回复？
+- 转账的回复？
+- 查询余额的回复？
+</code></pre><p>如果 Client 误以为&quot;成功&quot;是&quot;查询余额&quot;的回复，但其实是第一次&quot;转账&quot;的延迟回复，系统就乱了。</p>
+<p><strong>问题本质：回复和请求失去了对应关系。</strong></p>
+<h3 id="12--requestid-请求标识">1.2  RequestID 请求标识<a class="anchor" aria-hidden="true" href="#12--requestid-%e8%af%b7%e6%b1%82%e6%a0%87%e8%af%86">#</a></h3>
+<p>怎么建立对应关系？给每个请求打标签。</p>
+<p>标签需要满足：</p>
+<ul>
+<li>重试时保持不变（这样才知道是同一个请求）</li>
+<li>新命令时改变（这样才能区分不同请求）</li>
+</ul>
+<p><strong>自然的选择：递增的 request_id</strong></p>
+<pre tabindex="0"><code>Client 维护一个计数器:
+request_id = 0
+
+发送新命令:
+  request_id += 1
+  发送 (request_id, command)
+
+重试时:
+  发送相同的 (request_id, command)
+  (request_id 不变！)
+</code></pre><p>Server 的回复也必须带上 request_id，否则 Client 无法匹配。</p>
+<p>具体场景：</p>
+<pre tabindex="0"><code>T1: Client 发送 (request_id=1, &#34;转账 100&#34;)
+T2: (超时，准备重试) 
+T3: Client 发送 (request_id=1, &#34;转账 100&#34;)  ← ID 不变
+T4: Server 回复 (request_id=1, &#34;成功&#34;)
+T5: Client 发送 (request_id=2, &#34;查询余额&#34;) ← ID 递增
+T6: Server 回复 (request_id=1, &#34;成功&#34;)
+
+Client 检查: request_id=1 ≠ 当前的 request_id=2
+→ 这是旧回复，忽略
+→ 继续等待 request_id=2 的回复
+</code></pre><p>完整的消息格式：</p>
+<pre tabindex="0"><code>Request:
+  request_id: 第几个请求
+  command:    要执行什么
+
+Reply:
+  request_id: 回复哪个请求
+  result:     执行结果
+</code></pre><h3 id="13--at-least-once-的完整逻辑">1.3  At-Least-Once 的完整逻辑：<a class="anchor" aria-hidden="true" href="#13--at-least-once-%e7%9a%84%e5%ae%8c%e6%95%b4%e9%80%bb%e8%be%91">#</a></h3>
+<pre tabindex="0"><code>Client 的状态:
+- current_request_id: 当前请求的 ID
+- current_command:    当前请求的命令
+- timer:              重试定时器
+
+发送新命令:
+  current_request_id += 1
+  current_command = command
+  发送 Request(current_request_id, command)
+  启动 timer
+
+收到回复 Reply(reply_request_id, result):
+  if reply_request_id == current_request_id:
+      停止 timer
+      返回 result
+  else:
+      忽略 (这是旧请求的回复)
+
+Timer 超时:
+  重发 Request(current_request_id, current_command)
+  重启 timer
+</code></pre><p><strong>至此，我们实现了 At-Least-Once：只要 Client 不停重试，请求最终会到达并执行，Client 最终会收到回复。</strong></p>
+<h2 id="2--at-most-once-rpc">2  At-Most-Once RPC<a class="anchor" aria-hidden="true" href="#2--at-most-once-rpc">#</a></h2>
+<p>Client 重试会导致 Server 收到多个相同的请求。我们即将实现的 At-Most-Once 需要保证每个请求只被执行一次。</p>
+<p>At-Most-Once 在 Server 层级上实现。</p>
+<h3 id="21--去重机制">2.1  去重机制<a class="anchor" aria-hidden="true" href="#21--%e5%8e%bb%e9%87%8d%e6%9c%ba%e5%88%b6">#</a></h3>
+<p>Server 怎么知道这是重复请求？</p>
+<p>用我们已有的东西：<strong>request_id</strong></p>
+<pre tabindex="0"><code>Server 维护一个记录:
+seen = {1, 2, 5, 7, ...}
+
+收到请求 Request(request_id, command):
+  if request_id in seen:
+      这是重复请求
+      ...
+  else:
+      这是新请求
+      ...
+</code></pre><p>对于多个 Client 的情况：</p>
+<p>Server 的记录的 Key 变成 (client_id, request_id)：</p>
+<p>在网络通信中，每个消息天然就带有发送者的地址（address）。我们直接用这个地址作为 client_id 即可。</p>
+<p>所以一个请求的完整的唯一标识是：(client_id, request_id)，这也是在 Server 层要维护的记录。<br>
+其中：</p>
+<ul>
+<li><strong>client_id</strong>：由网络框架提供（发送者的地址）</li>
+<li><strong>request_id</strong>：由我们的应用层维护（递增序列号）</li>
+</ul>
+<h3 id="22--请求--结果-映射表">2.2  请求 → 结果 映射表<a class="anchor" aria-hidden="true" href="#22--%e8%af%b7%e6%b1%82--%e7%bb%93%e6%9e%9c-%e6%98%a0%e5%b0%84%e8%a1%a8">#</a></h3>
+<p>在接收到重复请求后，要怎么做？</p>
+<pre tabindex="0"><code>T1: Client 发送 Request(request_id=1, command)
+    Server 执行，回复丢失
+
+T2: Client 重试，发送 Request(request_id=1, command)
+    Server 发现: 之前见过 (client_id, 1)
+    然后呢？
+</code></pre><p>Server 不能：</p>
+<ul>
+<li>重新执行 → 违反 at-most-once</li>
+<li>不回复 → Client 会一直等</li>
+</ul>
+<p><strong>Server 必须：返回之前的结果</strong></p>
+<p>对于每个请求 (client_id, request_id)，保存对应的结果。</p>
+<p><strong>HashMap: (client_id, request_id) -&gt; Result</strong></p>
+<p>使用一个“请求 → 结果”映射表，收到旧请求时返回即可。</p>
+<p>Server 不能无限保存历史。</p>
+<h3 id="23--单请求假设下的垃圾回收机制">2.3  单请求假设下的垃圾回收机制<a class="anchor" aria-hidden="true" href="#23--%e5%8d%95%e8%af%b7%e6%b1%82%e5%81%87%e8%ae%be%e4%b8%8b%e7%9a%84%e5%9e%83%e5%9c%be%e5%9b%9e%e6%94%b6%e6%9c%ba%e5%88%b6">#</a></h3>
+<p>Client 单请求假设：Client 在未收到当前请求的回复之前不会请求新命令。</p>
+<pre tabindex="0"><code>Client 的行为:
+发送 req=1 → 等回复 → 收到
+发送 req=2 → 等回复 → 收到
+发送 req=3 → ...
+</code></pre><p>在此情况下：</p>
+<pre tabindex="0"><code>Client 发送了 request_id=N+1
+→ 说明它已经收到了 request_id≤N 的回复
+→ Server 可以丢弃 request_id≤N 的记录
+</code></pre><p>所以只需保存最后一个：</p>
+<pre tabindex="0"><code>history = {
+  client_A: (last_id, last_result),
+  client_B: (last_id, last_result),
+}
+
+收到新请求 N:
+  history[client_id] = (N, result)
+  // 自动覆盖旧的，只保留最新
+</code></pre><p><strong>HashMap: client_id -&gt; (request_id, Result)</strong></p>
+<h3 id="24--at-most-once-的完整逻辑">2.4  At-Most-Once 的完整逻辑<a class="anchor" aria-hidden="true" href="#24--at-most-once-%e7%9a%84%e5%ae%8c%e6%95%b4%e9%80%bb%e8%be%91">#</a></h3>
+<pre tabindex="0"><code>Server 的状态:
+- history: map[client_id → (last_request_id, last_result)]
+
+收到请求 Request(request_id, command) 来自 client_id:
+  
+  record = history.get(client_id)
+  
+  if record 不存在:
+      // 第一次见到这个 Client
+      result = execute(command)
+      history[client_id] = (request_id, result)
+      发送 Reply(request_id, result)
+      return
+  
+  if request_id &lt;= record.last_request_id:
+      // 重复或乱序的旧请求
+      发送 Reply(request_id, record.last_result)
+      return
+  
+  // 新请求 (request_id &gt; last_request_id)
+  result = execute(command)
+  history[client_id] = (request_id, result)  // 覆盖旧记录
+  发送 Reply(request_id, result)
+</code></pre><h2 id="3--exactly-once-rpc-完整架构">3  Exactly-Once RPC 完整架构<a class="anchor" aria-hidden="true" href="#3--exactly-once-rpc-%e5%ae%8c%e6%95%b4%e6%9e%b6%e6%9e%84">#</a></h2>
+<pre tabindex="0"><code>Client 节点                    Server 节点
+┌──────────────┐              ┌────────────────┐
+│ Retry Logic  │   Command    │ AMOApplication │
+│    (ALO)     │  ─────────→  │     (AMO)      │
+│              │    Result    │       ↓        │
+│              │  ←─────────  │  Application   │
+│              │              │   (business)   │
+└──────────────┘              └────────────────┘
+</code></pre><p>详细版本：</p>
+<pre tabindex="0"><code>Client Node                              Server Node
+┌─────────────────────────┐             ┌──────────────────────────┐
+│ Retry Logic (ALO impl)  │             │ AMOApplication (AMO impl)│
+│                         │             │                          │
+│ • request_id: 1,2,3...  │  Command    │ • Dedup check:           │
+│ • Timer: retry timeout  │  +request_id│   req_id &lt;= last_req_id? │
+│ • Match reply: ID match?│             │                          │
+│                         │ ─────────→  │ • Save history:          │
+│                         │             │   map[client_id→         │
+│                         │             │       (req_id, result)]  │
+│                         │  Result     │                          │
+│                         │  +request_id│   ↓ if new request       │
+│ Match → stop retry      │ ←─────────  │                          │
+│                         │             │ Application (Business)   │
+│                         │             │ • Get/Put/Append         │
+│                         │             │ • Transfer/Query         │
+│                         │             │ • ... (any business)     │
+└─────────────────────────┘             └──────────────────────────┘
+         ↑                                         ↑
+client_id provided by network          Get client_id from message
+framework (sender address)             (sender address)
+</code></pre><p><strong>Server 内部分层（怎么做）</strong></p>
+<pre tabindex="0"><code>Server 内部:
+┌─────────────────────┐
+│  AMOApplication     │ ← 去重层
+│      (包装)          │   只关心 request_id
+│                     │   不关心业务逻辑
+│        ↓            │
+│  Application        │ ← 业务层
+│   (具体业务)          │   只关心业务逻辑
+│  • KVStore          │   不关心去重
+│  • GameServer       │
+│  • ShoppingCart     │
+└─────────────────────┘
+</code></pre><h2 id="4--拓展延伸">4  拓展延伸<a class="anchor" aria-hidden="true" href="#4--%e6%8b%93%e5%b1%95%e5%bb%b6%e4%bc%b8">#</a></h2>
+<p>不是所有操作都怕重复</p>
+<h3 id="41--side-effect-和-idempotence">4.1  Side Effect 和 Idempotence<a class="anchor" aria-hidden="true" href="#41--side-effect-%e5%92%8c-idempotence">#</a></h3>
+<p><strong>Side Effect = 改变系统状态的操作</strong></p>
+<pre tabindex="0"><code>无副作用 (读操作):
+- GET(key)          - 只读，不改变状态
+- QUERY_BALANCE()   - 只读，不改变状态
+
+有副作用 (写操作):
+- PUT(key, value)   - 修改状态
+- TRANSFER(amount)  - 修改状态
+- APPEND(key, val)  - 修改状态
+</code></pre><p>如果操作有副作用，重复执行可能产生错误的结果。</p>
+<p><strong>Idempotence（幂等性）= 执行多次和执行一次的效果相同</strong></p>
+<pre tabindex="0"><code>幂等操作:
+- GET(key)            - 读多次结果一样
+- PUT(key, &#34;value&#34;)   - 设置成固定值，重复设置还是那个值
+- DELETE(key)         - 删除（删除已删除的 = 还是删除）
+
+非幂等操作:
+- APPEND(key, value)  - 每次追加，越来越长
+- INCREMENT(counter)  - 每次加 1，越来越大
+- TRANSFER(amount)    - 每次扣钱，越来越少
+</code></pre><p><strong>为什么重要？</strong></p>
+<p>如果操作是幂等的，系统可以简化：</p>
+<pre tabindex="0"><code>Client: 不确定是否成功？直接重试就行
+Server: 重复执行也没事
+→ 不需要复杂的 AMO 机制，at-least-once 就够了
+</code></pre><p>这就是为什么 DNS、NFS 等系统能用简单的 at-least-once。</p>
+<h3 id="42-我们的方案适用范围">4.2 我们的方案适用范围<a class="anchor" aria-hidden="true" href="#42-%e6%88%91%e4%bb%ac%e7%9a%84%e6%96%b9%e6%a1%88%e9%80%82%e7%94%a8%e8%8c%83%e5%9b%b4">#</a></h3>
+<p>适用于：</p>
+<ul>
+<li>非幂等操作（需要 AMO 保护）
+<ul>
+<li>APPEND、INCREMENT、TRANSFER 等</li>
+</ul>
+</li>
+<li>Client 单请求模式（垃圾回收依赖这个假设）
+<ul>
+<li>一个 Client 一次只发一个请求</li>
+</ul>
+</li>
+<li>有状态服务（需要记住历史）
+<ul>
+<li>需要持久化存储的服务</li>
+</ul>
+</li>
+</ul>
+<h2 id="5--结语">5  结语<a class="anchor" aria-hidden="true" href="#5--%e7%bb%93%e8%af%ad">#</a></h2>
+<p>Lab 1 看起来很简单：实现一个 RPC。</p>
+<p>但它揭示了分布式系统的核心挑战：<strong>如何在不确定性中构建确定性？</strong></p>
+<p>我们的答案不是消除不确定性（做不到），而是：</p>
+<ul>
+<li>承认网络不可靠</li>
+<li>分解问题（exactly-once = at-least + at-most）</li>
+<li>分层设计（Client 重试 + Server 去重）</li>
+<li>利用假设（单请求 → 垃圾回收机制）</li>
+<li>用简单机制组合成复杂保证</li>
+</ul>
+<p>这不仅仅是一个 Lab 的解法，更是分布式系统设计的基本哲学。</p>
+<p>下一步：Lab 2 会引入 Primary-Backup，在不可靠的服务器上实现可靠的服务。</p>
+
+
+        </article>
+    </main>
+
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2026 MUKIMASTA</p>
+    </div>
+</footer>
+
+</body>
+
+</html>

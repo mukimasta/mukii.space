@@ -3,6 +3,8 @@ title: "动态规划"
 author: "Mukii"
 description: "算法：动态规划"
 date: 2026-03-03
+aliases:
+  - /posts/dp_zh/
 ---
 
 ## 1  概述

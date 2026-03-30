@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en-us" dir="ltr" class="kind-page">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="从零开始的分布式系统# 在 2026 年 1 月到 3 月的春季学期里，我在 UW 上完了 Distributed System 这一门课程。我的最大感受就是这真的是一门优质的课程，教授带领我们系统性地了解分布式系统的底层思想和原理，并且还设置了4个lab，带我们从零开始一步步实现一个分布式 KV …">
+    <title>MUKIMASTA</title>
+    <link rel="canonical" href="http://localhost:1313/professional/distributed/distributed-system-blog-00--overview/">
+
+
+
+<meta property="og:title" content="MUKIMASTA">
+<meta property="og:description" content="从零开始的分布式系统# 在 2026 年 1 月到 3 月的春季学期里，我在 UW 上完了 Distributed System 这一门课程。我的最大感受就是这真的是一门优质的课程，教授带领我们系统性地了解分布式系统的底层思想和原理，并且还设置了4个lab，带我们从零开始一步步实现一个分布式 KV …">
+<meta property="og:image" content="http://localhost:1313/og/og-image-1a8f4c5815c025a273e6e54ef7a0d05d.svg">
+<meta property="og:image:type" content="image/svg+xml">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="website">
+<meta property="og:url" content="http://localhost:1313/professional/distributed/distributed-system-blog-00--overview/">
+<meta property="og:locale" content="en-us">
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MUKIMASTA">
+<meta name="twitter:description" content="从零开始的分布式系统# 在 2026 年 1 月到 3 月的春季学期里，我在 UW 上完了 Distributed System 这一门课程。我的最大感受就是这真的是一门优质的课程，教授带领我们系统性地了解分布式系统的底层思想和原理，并且还设置了4个lab，带我们从零开始一步步实现一个分布式 KV …">
+<meta name="twitter:image" content="http://localhost:1313/og/og-image-1a8f4c5815c025a273e6e54ef7a0d05d.svg">
+
+    <link rel="preload" href="/fonts/Newsreader.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/default.min.fb89c3008d933d5ac0e46af0bee4acd14efae3a00fca1ebbeb11e373ecaf3a64.css" integrity="sha256-&#43;4nDAI2TPVrA5GrwvuSs0U7646APyh676xHjc&#43;yvOmQ=">
+    <script src="/js/darkmode.min.9211af6d380489c7cf64d4b18a1e49e75be2bebf92031d2165eb6c20bc59c6a2.js" integrity="sha256-khGvbTgEicfPZNSxih5J51vivr&#43;SAx0hZetsILxZxqI=" defer></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <style>
+    :root { --font-size-base: 18px; --content-max-inline-size: 680px; }
+    h1 { font-size: 2em; }
+    .katex { font-size: 0.95em; }
+    pre code {
+    background: var(--code-bg) !important;
+    color: var(--text-color);
+    padding: 1em;
+    border-radius: var(--radius);
+    }
+    </style><script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+
+
+<body>
+<header>
+    <div>
+        <h1>
+            <a href="http://localhost:1313/">MUKIMASTA</a>
+        </h1>
+        <div class="header-controls">
+            <div class="toggle-switch">
+                <input type="checkbox" id="darkModeToggle" class="toggle-input" aria-label="Toggle dark mode">
+                <label for="darkModeToggle" class="toggle-label">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <main class="content-wrapper">
+        <article class="content-container">
+
+
+    <h1></h1>
+    <h4></h4>
+
+<h1 id="从零开始的分布式系统">从零开始的分布式系统<a class="anchor" aria-hidden="true" href="#%e4%bb%8e%e9%9b%b6%e5%bc%80%e5%a7%8b%e7%9a%84%e5%88%86%e5%b8%83%e5%bc%8f%e7%b3%bb%e7%bb%9f">#</a></h1>
+<p>在 2026 年 1 月到 3 月的春季学期里，我在 UW 上完了 Distributed System 这一门课程。我的最大感受就是这真的是一门优质的课程，教授带领我们系统性地了解分布式系统的底层思想和原理，并且还设置了4个lab，带我们从零开始一步步实现一个分布式 KV Store 系统。</p>
+<p>四个 lab 分别是：</p>
+<ol>
+<li>Exactly-Once RPC</li>
+<li>Primary-Backup</li>
+<li>Multi-Paxos</li>
+<li>Sharded Multi-Paxos</li>
+</ol>
+<p>除了这些内容之外，课程还要求我们阅读 3 篇 paper 并选取两个角度写 BLOG，这也是非常好的设计，让我们不止是纸上谈兵，而是看看真实工业系统中的设计是什么样的。</p>
+<p>接下来我会用一系列的 BLOG 记录这一系列 lab 主题的思想和实现思路，从零开始实现一个 Multi-Paxos 的分布式系统。</p>
+<p>第一篇：<br>
+<a href="/professional/distributed/distributed-system-blog-01--exactly-once-rpc/">Distributed System Blog 01 – Exactly-Once RPC</a></p>
+
+
+        </article>
+    </main>
+
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2026 MUKIMASTA</p>
+    </div>
+</footer>
+
+</body>
+
+</html>

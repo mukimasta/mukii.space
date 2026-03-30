@@ -65,7 +65,11 @@
     <loc>http://localhost:1313/qingyeshu/part3-chuzhong/</loc>
     <lastmod>2018-07-01T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/professional/distributed/distributed-system-blog-00--overview/</loc>
+  </url><url>
     <loc>http://localhost:1313/professional/distributed/distributed-system-blog-01--exactly-once-rpc/</loc>
+  </url><url>
+    <loc>http://localhost:1313/professional/distributed/distributed-system-blog-02--primary-backup/</loc>
   </url><url>
     <loc>http://localhost:1313/professional/distributed/distributed-system-blog-03--paxos/</loc>
   </url><url>

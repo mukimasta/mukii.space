@@ -499,3 +499,4 @@ Lab 1 看起来很简单：实现一个 RPC。
 这不仅仅是一个 Lab 的解法，更是分布式系统设计的基本哲学。
 
 下一步：Lab 2 会引入 Primary-Backup，在不可靠的服务器上实现可靠的服务。
+[Distributed System Blog 02 – Primary-Backup](/professional/distributed/distributed-system-blog-02--primary-backup/)

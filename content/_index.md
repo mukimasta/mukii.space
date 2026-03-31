@@ -2,15 +2,15 @@
 subtitle: ""
 ---
 
-### CS
+### Professional
 
-- [分布式系统](/professional/distributed/)
-- [算法](/professional/algorithm/)
+- [Distributed Systems](/professional/distributed/)
+- [Algorithms](/professional/algorithm/)
+
 
 
 ---
 
 [青叶树](/qingyeshu/)
-
 
 ---

@@ -1,0 +1,11 @@
+{{- $src := .Get "src" -}}
+{{- $title := .Get "title" -}}
+{{- $type := default "audio/mpeg" (.Get "type") -}}
+<figure class="audio-embed" style="margin:1.25rem 0">
+  <audio controls preload="metadata" style="width:100%;max-width:36rem">
+    <source src="{{ $src | safeURL }}" type="{{ $type }}">
+  </audio>
+  {{- if $title -}}
+  <figcaption style="margin-top:0.5rem;font-size:0.95em;opacity:0.9">{{ $title | markdownify }}</figcaption>
+  {{- end -}}
+</figure>

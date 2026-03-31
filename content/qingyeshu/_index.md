@@ -27,12 +27,14 @@ date: 2025-08-01
 - [外在意义与内在意义](/qingyeshu/part1-daxue/外在意义与内在意义/)
 - [西北日记选集](/qingyeshu/part1-daxue/西北日记选集/)
 - [意象集](/qingyeshu/part1-daxue/意象集/)
+- [弦乐四重奏 · 西北生活](/qingyeshu/part1-daxue/弦乐四重奏-西北生活/)
 
 ### 夏日书 · 高中集
 
 - [乡情](/qingyeshu/part2-gaozhong/乡情/)
 - [游中医药大学记](/qingyeshu/part2-gaozhong/游中医药大学记/)
 - [瞬间](/qingyeshu/part2-gaozhong/瞬间/)
+- [长笛与弦乐六重奏 · 蒲公英之舞](/qingyeshu/part2-gaozhong/长笛与弦乐六重奏-蒲公英之舞/)
 
 ### 春游前后 · 初中集
 
@@ -44,3 +46,11 @@ date: 2025-08-01
 ### 后记
 
 [→ 后记](/qingyeshu/postface/)
+
+---
+
+![《青叶树》封面](/qingyeshu/cover.png)
+《青叶树》封面
+
+![印好的《青叶树》](/qingyeshu/printed-books.png)
+印刷好的《青叶树》

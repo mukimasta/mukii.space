@@ -19,7 +19,7 @@
         <foreignObject x="80" y="200" width="840" height="300">
             <div xmlns="http://www.w3.org/1999/xhtml">
                 <div style="font-family: Newsreader, serif; font-size: 78px; font-weight: 600; margin-bottom: 20px; word-wrap: break-word;">MUKIMASTA</div>
-                <div style="font-family: Newsreader, serif; font-size: 70px; font-weight: 400; word-wrap: break-word;">比喻解释 Paxos 算法： 如何浅显易懂地解说 Paxos 的算法？ - 知乎</div>
+                <div style="font-family: Newsreader, serif; font-size: 70px; font-weight: 400; word-wrap: break-word;">（知乎好文）比喻解释 Paxos 算法： 如何浅显易懂地解说 Paxos 的算法？ - 知乎 Paxos 这里我遇到了两个 bug，以下是修复记录 Bug 1 及修复：P2B 语义混淆导致错误计票# 在实现 Multi-Paxos 分布式 KV Store 的过程中， …</div>
             </div>
         </foreignObject>
     </svg>

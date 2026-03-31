@@ -8,7 +8,7 @@ description: "CSE M 552 · Distributed Systems 学习笔记与资源"
 - [Distributed System Blog 00 – Overview](/professional/distributed/distributed-system-blog-00--overview/)
 - [Distributed System Blog 01 – Exactly-Once RPC](/professional/distributed/distributed-system-blog-01--exactly-once-rpc/)
 - [Distributed System Blog 02 – Primary-Backup](/professional/distributed/distributed-system-blog-02--primary-backup/)
-- [Distributed System Blog 03 – Paxos (TODO)](/professional/distributed/distributed-system-blog-03--paxos/)
+- [Distributed System Blog 03 – Paxos](/professional/distributed/distributed-system-blog-03--paxos/)
 - [Distributed System – Consistency](/professional/distributed/distributed-system--consistency/)
 
 - [Distributed System Blog – Google File System](/professional/distributed/distributed-system-blog--google-file-system/)

@@ -1,15 +1,90 @@
-<!doctype html><html lang=en-us dir=ltr class=kind-page><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="0 前言# 0.1 Lab 1 解决了什么？# 上一篇 blog 里，我们解决了一个根本问题：网络不可靠。 通过 Client 重试（At-Least-Once）和 Server 去重（At-Most-Once），我们实现了 Exactly-Once RPC。不管网络怎么丢包、延迟、重复，每个操作恰 …"><title>MUKIMASTA</title><link rel=canonical href=https://mukii.space/professional/distributed/distributed-system-blog-02--primary-backup/><meta property="og:title" content="MUKIMASTA"><meta property="og:description" content="0 前言# 0.1 Lab 1 解决了什么？# 上一篇 blog 里，我们解决了一个根本问题：网络不可靠。 通过 Client 重试（At-Least-Once）和 Server 去重（At-Most-Once），我们实现了 Exactly-Once RPC。不管网络怎么丢包、延迟、重复，每个操作恰 …"><meta property="og:image" content="https://mukii.space/og/og-image-fd7f7e57430eeeec21a53e630d0aba2d.svg"><meta property="og:image:type" content="image/svg+xml"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:type" content="website"><meta property="og:url" content="https://mukii.space/professional/distributed/distributed-system-blog-02--primary-backup/"><meta property="og:locale" content="en-us"><meta name=twitter:card content="summary_large_image"><meta name=twitter:title content="MUKIMASTA"><meta name=twitter:description content="0 前言# 0.1 Lab 1 解决了什么？# 上一篇 blog 里，我们解决了一个根本问题：网络不可靠。 通过 Client 重试（At-Least-Once）和 Server 去重（At-Most-Once），我们实现了 Exactly-Once RPC。不管网络怎么丢包、延迟、重复，每个操作恰 …"><meta name=twitter:image content="https://mukii.space/og/og-image-fd7f7e57430eeeec21a53e630d0aba2d.svg"><link rel=preload href=/fonts/Newsreader.woff2 as=font type=font/woff2 crossorigin><link rel=stylesheet href=/css/default.min.fb89c3008d933d5ac0e46af0bee4acd14efae3a00fca1ebbeb11e373ecaf3a64.css integrity="sha256-+4nDAI2TPVrA5GrwvuSs0U7646APyh676xHjc+yvOmQ="><script src=/js/darkmode.min.9211af6d380489c7cf64d4b18a1e49e75be2bebf92031d2165eb6c20bc59c6a2.js integrity="sha256-khGvbTgEicfPZNSxih5J51vivr+SAx0hZetsILxZxqI=" defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css crossorigin=anonymous><style>:root{--font-size-base:18px;--content-max-inline-size:680px}h1{font-size:2em}.katex{font-size:.95em}pre code{background:var(--code-bg)!important;color:var(--text-color);padding:1em;border-radius:var(--radius)}</style><script type=module>
+<!doctype html>
+<html lang="en-us" dir="ltr" class="kind-page">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="0 前言# 0.1 Lab 1 解决了什么？# 上一篇 blog 里，我们解决了一个根本问题：网络不可靠。 通过 Client 重试（At-Least-Once）和 Server 去重（At-Most-Once），我们实现了 Exactly-Once RPC。不管网络怎么丢包、延迟、重复，每个操作恰 …">
+    <title>MUKIMASTA</title>
+    <link rel="canonical" href="https://mukii.space/professional/distributed/distributed-system-blog-02--primary-backup/">
+
+
+
+<meta property="og:title" content="MUKIMASTA">
+<meta property="og:description" content="0 前言# 0.1 Lab 1 解决了什么？# 上一篇 blog 里，我们解决了一个根本问题：网络不可靠。 通过 Client 重试（At-Least-Once）和 Server 去重（At-Most-Once），我们实现了 Exactly-Once RPC。不管网络怎么丢包、延迟、重复，每个操作恰 …">
+<meta property="og:image" content="https://mukii.space/og/og-image-fd7f7e57430eeeec21a53e630d0aba2d.svg">
+<meta property="og:image:type" content="image/svg+xml">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mukii.space/professional/distributed/distributed-system-blog-02--primary-backup/">
+<meta property="og:locale" content="en-us">
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MUKIMASTA">
+<meta name="twitter:description" content="0 前言# 0.1 Lab 1 解决了什么？# 上一篇 blog 里，我们解决了一个根本问题：网络不可靠。 通过 Client 重试（At-Least-Once）和 Server 去重（At-Most-Once），我们实现了 Exactly-Once RPC。不管网络怎么丢包、延迟、重复，每个操作恰 …">
+<meta name="twitter:image" content="https://mukii.space/og/og-image-fd7f7e57430eeeec21a53e630d0aba2d.svg">
+
+    <link rel="preload" href="/fonts/Newsreader.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/default.min.fb89c3008d933d5ac0e46af0bee4acd14efae3a00fca1ebbeb11e373ecaf3a64.css" integrity="sha256-&#43;4nDAI2TPVrA5GrwvuSs0U7646APyh676xHjc&#43;yvOmQ=">
+    <script src="/js/darkmode.min.9211af6d380489c7cf64d4b18a1e49e75be2bebf92031d2165eb6c20bc59c6a2.js" integrity="sha256-khGvbTgEicfPZNSxih5J51vivr&#43;SAx0hZetsILxZxqI=" defer></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <style>
+    :root { --font-size-base: 18px; --content-max-inline-size: 680px; }
+    h1 { font-size: 2em; }
+    .katex { font-size: 0.95em; }
+    pre code {
+    background: var(--code-bg) !important;
+    color: var(--text-color);
+    padding: 1em;
+    border-radius: var(--radius);
+    }
+    </style><script type="module">
         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
         mermaid.initialize({ startOnLoad: true });
-    </script></head><body><header><div><h1><a href=https://mukii.space/>MUKIMASTA</a></h1><div class=header-controls><div class=toggle-switch><input type=checkbox id=darkModeToggle class=toggle-input aria-label="Toggle dark mode">
-<label for=darkModeToggle class=toggle-label><span class=toggle-slider></span></label></div></div></div></header><main class=content-wrapper><article class=content-container><h1></h1><h4></h4><h2 id=0-前言>0 前言<a class=anchor aria-hidden=true href=#0-%e5%89%8d%e8%a8%80>#</a></h2><h3 id=01-lab-1-解决了什么>0.1 Lab 1 解决了什么？<a class=anchor aria-hidden=true href=#01-lab-1-%e8%a7%a3%e5%86%b3%e4%ba%86%e4%bb%80%e4%b9%88>#</a></h3><p>上一篇 blog 里，我们解决了一个根本问题：<strong>网络不可靠</strong>。</p><p>通过 Client 重试（At-Least-Once）和 Server 去重（At-Most-Once），我们实现了 Exactly-Once RPC。不管网络怎么丢包、延迟、重复，每个操作恰好执行一次。</p><pre tabindex=0><code>Client                     Server
+    </script>
+</head>
+
+
+<body>
+<header>
+    <div>
+        <h1>
+            <a href="https://mukii.space/">MUKIMASTA</a>
+        </h1>
+        <div class="header-controls">
+            <div class="toggle-switch">
+                <input type="checkbox" id="darkModeToggle" class="toggle-input" aria-label="Toggle dark mode">
+                <label for="darkModeToggle" class="toggle-label">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <main class="content-wrapper">
+        <article class="content-container">
+
+
+    <h1></h1>
+    <h4></h4>
+
+<h2 id="0-前言">0 前言<a class="anchor" aria-hidden="true" href="#0-%e5%89%8d%e8%a8%80">#</a></h2>
+<h3 id="01-lab-1-解决了什么">0.1 Lab 1 解决了什么？<a class="anchor" aria-hidden="true" href="#01-lab-1-%e8%a7%a3%e5%86%b3%e4%ba%86%e4%bb%80%e4%b9%88">#</a></h3>
+<p>上一篇 blog 里，我们解决了一个根本问题：<strong>网络不可靠</strong>。</p>
+<p>通过 Client 重试（At-Least-Once）和 Server 去重（At-Most-Once），我们实现了 Exactly-Once RPC。不管网络怎么丢包、延迟、重复，每个操作恰好执行一次。</p>
+<pre tabindex="0"><code>Client                     Server
 ┌──────────────┐          ┌────────────────┐
 │ Retry Logic  │ Command  │ AMOApplication │
 │    (ALO)     │ ───────→ │     (AMO)      │
 │              │ Result   │       ↓        │
 │              │ ←─────── │  Application   │
 └──────────────┘          └────────────────┘
-</code></pre><p>看起来很完美。但有一个前提我们一直没提：</p><p><strong>Server 不会挂。</strong></p><h3 id=02-server-挂了会怎样>0.2 Server 挂了会怎样？<a class=anchor aria-hidden=true href=#02-server-%e6%8c%82%e4%ba%86%e4%bc%9a%e6%80%8e%e6%a0%b7>#</a></h3><pre tabindex=0><code>Client                     Server
+</code></pre><p>看起来很完美。但有一个前提我们一直没提：</p>
+<p><strong>Server 不会挂。</strong></p>
+<h3 id="02-server-挂了会怎样">0.2 Server 挂了会怎样？<a class="anchor" aria-hidden="true" href="#02-server-%e6%8c%82%e4%ba%86%e4%bc%9a%e6%80%8e%e6%a0%b7">#</a></h3>
+<pre tabindex="0"><code>Client                     Server
 ┌──────────────┐          ┌────────────────┐
 │              │ Command  │                │
 │              │ ───────→ │    💀 崩溃      │
@@ -18,7 +93,19 @@
 │  一直重试...  │          │  AMO 历史没了   │
 │  一直重试...  │          │  余额没了       │
 └──────────────┘          └────────────────┘
-</code></pre><p>Client 会不停重试，但永远不会收到回复。</p><p>更糟的是：即使我们重启 Server，它的内存状态已经丢失——用户的余额、交易记录、AMO 去重历史，全部归零。</p><p>这就是<strong>单点故障（Single Point of Failure）</strong>：整个系统的可用性取决于一台机器，它挂了，服务就挂了。</p><h3 id=03-我们的新目标>0.3 我们的新目标<a class=anchor aria-hidden=true href=#03-%e6%88%91%e4%bb%ac%e7%9a%84%e6%96%b0%e7%9b%ae%e6%a0%87>#</a></h3><p>Lab 1 的目标：在不可靠的<strong>网络</strong>上保证正确性。</p><p>Lab 2 的目标：在不可靠的<strong>服务器</strong>上保证可用性。</p><h2 id=1-思路保持两份>1 思路：保持两份<a class=anchor aria-hidden=true href=#1-%e6%80%9d%e8%b7%af%e4%bf%9d%e6%8c%81%e4%b8%a4%e4%bb%bd>#</a></h2><h3 id=11-最直觉的想法>1.1 最直觉的想法<a class=anchor aria-hidden=true href=#11-%e6%9c%80%e7%9b%b4%e8%a7%89%e7%9a%84%e6%83%b3%e6%b3%95>#</a></h3><p>怎么防止一台机器挂了导致数据丢失？</p><p><strong>再加一台。</strong></p><p>始终让两台机器维护相同的状态。一台挂了，另一台还有完整的数据，可以立刻顶上继续服务。</p><p>这就是 <strong>Primary-Backup</strong> 的核心思路：</p><pre tabindex=0><code>Client                Primary            Backup
+</code></pre><p>Client 会不停重试，但永远不会收到回复。</p>
+<p>更糟的是：即使我们重启 Server，它的内存状态已经丢失——用户的余额、交易记录、AMO 去重历史，全部归零。</p>
+<p>这就是<strong>单点故障（Single Point of Failure）</strong>：整个系统的可用性取决于一台机器，它挂了，服务就挂了。</p>
+<h3 id="03-我们的新目标">0.3 我们的新目标<a class="anchor" aria-hidden="true" href="#03-%e6%88%91%e4%bb%ac%e7%9a%84%e6%96%b0%e7%9b%ae%e6%a0%87">#</a></h3>
+<p>Lab 1 的目标：在不可靠的<strong>网络</strong>上保证正确性。</p>
+<p>Lab 2 的目标：在不可靠的<strong>服务器</strong>上保证可用性。</p>
+<h2 id="1-思路保持两份">1 思路：保持两份<a class="anchor" aria-hidden="true" href="#1-%e6%80%9d%e8%b7%af%e4%bf%9d%e6%8c%81%e4%b8%a4%e4%bb%bd">#</a></h2>
+<h3 id="11-最直觉的想法">1.1 最直觉的想法<a class="anchor" aria-hidden="true" href="#11-%e6%9c%80%e7%9b%b4%e8%a7%89%e7%9a%84%e6%83%b3%e6%b3%95">#</a></h3>
+<p>怎么防止一台机器挂了导致数据丢失？</p>
+<p><strong>再加一台。</strong></p>
+<p>始终让两台机器维护相同的状态。一台挂了，另一台还有完整的数据，可以立刻顶上继续服务。</p>
+<p>这就是 <strong>Primary-Backup</strong> 的核心思路：</p>
+<pre tabindex="0"><code>Client                Primary            Backup
 ┌──────┐            ┌──────────┐       ┌──────────┐
 │      │  Request   │ key-value│       │ key-value│
 │      │ ─────────→ │  store   │       │  store   │
@@ -26,7 +113,25 @@
 │      │ ←───────── │ (服务请求) │       │ (备份数据) │
 └──────┘            └──────────┘       └──────────┘
                      状态一致 ←──────→  状态一致
-</code></pre><p>一台叫 <strong>Primary</strong>，负责接收和处理请求。一台叫 <strong>Backup</strong>，保持与 Primary 完全相同的状态，随时准备接替。</p><p>思路很简单，但多了一台机器，就多了一个问题：</p><p>一台机器的时候，一致性是免费的——只有一份数据，不存在"不一致"。</p><p>两台机器的时候，&ldquo;两份数据始终一致"变成了需要主动维护的东西。</p><p>怎么维护？</p><h2 id=2-正常运行state-machine-replication>2 正常运行：State Machine Replication<a class=anchor aria-hidden=true href=#2-%e6%ad%a3%e5%b8%b8%e8%bf%90%e8%a1%8cstate-machine-replication>#</a></h2><h3 id=21-核心思想>2.1 核心思想<a class=anchor aria-hidden=true href=#21-%e6%a0%b8%e5%bf%83%e6%80%9d%e6%83%b3>#</a></h3><p>两台机器各自维护一个状态机（比如 key-value store）。如果它们：</p><ul><li>从相同的初始状态出发</li><li>按相同的顺序</li><li>执行相同的操作</li></ul><p>那么它们的状态一定相同。</p><p>这就是 <strong>State Machine Replication</strong>。</p><p>听起来像废话，但这三个条件给了我们一个清晰的实现思路：让 Primary 决定操作顺序，然后把这个顺序强制同步给 Backup。</p><h3 id=22-具体怎么做>2.2 具体怎么做？<a class=anchor aria-hidden=true href=#22-%e5%85%b7%e4%bd%93%e6%80%8e%e4%b9%88%e5%81%9a>#</a></h3><p>一个请求的完整生命周期：</p><pre tabindex=0><code>Client              Primary              Backup
+</code></pre><p>一台叫 <strong>Primary</strong>，负责接收和处理请求。一台叫 <strong>Backup</strong>，保持与 Primary 完全相同的状态，随时准备接替。</p>
+<p>思路很简单，但多了一台机器，就多了一个问题：</p>
+<p>一台机器的时候，一致性是免费的——只有一份数据，不存在&quot;不一致&quot;。</p>
+<p>两台机器的时候，&ldquo;两份数据始终一致&quot;变成了需要主动维护的东西。</p>
+<p>怎么维护？</p>
+<h2 id="2-正常运行state-machine-replication">2 正常运行：State Machine Replication<a class="anchor" aria-hidden="true" href="#2-%e6%ad%a3%e5%b8%b8%e8%bf%90%e8%a1%8cstate-machine-replication">#</a></h2>
+<h3 id="21-核心思想">2.1 核心思想<a class="anchor" aria-hidden="true" href="#21-%e6%a0%b8%e5%bf%83%e6%80%9d%e6%83%b3">#</a></h3>
+<p>两台机器各自维护一个状态机（比如 key-value store）。如果它们：</p>
+<ul>
+<li>从相同的初始状态出发</li>
+<li>按相同的顺序</li>
+<li>执行相同的操作</li>
+</ul>
+<p>那么它们的状态一定相同。</p>
+<p>这就是 <strong>State Machine Replication</strong>。</p>
+<p>听起来像废话，但这三个条件给了我们一个清晰的实现思路：让 Primary 决定操作顺序，然后把这个顺序强制同步给 Backup。</p>
+<h3 id="22-具体怎么做">2.2 具体怎么做？<a class="anchor" aria-hidden="true" href="#22-%e5%85%b7%e4%bd%93%e6%80%8e%e4%b9%88%e5%81%9a">#</a></h3>
+<p>一个请求的完整生命周期：</p>
+<pre tabindex="0"><code>Client              Primary              Backup
   │                    │                    │
   │  Put(&#34;x&#34;, 1)      │                    │
   │ ──────────────→    │                    │
@@ -39,7 +144,16 @@
   │                    │ 执行 Put(&#34;x&#34;, 1)   │
   │    Reply: OK       │                    │
   │ ←────────────────  │                    │
-</code></pre><p>关键顺序：</p><ol><li>Client 把请求发给 Primary</li><li>Primary 把请求<strong>转发</strong>给 Backup</li><li>Backup <strong>先执行</strong>，回复 Ack</li><li>Primary 收到 Ack 后<strong>再执行</strong>，回复 Client</li></ol><h3 id=23-为什么-primary-要等-backup>2.3 为什么 Primary 要等 Backup？<a class=anchor aria-hidden=true href=#23-%e4%b8%ba%e4%bb%80%e4%b9%88-primary-%e8%a6%81%e7%ad%89-backup>#</a></h3><p>为什么不能 Primary 先执行，再转发给 Backup？</p><pre tabindex=0><code>场景：Primary 先执行再转发
+</code></pre><p>关键顺序：</p>
+<ol>
+<li>Client 把请求发给 Primary</li>
+<li>Primary 把请求<strong>转发</strong>给 Backup</li>
+<li>Backup <strong>先执行</strong>，回复 Ack</li>
+<li>Primary 收到 Ack 后<strong>再执行</strong>，回复 Client</li>
+</ol>
+<h3 id="23-为什么-primary-要等-backup">2.3 为什么 Primary 要等 Backup？<a class="anchor" aria-hidden="true" href="#23-%e4%b8%ba%e4%bb%80%e4%b9%88-primary-%e8%a6%81%e7%ad%89-backup">#</a></h3>
+<p>为什么不能 Primary 先执行，再转发给 Backup？</p>
+<pre tabindex="0"><code>场景：Primary 先执行再转发
 
 Client              Primary              Backup
   │  Append(&#34;x&#34;,&#34;a&#34;)  │                    │
@@ -58,7 +172,11 @@ Client              Primary              Backup
   Client 以为:   {x: &#34;a&#34;}  ← Append 成功了
 
 不一致。
-</code></pre><p>Client 收到了"成功&rdquo;，但数据只存在于已经挂掉的 Primary 上。</p><p><strong>Primary 必须等 Backup 确认之后再执行和回复。</strong> 这样，只要 Client 收到了回复，数据就一定在 Backup 上有一份。Primary 挂了也不怕。</p><h3 id=24-一次只处理一个请求>2.4 一次只处理一个请求<a class=anchor aria-hidden=true href=#24-%e4%b8%80%e6%ac%a1%e5%8f%aa%e5%a4%84%e7%90%86%e4%b8%80%e4%b8%aa%e8%af%b7%e6%b1%82>#</a></h3><p>如果 Primary 同时处理两个 Client 的请求会怎样？</p><pre tabindex=0><code>Primary                          Backup
+</code></pre><p>Client 收到了&quot;成功&rdquo;，但数据只存在于已经挂掉的 Primary 上。</p>
+<p><strong>Primary 必须等 Backup 确认之后再执行和回复。</strong> 这样，只要 Client 收到了回复，数据就一定在 Backup 上有一份。Primary 挂了也不怕。</p>
+<h3 id="24-一次只处理一个请求">2.4 一次只处理一个请求<a class="anchor" aria-hidden="true" href="#24-%e4%b8%80%e6%ac%a1%e5%8f%aa%e5%a4%84%e7%90%86%e4%b8%80%e4%b8%aa%e8%af%b7%e6%b1%82">#</a></h3>
+<p>如果 Primary 同时处理两个 Client 的请求会怎样？</p>
+<pre tabindex="0"><code>Primary                          Backup
   │  Forward: Put(&#34;a&#34;, &#34;foo&#34;)      │
   │ ────────────────────────────→   │
   │  Forward: Put(&#34;a&#34;, &#34;bar&#34;)      │  
@@ -71,14 +189,23 @@ Primary 执行顺序: foo → bar  →  {a: &#34;bar&#34;}
 Backup  执行顺序: bar → foo  →  {a: &#34;foo&#34;}
 
 不一致。
-</code></pre><p>State Machine Replication 要求相同顺序。如果并发发送，网络可能乱序，Backup 的执行顺序就可能和 Primary 不同。</p><p>所以 <strong>Primary 一次只处理一个请求</strong>：发出 Forward，等 Ack 回来，再处理下一个。</p><h2 id=3-故障来了谁说了算>3 故障来了：谁说了算？<a class=anchor aria-hidden=true href=#3-%e6%95%85%e9%9a%9c%e6%9d%a5%e4%ba%86%e8%b0%81%e8%af%b4%e4%ba%86%e7%ae%97>#</a></h2><h3 id=31-正常运行时一切都很美好>3.1 正常运行时一切都很美好<a class=anchor aria-hidden=true href=#31-%e6%ad%a3%e5%b8%b8%e8%bf%90%e8%a1%8c%e6%97%b6%e4%b8%80%e5%88%87%e9%83%bd%e5%be%88%e7%be%8e%e5%a5%bd>#</a></h3><p>上面的流程有一个隐含前提：大家都知道谁是 Primary，谁是 Backup。</p><p>但如果 Primary 挂了呢？</p><pre tabindex=0><code>Client              Primary              Backup
+</code></pre><p>State Machine Replication 要求相同顺序。如果并发发送，网络可能乱序，Backup 的执行顺序就可能和 Primary 不同。</p>
+<p>所以 <strong>Primary 一次只处理一个请求</strong>：发出 Forward，等 Ack 回来，再处理下一个。</p>
+<h2 id="3-故障来了谁说了算">3 故障来了：谁说了算？<a class="anchor" aria-hidden="true" href="#3-%e6%95%85%e9%9a%9c%e6%9d%a5%e4%ba%86%e8%b0%81%e8%af%b4%e4%ba%86%e7%ae%97">#</a></h2>
+<h3 id="31-正常运行时一切都很美好">3.1 正常运行时一切都很美好<a class="anchor" aria-hidden="true" href="#31-%e6%ad%a3%e5%b8%b8%e8%bf%90%e8%a1%8c%e6%97%b6%e4%b8%80%e5%88%87%e9%83%bd%e5%be%88%e7%be%8e%e5%a5%bd">#</a></h3>
+<p>上面的流程有一个隐含前提：大家都知道谁是 Primary，谁是 Backup。</p>
+<p>但如果 Primary 挂了呢？</p>
+<pre tabindex="0"><code>Client              Primary              Backup
   │  Request          │                    │
   │ ──────────────→   💀                   │
   │                                        │
   │  (没回复...)                            │
   │  重试...                                │
   │  重试...           还是没回复            │
-</code></pre><p>Backup 应该接管成为新 Primary。但——</p><p><strong>谁来做这个决定？</strong></p><h3 id=32-让两台机器自己商量>3.2 让两台机器自己商量？<a class=anchor aria-hidden=true href=#32-%e8%ae%a9%e4%b8%a4%e5%8f%b0%e6%9c%ba%e5%99%a8%e8%87%aa%e5%b7%b1%e5%95%86%e9%87%8f>#</a></h3><pre tabindex=0><code>A: &#34;你还活着吗？&#34;
+</code></pre><p>Backup 应该接管成为新 Primary。但——</p>
+<p><strong>谁来做这个决定？</strong></p>
+<h3 id="32-让两台机器自己商量">3.2 让两台机器自己商量？<a class="anchor" aria-hidden="true" href="#32-%e8%ae%a9%e4%b8%a4%e5%8f%b0%e6%9c%ba%e5%99%a8%e8%87%aa%e5%b7%b1%e5%95%86%e9%87%8f">#</a></h3>
+<pre tabindex="0"><code>A: &#34;你还活着吗？&#34;
 B: &#34;......&#34;  (没回复)
 A: &#34;你没回复，你挂了，我来当 Primary&#34;
 
@@ -88,7 +215,11 @@ A: &#34;......&#34;  (网络延迟，消息没到)
 B: &#34;你没回复，你挂了，我来当 Primary&#34;
 
 结果：A 和 B 都觉得自己是 Primary
-</code></pre><p>这就是 <strong>Split Brain</strong>：两台机器都认为自己是 Primary，各自独立服务客户端，状态开始分叉。</p><p>两台机器之间无法区分"对方挂了"和"网络暂时不通"。靠它们自己协商，永远可能出现两个 Primary。</p><h3 id=33-引入第三方viewserver>3.3 引入第三方：ViewServer<a class=anchor aria-hidden=true href=#33-%e5%bc%95%e5%85%a5%e7%ac%ac%e4%b8%89%e6%96%b9viewserver>#</a></h3><p>既然两个人吵不出结果，就找一个裁判。</p><pre tabindex=0><code>                    ViewServer
+</code></pre><p>这就是 <strong>Split Brain</strong>：两台机器都认为自己是 Primary，各自独立服务客户端，状态开始分叉。</p>
+<p>两台机器之间无法区分&quot;对方挂了&quot;和&quot;网络暂时不通&quot;。靠它们自己协商，永远可能出现两个 Primary。</p>
+<h3 id="33-引入第三方viewserver">3.3 引入第三方：ViewServer<a class="anchor" aria-hidden="true" href="#33-%e5%bc%95%e5%85%a5%e7%ac%ac%e4%b8%89%e6%96%b9viewserver">#</a></h3>
+<p>既然两个人吵不出结果，就找一个裁判。</p>
+<pre tabindex="0"><code>                    ViewServer
                    ┌──────────┐
            Ping    │ View:    │    Ping
       ┌──────────→ │  #1      │ ←──────────┐
@@ -106,12 +237,21 @@ B: &#34;你没回复，你挂了，我来当 Primary&#34;
       │
       │  Request
       │ ─────────→ Server A
-</code></pre><p><strong>ViewServer</strong> 是一个独立的仲裁节点，维护一个 <strong>View</strong>：</p><pre tabindex=0><code>View = {
+</code></pre><p><strong>ViewServer</strong> 是一个独立的仲裁节点，维护一个 <strong>View</strong>：</p>
+<pre tabindex="0"><code>View = {
     viewNum:  当前编号（递增）,
     primary:  谁是 Primary,
     backup:   谁是 Backup
 }
-</code></pre><p>规则很简单：</p><ul><li>每个 Server 定期向 ViewServer 发 <strong>Ping</strong>（&ldquo;我还活着&rdquo;）</li><li>ViewServer 如果一段时间没收到某个 Server 的 Ping，就认为它挂了</li><li>ViewServer 根据存活情况决定新的 View，通过 Ping 的回复告知各 Server</li><li>Client 向 ViewServer 查询当前 Primary 是谁</li></ul><h3 id=34-view-的切换>3.4 View 的切换<a class=anchor aria-hidden=true href=#34-view-%e7%9a%84%e5%88%87%e6%8d%a2>#</a></h3><pre tabindex=0><code>View 1: Primary=A, Backup=B    (正常运行)
+</code></pre><p>规则很简单：</p>
+<ul>
+<li>每个 Server 定期向 ViewServer 发 <strong>Ping</strong>（&ldquo;我还活着&rdquo;）</li>
+<li>ViewServer 如果一段时间没收到某个 Server 的 Ping，就认为它挂了</li>
+<li>ViewServer 根据存活情况决定新的 View，通过 Ping 的回复告知各 Server</li>
+<li>Client 向 ViewServer 查询当前 Primary 是谁</li>
+</ul>
+<h3 id="34-view-的切换">3.4 View 的切换<a class="anchor" aria-hidden="true" href="#34-view-%e7%9a%84%e5%88%87%e6%8d%a2">#</a></h3>
+<pre tabindex="0"><code>View 1: Primary=A, Backup=B    (正常运行)
             │
             │  B 不再 Ping（挂了）
             ▼
@@ -120,7 +260,10 @@ View 2: Primary=A, Backup=C    (C 是空闲 Server，顶上来)
             │  A 不再 Ping（挂了）
             ▼
 View 3: Primary=C, Backup=nil  (没有空闲 Server 了)
-</code></pre><p>有一条关键约束：</p><p><strong>新 View 的 Primary 必须是上一个 View 的 Primary 或 Backup。</strong></p><p>为什么？因为只有它们有最新的数据。如果直接让一台空闲 Server 当 Primary，它的状态是空的，之前所有的数据就丢了。</p><pre tabindex=0><code>如果违反这条规则：
+</code></pre><p>有一条关键约束：</p>
+<p><strong>新 View 的 Primary 必须是上一个 View 的 Primary 或 Backup。</strong></p>
+<p>为什么？因为只有它们有最新的数据。如果直接让一台空闲 Server 当 Primary，它的状态是空的，之前所有的数据就丢了。</p>
+<pre tabindex="0"><code>如果违反这条规则：
 
 View 1: Primary=A, Backup=B
   A 和 B 都有数据: {x: &#34;hello&#34;}
@@ -129,14 +272,29 @@ View 2: Primary=C, Backup=nil   ← C 是空闲 Server
   C 的状态: {}
 
 Client: Get(&#34;x&#34;) → KeyNotFound   ← 数据丢了
-</code></pre><h2 id=4-split-brain-防御>4 Split Brain 防御<a class=anchor aria-hidden=true href=#4-split-brain-%e9%98%b2%e5%be%a1>#</a></h2><h3 id=41-view-不是瞬间切换的>4.1 View 不是瞬间切换的<a class=anchor aria-hidden=true href=#41-view-%e4%b8%8d%e6%98%af%e7%9e%ac%e9%97%b4%e5%88%87%e6%8d%a2%e7%9a%84>#</a></h3><p>ViewServer 决定了新 View，问题就解决了吗？</p><p>没有。ViewServer 知道新 View，不代表所有人都知道。</p><pre tabindex=0><code>时刻 T1: ViewServer 决定 View 2: Primary=B, Backup=C
+</code></pre><h2 id="4-split-brain-防御">4 Split Brain 防御<a class="anchor" aria-hidden="true" href="#4-split-brain-%e9%98%b2%e5%be%a1">#</a></h2>
+<h3 id="41-view-不是瞬间切换的">4.1 View 不是瞬间切换的<a class="anchor" aria-hidden="true" href="#41-view-%e4%b8%8d%e6%98%af%e7%9e%ac%e9%97%b4%e5%88%87%e6%8d%a2%e7%9a%84">#</a></h3>
+<p>ViewServer 决定了新 View，问题就解决了吗？</p>
+<p>没有。ViewServer 知道新 View，不代表所有人都知道。</p>
+<pre tabindex="0"><code>时刻 T1: ViewServer 决定 View 2: Primary=B, Backup=C
 
 时刻 T2: 各节点的认知：
   ViewServer:  View 2 (P=B, B=C)
   Server B:    View 2 (P=B, B=C)  ✔️ 已更新
   Server A:    View 1 (P=A, B=B)  ❌ 还以为自己是 Primary
   Client:      View 1 (P=A, B=B)  ❌ 还在找 A
-</code></pre><p>A 没挂，只是网络暂时不通，没收到新 View。它还在正常工作，以为自己是 Primary。</p><p>如果此时 Client 也还持有旧 View，它会把请求发给 A，A 会执行并回复。与此同时 B 也在以新 Primary 的身份服务其他 Client。</p><p><strong>两个 Primary，两条时间线，状态分叉。这就是 Split Brain。</strong></p><h3 id=42-不要试图让所有人同时切换>4.2 不要试图让所有人同时切换<a class=anchor aria-hidden=true href=#42-%e4%b8%8d%e8%a6%81%e8%af%95%e5%9b%be%e8%ae%a9%e6%89%80%e6%9c%89%e4%ba%ba%e5%90%8c%e6%97%b6%e5%88%87%e6%8d%a2>#</a></h3><p>一个自然的想法：能不能让 ViewServer 通知所有人，等大家都确认了再切换？</p><p>做不到。这本身就是一个分布式共识问题——消息可能丢、可能延迟，你没法保证所有节点在同一时刻看到同一个 View。</p><p>所以思路不是"让所有人同时切换"，而是：</p><p><strong>让旧 Primary 自己发现自己过时了。</strong></p><h3 id=43-转发就是检测机制>4.3 转发就是检测机制<a class=anchor aria-hidden=true href=#43-%e8%bd%ac%e5%8f%91%e5%b0%b1%e6%98%af%e6%a3%80%e6%b5%8b%e6%9c%ba%e5%88%b6>#</a></h3><p>回忆 Section 2 的正常流程：Primary 每次都要把操作转发给 Backup，等 Ack 才能继续。</p><p>这个转发不只是为了同步数据，它同时是一个 <strong>split brain 检测机制</strong>：</p><pre tabindex=0><code>场景：A 还以为自己是 Primary
+</code></pre><p>A 没挂，只是网络暂时不通，没收到新 View。它还在正常工作，以为自己是 Primary。</p>
+<p>如果此时 Client 也还持有旧 View，它会把请求发给 A，A 会执行并回复。与此同时 B 也在以新 Primary 的身份服务其他 Client。</p>
+<p><strong>两个 Primary，两条时间线，状态分叉。这就是 Split Brain。</strong></p>
+<h3 id="42-不要试图让所有人同时切换">4.2 不要试图让所有人同时切换<a class="anchor" aria-hidden="true" href="#42-%e4%b8%8d%e8%a6%81%e8%af%95%e5%9b%be%e8%ae%a9%e6%89%80%e6%9c%89%e4%ba%ba%e5%90%8c%e6%97%b6%e5%88%87%e6%8d%a2">#</a></h3>
+<p>一个自然的想法：能不能让 ViewServer 通知所有人，等大家都确认了再切换？</p>
+<p>做不到。这本身就是一个分布式共识问题——消息可能丢、可能延迟，你没法保证所有节点在同一时刻看到同一个 View。</p>
+<p>所以思路不是&quot;让所有人同时切换&quot;，而是：</p>
+<p><strong>让旧 Primary 自己发现自己过时了。</strong></p>
+<h3 id="43-转发就是检测机制">4.3 转发就是检测机制<a class="anchor" aria-hidden="true" href="#43-%e8%bd%ac%e5%8f%91%e5%b0%b1%e6%98%af%e6%a3%80%e6%b5%8b%e6%9c%ba%e5%88%b6">#</a></h3>
+<p>回忆 Section 2 的正常流程：Primary 每次都要把操作转发给 Backup，等 Ack 才能继续。</p>
+<p>这个转发不只是为了同步数据，它同时是一个 <strong>split brain 检测机制</strong>：</p>
+<pre tabindex="0"><code>场景：A 还以为自己是 Primary
 
 View 1: Primary=A, Backup=B
 View 2: Primary=B, Backup=C   ← A 不知道
@@ -153,7 +311,16 @@ A 收到拒绝: Backup 不认我了，说明 View 变了，我不再是 Primary
   A ──── Error ────→ Client
 
 Client 去 ViewServer 查新 View，找到 B
-</code></pre><p>整个防御链条：</p><ol><li><strong>Primary 必须转发所有操作给 Backup</strong>——包括读操作。如果读操作不转发，旧 Primary 可以独自服务读请求，永远不会发现自己过时。</li><li><strong>Backup 检查 View 号</strong>——只接受来自当前 View 的 Primary 的转发。View 不对就拒绝。</li><li><strong>非 Primary 拒绝客户端请求</strong>——即使 Client 拿着旧 View 直接找到旧 Backup，旧 Backup 也不会执行。</li></ol><p>没有任何一条规则能单独防住 split brain，三条合在一起才构成完整的防线。</p><h3 id=44-完整的-split-brain-场景>4.4 完整的 split brain 场景<a class=anchor aria-hidden=true href=#44-%e5%ae%8c%e6%95%b4%e7%9a%84-split-brain-%e5%9c%ba%e6%99%af>#</a></h3><p>把所有参与者串起来：</p><pre tabindex=0><code>View 1: Primary=A, Backup=B
+</code></pre><p>整个防御链条：</p>
+<ol>
+<li><strong>Primary 必须转发所有操作给 Backup</strong>——包括读操作。如果读操作不转发，旧 Primary 可以独自服务读请求，永远不会发现自己过时。</li>
+<li><strong>Backup 检查 View 号</strong>——只接受来自当前 View 的 Primary 的转发。View 不对就拒绝。</li>
+<li><strong>非 Primary 拒绝客户端请求</strong>——即使 Client 拿着旧 View 直接找到旧 Backup，旧 Backup 也不会执行。</li>
+</ol>
+<p>没有任何一条规则能单独防住 split brain，三条合在一起才构成完整的防线。</p>
+<h3 id="44-完整的-split-brain-场景">4.4 完整的 split brain 场景<a class="anchor" aria-hidden="true" href="#44-%e5%ae%8c%e6%95%b4%e7%9a%84-split-brain-%e5%9c%ba%e6%99%af">#</a></h3>
+<p>把所有参与者串起来：</p>
+<pre tabindex="0"><code>View 1: Primary=A, Backup=B
 View 2: Primary=B, Backup=C
 
 参与者各自的认知可能不同步，但系统仍然安全：
@@ -171,7 +338,11 @@ View 2: Primary=B, Backup=C
   A 以为自己还是 Primary，但转发给 B 被拒绝
   A 无法完成任何操作
   ✔️ 安全
-</code></pre><p>关键 insight：<strong>系统不需要所有人都知道最新 View，只需要旧 Primary 无法独自完成一个操作。</strong> 转发机制保证了这一点——它必须经过 Backup，而 Backup 会校验 View。</p><h2 id=5-安全换人state-transfer>5 安全换人：State Transfer<a class=anchor aria-hidden=true href=#5-%e5%ae%89%e5%85%a8%e6%8d%a2%e4%ba%bastate-transfer>#</a></h2><h3 id=51-新-backup-的问题>5.1 新 Backup 的问题<a class=anchor aria-hidden=true href=#51-%e6%96%b0-backup-%e7%9a%84%e9%97%ae%e9%a2%98>#</a></h3><p>View 切换时，新 Backup 可能是一台刚加入的空闲 Server，状态为空：</p><pre tabindex=0><code>View 1: Primary=A, Backup=B
+</code></pre><p>关键 insight：<strong>系统不需要所有人都知道最新 View，只需要旧 Primary 无法独自完成一个操作。</strong> 转发机制保证了这一点——它必须经过 Backup，而 Backup 会校验 View。</p>
+<h2 id="5-安全换人state-transfer">5 安全换人：State Transfer<a class="anchor" aria-hidden="true" href="#5-%e5%ae%89%e5%85%a8%e6%8d%a2%e4%ba%bastate-transfer">#</a></h2>
+<h3 id="51-新-backup-的问题">5.1 新 Backup 的问题<a class="anchor" aria-hidden="true" href="#51-%e6%96%b0-backup-%e7%9a%84%e9%97%ae%e9%a2%98">#</a></h3>
+<p>View 切换时，新 Backup 可能是一台刚加入的空闲 Server，状态为空：</p>
+<pre tabindex="0"><code>View 1: Primary=A, Backup=B
   A: {x: &#34;hello&#34;, y: &#34;world&#34;}
   B: {x: &#34;hello&#34;, y: &#34;world&#34;}
 
@@ -179,7 +350,10 @@ B 挂了 → View 2: Primary=A, Backup=C
 
   A: {x: &#34;hello&#34;, y: &#34;world&#34;}
   C: {}                          ← 什么都没有
-</code></pre><p>如果此时 A 也挂了，C 被提升为 Primary，所有数据就丢了。</p><p>所以在新 View 开始正常服务之前，Primary 必须先把完整状态发给新 Backup。这就是 <strong>State Transfer</strong>。</p><h3 id=52-state-transfer-的流程>5.2 State Transfer 的流程<a class=anchor aria-hidden=true href=#52-state-transfer-%e7%9a%84%e6%b5%81%e7%a8%8b>#</a></h3><pre tabindex=0><code>Primary (A)                          New Backup (C)
+</code></pre><p>如果此时 A 也挂了，C 被提升为 Primary，所有数据就丢了。</p>
+<p>所以在新 View 开始正常服务之前，Primary 必须先把完整状态发给新 Backup。这就是 <strong>State Transfer</strong>。</p>
+<h3 id="52-state-transfer-的流程">5.2 State Transfer 的流程<a class="anchor" aria-hidden="true" href="#52-state-transfer-%e7%9a%84%e6%b5%81%e7%a8%8b">#</a></h3>
+<pre tabindex="0"><code>Primary (A)                          New Backup (C)
     │                                      │
     │  StateTransfer(完整的 AMOApplication)  │
     │ ────────────────────────────────────→ │
@@ -188,7 +362,10 @@ B 挂了 → View 2: Primary=A, Backup=C
     │ ←──────────────────────────────────── │
     │                                      │
     │  (现在可以开始正常转发操作了)            │
-</code></pre><p>传的是什么？整个 AMOApplication——包括业务状态（key-value store）和 AMO 去重历史。缺了去重历史，Backup 就无法正确去重，Exactly-Once 语义就破了。</p><h3 id=53-transfer-期间不能处理请求>5.3 Transfer 期间不能处理请求<a class=anchor aria-hidden=true href=#53-transfer-%e6%9c%9f%e9%97%b4%e4%b8%8d%e8%83%bd%e5%a4%84%e7%90%86%e8%af%b7%e6%b1%82>#</a></h3><p>为什么？看这个场景：</p><pre tabindex=0><code>Primary (A)                          New Backup (C)
+</code></pre><p>传的是什么？整个 AMOApplication——包括业务状态（key-value store）和 AMO 去重历史。缺了去重历史，Backup 就无法正确去重，Exactly-Once 语义就破了。</p>
+<h3 id="53-transfer-期间不能处理请求">5.3 Transfer 期间不能处理请求<a class="anchor" aria-hidden="true" href="#53-transfer-%e6%9c%9f%e9%97%b4%e4%b8%8d%e8%83%bd%e5%a4%84%e7%90%86%e8%af%b7%e6%b1%82">#</a></h3>
+<p>为什么？看这个场景：</p>
+<pre tabindex="0"><code>Primary (A)                          New Backup (C)
     │                                      │
     │  StateTransfer({x: &#34;foo&#34;})           │
     │ ────────────────────────────────────→ │
@@ -211,7 +388,10 @@ A 执行 Put → {x: &#34;bar&#34;}
 C 的状态:     {x: &#34;foo&#34;}   ← 被 StateTransfer 覆盖了
 
 不一致。
-</code></pre><p><strong>所有操作必须在 State Transfer 之前或之后，不能同时。</strong> Primary 在 transfer 完成之前，应该拒绝客户端请求。</p><h3 id=54-viewserver-必须等-primary-确认>5.4 ViewServer 必须等 Primary 确认<a class=anchor aria-hidden=true href=#54-viewserver-%e5%bf%85%e9%a1%bb%e7%ad%89-primary-%e7%a1%ae%e8%ae%a4>#</a></h3><p>还有一个更微妙的问题：如果 ViewServer 不等 Primary 确认就继续推进 View 会怎样？</p><pre tabindex=0><code>View 1: Primary=A, Backup=B
+</code></pre><p><strong>所有操作必须在 State Transfer 之前或之后，不能同时。</strong> Primary 在 transfer 完成之前，应该拒绝客户端请求。</p>
+<h3 id="54-viewserver-必须等-primary-确认">5.4 ViewServer 必须等 Primary 确认<a class="anchor" aria-hidden="true" href="#54-viewserver-%e5%bf%85%e9%a1%bb%e7%ad%89-primary-%e7%a1%ae%e8%ae%a4">#</a></h3>
+<p>还有一个更微妙的问题：如果 ViewServer 不等 Primary 确认就继续推进 View 会怎样？</p>
+<pre tabindex="0"><code>View 1: Primary=A, Backup=B
   B 挂了
 View 2: Primary=A, Backup=C    ← ViewServer 推进了
   A 还没来得及做 State Transfer 给 C
@@ -220,7 +400,10 @@ View 3: Primary=C, Backup=nil  ← ViewServer 又推进了
 
 C 的状态: {}   ← 从来没收到过 State Transfer
 数据全丢。
-</code></pre><p>问题出在哪？ViewServer 推进到 View 3 的时候，View 2 的 State Transfer 还没完成。C 被提升为 Primary，但它的状态是空的。</p><p>所以：<strong>ViewServer 必须等当前 View 的 Primary 确认（Ack）之后，才能切换到下一个 View。</strong></p><p>Primary 的确认意味着：我已经知道当前 View 是什么，并且已经完成了 State Transfer。在此之前，Primary 用旧 View 号 Ping ViewServer，ViewServer 就知道还不能推进。</p><pre tabindex=0><code>理想流程：
+</code></pre><p>问题出在哪？ViewServer 推进到 View 3 的时候，View 2 的 State Transfer 还没完成。C 被提升为 Primary，但它的状态是空的。</p>
+<p>所以：<strong>ViewServer 必须等当前 View 的 Primary 确认（Ack）之后，才能切换到下一个 View。</strong></p>
+<p>Primary 的确认意味着：我已经知道当前 View 是什么，并且已经完成了 State Transfer。在此之前，Primary 用旧 View 号 Ping ViewServer，ViewServer 就知道还不能推进。</p>
+<pre tabindex="0"><code>理想流程：
 
 View 1: Primary=A, Backup=B
   B 挂了
@@ -237,7 +420,9 @@ A 确认完成 → Ping(view=2) → ViewServer 知道 View 2 已经稳定
 此后即使 A 挂了：
   View 3: Primary=C, Backup=nil
   C 有完整数据 ✔️
-</code></pre><h3 id=55-state-transfer-的幂等性>5.5 State Transfer 的幂等性<a class=anchor aria-hidden=true href=#55-state-transfer-%e7%9a%84%e5%b9%82%e7%ad%89%e6%80%a7>#</a></h3><p>State Transfer 消息可能因为网络重复到达。如果 Backup 每次收到都覆盖自己的状态：</p><pre tabindex=0><code>Primary                          Backup
+</code></pre><h3 id="55-state-transfer-的幂等性">5.5 State Transfer 的幂等性<a class="anchor" aria-hidden="true" href="#55-state-transfer-%e7%9a%84%e5%b9%82%e7%ad%89%e6%80%a7">#</a></h3>
+<p>State Transfer 消息可能因为网络重复到达。如果 Backup 每次收到都覆盖自己的状态：</p>
+<pre tabindex="0"><code>Primary                          Backup
     │  StateTransfer({x: &#34;foo&#34;})    │
     │ ────────────────────────────→ │  覆盖 → {x: &#34;foo&#34;}
     │                               │
@@ -247,13 +432,28 @@ A 确认完成 → Ping(view=2) → ViewServer 知道 View 2 已经稳定
     │                               │
     │  StateTransfer({x: &#34;foo&#34;})    │  ← 重复到达！
     │ ────────────────────────────→ │  覆盖 → {x: &#34;foo&#34;}  ← 倒退了
-</code></pre><p>所以 <strong>Backup 每个 View 只执行一次 State Transfer</strong>。收到重复的 StateTransfer 消息时，不覆盖状态，但仍然回复 Ack（否则 Primary 会一直重发）。</p><h2 id=6-实现视角server-的状态机>6 实现视角：Server 的状态机<a class=anchor aria-hidden=true href=#6-%e5%ae%9e%e7%8e%b0%e8%a7%86%e8%a7%92server-%e7%9a%84%e7%8a%b6%e6%80%81%e6%9c%ba>#</a></h2><h3 id=61-回头看server-在任意时刻在干什么>6.1 回头看：Server 在任意时刻在干什么？<a class=anchor aria-hidden=true href=#61-%e5%9b%9e%e5%a4%b4%e7%9c%8bserver-%e5%9c%a8%e4%bb%bb%e6%84%8f%e6%97%b6%e5%88%bb%e5%9c%a8%e5%b9%b2%e4%bb%80%e4%b9%88>#</a></h3><p>整篇 blog 讲了很多规则和场景，但回到实现层面，一个 Server 在任意时刻其实只可能处于四种模式之一：</p><p><strong>ACTIVE</strong>：正常工作。我是 Primary，有一个已同步的 Backup，可以接收客户端请求、转发、执行、回复。</p><p><strong>FORWARDING</strong>：等待 Backup 确认。我把操作转发给了 Backup，在等 Ack。这期间不能处理下一个请求（Section 2.4，一次只处理一个）。</p><p><strong>TRANSFERRING</strong>：正在做 State Transfer。我是 Primary，新 View 给了我一个新 Backup，我在把完整状态发给它。这期间必须拒绝客户端请求（Section 5.3）。</p><p><strong>AWAITING_TRANSFER</strong>：等待接收 State Transfer。我是新 Backup，刚被 ViewServer 指派，但还没收到 Primary 的状态。这期间不能接受转发的操作——我的状态是空的，执行了也是错的。</p><h3 id=62-这四种模式是互斥的>6.2 这四种模式是互斥的<a class=anchor aria-hidden=true href=#62-%e8%bf%99%e5%9b%9b%e7%a7%8d%e6%a8%a1%e5%bc%8f%e6%98%af%e4%ba%92%e6%96%a5%e7%9a%84>#</a></h3><p>一个 Server 不可能同时在做 State Transfer 又在处理客户端请求——Section 5.3 说了，这会导致 Transfer 覆盖已执行的操作。</p><p>一个 Server 不可能同时在等 Backup 确认又在等接收 Transfer——前者是 Primary 的行为，后者是 Backup 的行为。</p><p>这种互斥性直接映射成一个 enum：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#66d9ef>enum</span> State {
-</span></span><span style=display:flex><span>    ACTIVE,
-</span></span><span style=display:flex><span>    FORWARDING,
-</span></span><span style=display:flex><span>    TRANSFERRING,
-</span></span><span style=display:flex><span>    AWAITING_TRANSFER
-</span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p>不需要多个 boolean，不需要自己维护"这些状态不能同时为 true"。编译器帮你保证。</p><h3 id=63-状态决定行为>6.3 状态决定行为<a class=anchor aria-hidden=true href=#63-%e7%8a%b6%e6%80%81%e5%86%b3%e5%ae%9a%e8%a1%8c%e4%b8%ba>#</a></h3><p>有了这个 enum，Server 收到任何消息时的第一件事就是看自己的状态，然后决定接受还是拒绝：</p><pre tabindex=0><code>收到客户端请求:
+</code></pre><p>所以 <strong>Backup 每个 View 只执行一次 State Transfer</strong>。收到重复的 StateTransfer 消息时，不覆盖状态，但仍然回复 Ack（否则 Primary 会一直重发）。</p>
+<h2 id="6-实现视角server-的状态机">6 实现视角：Server 的状态机<a class="anchor" aria-hidden="true" href="#6-%e5%ae%9e%e7%8e%b0%e8%a7%86%e8%a7%92server-%e7%9a%84%e7%8a%b6%e6%80%81%e6%9c%ba">#</a></h2>
+<h3 id="61-回头看server-在任意时刻在干什么">6.1 回头看：Server 在任意时刻在干什么？<a class="anchor" aria-hidden="true" href="#61-%e5%9b%9e%e5%a4%b4%e7%9c%8bserver-%e5%9c%a8%e4%bb%bb%e6%84%8f%e6%97%b6%e5%88%bb%e5%9c%a8%e5%b9%b2%e4%bb%80%e4%b9%88">#</a></h3>
+<p>整篇 blog 讲了很多规则和场景，但回到实现层面，一个 Server 在任意时刻其实只可能处于四种模式之一：</p>
+<p><strong>ACTIVE</strong>：正常工作。我是 Primary，有一个已同步的 Backup，可以接收客户端请求、转发、执行、回复。</p>
+<p><strong>FORWARDING</strong>：等待 Backup 确认。我把操作转发给了 Backup，在等 Ack。这期间不能处理下一个请求（Section 2.4，一次只处理一个）。</p>
+<p><strong>TRANSFERRING</strong>：正在做 State Transfer。我是 Primary，新 View 给了我一个新 Backup，我在把完整状态发给它。这期间必须拒绝客户端请求（Section 5.3）。</p>
+<p><strong>AWAITING_TRANSFER</strong>：等待接收 State Transfer。我是新 Backup，刚被 ViewServer 指派，但还没收到 Primary 的状态。这期间不能接受转发的操作——我的状态是空的，执行了也是错的。</p>
+<h3 id="62-这四种模式是互斥的">6.2 这四种模式是互斥的<a class="anchor" aria-hidden="true" href="#62-%e8%bf%99%e5%9b%9b%e7%a7%8d%e6%a8%a1%e5%bc%8f%e6%98%af%e4%ba%92%e6%96%a5%e7%9a%84">#</a></h3>
+<p>一个 Server 不可能同时在做 State Transfer 又在处理客户端请求——Section 5.3 说了，这会导致 Transfer 覆盖已执行的操作。</p>
+<p>一个 Server 不可能同时在等 Backup 确认又在等接收 Transfer——前者是 Primary 的行为，后者是 Backup 的行为。</p>
+<p>这种互斥性直接映射成一个 enum：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">enum</span> State {
+</span></span><span style="display:flex;"><span>    ACTIVE,
+</span></span><span style="display:flex;"><span>    FORWARDING,
+</span></span><span style="display:flex;"><span>    TRANSFERRING,
+</span></span><span style="display:flex;"><span>    AWAITING_TRANSFER
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>不需要多个 boolean，不需要自己维护&quot;这些状态不能同时为 true&quot;。编译器帮你保证。</p>
+<h3 id="63-状态决定行为">6.3 状态决定行为<a class="anchor" aria-hidden="true" href="#63-%e7%8a%b6%e6%80%81%e5%86%b3%e5%ae%9a%e8%a1%8c%e4%b8%ba">#</a></h3>
+<p>有了这个 enum，Server 收到任何消息时的第一件事就是看自己的状态，然后决定接受还是拒绝：</p>
+<pre tabindex="0"><code>收到客户端请求:
   ACTIVE         → 接受，转发给 Backup，进入 FORWARDING
   FORWARDING     → 拒绝（还在等上一个请求的 Ack）
   TRANSFERRING   → 拒绝（State Transfer 还没完成）
@@ -271,4 +471,29 @@ A 确认完成 → Ping(view=2) → ViewServer 知道 View 2 已经稳定
 收到新 View（通过 Ping 回复）:
   根据新 View 里自己的角色和是否有新 Backup，
   切换到对应状态
-</code></pre><p>前面五个 Section 讲的所有规则——转发、等待确认、拒绝请求、State Transfer 的原子性——在实现里都变成了这张表。</p><p><strong>每种状态定义了 Server 该接受什么、拒绝什么。</strong> 协议的正确性，最终落在状态转换的正确性上。</p><h2 id=7-局限性>7 局限性<a class=anchor aria-hidden=true href=#7-%e5%b1%80%e9%99%90%e6%80%a7>#</a></h2><p>Primary-Backup 能容忍一台 Server 故障。但它的容错能力到此为止，有几个没解决的问题：</p><p><strong>ViewServer 是单点故障。</strong> 整套机制依赖 ViewServer 做仲裁，但 ViewServer 自己只有一台。它挂了，就没人能决定新的 View，系统卡死。讽刺的是，我们为了解决单点故障引入了 Primary-Backup，结果制造了一个新的单点故障。</p><p><strong>Primary 确认前挂了，系统卡死。</strong> ViewServer 必须等 Primary 确认当前 View 才能推进。如果 Primary 在确认之前就挂了，ViewServer 永远等不到确认，也永远无法切换到下一个 View。</p><p><strong>不能容忍同时宕机。</strong> 如果 Primary 和 Backup 同时挂了，数据就丢了。没有第三份副本。</p><p><strong>State Transfer 是全量的。</strong> 每次换 Backup 都要把完整状态发过去。如果数据量很大，Backup 只是断网几秒钟又回来了，也得重新传全部数据。</p><p>这些问题的根源是一样的：<strong>两台机器加一个裁判，能做的事情是有限的。</strong></p><p>要去掉 ViewServer 这个单点故障，就需要让多台机器自己达成共识——谁是 Primary，当前状态是什么。这正是 Lab 3 的主题：<strong>Paxos</strong>。</p><p>下一步：<br><a href=/professional/distributed/distributed-system-blog-03--paxos/>Distributed System Blog 03 – Paxos</a></p></article></main><footer><div class=footer-content><p>&copy; 2026 MUKIMASTA</p></div></footer></body></html>
+</code></pre><p>前面五个 Section 讲的所有规则——转发、等待确认、拒绝请求、State Transfer 的原子性——在实现里都变成了这张表。</p>
+<p><strong>每种状态定义了 Server 该接受什么、拒绝什么。</strong> 协议的正确性，最终落在状态转换的正确性上。</p>
+<h2 id="7-局限性">7 局限性<a class="anchor" aria-hidden="true" href="#7-%e5%b1%80%e9%99%90%e6%80%a7">#</a></h2>
+<p>Primary-Backup 能容忍一台 Server 故障。但它的容错能力到此为止，有几个没解决的问题：</p>
+<p><strong>ViewServer 是单点故障。</strong> 整套机制依赖 ViewServer 做仲裁，但 ViewServer 自己只有一台。它挂了，就没人能决定新的 View，系统卡死。讽刺的是，我们为了解决单点故障引入了 Primary-Backup，结果制造了一个新的单点故障。</p>
+<p><strong>Primary 确认前挂了，系统卡死。</strong> ViewServer 必须等 Primary 确认当前 View 才能推进。如果 Primary 在确认之前就挂了，ViewServer 永远等不到确认，也永远无法切换到下一个 View。</p>
+<p><strong>不能容忍同时宕机。</strong> 如果 Primary 和 Backup 同时挂了，数据就丢了。没有第三份副本。</p>
+<p><strong>State Transfer 是全量的。</strong> 每次换 Backup 都要把完整状态发过去。如果数据量很大，Backup 只是断网几秒钟又回来了，也得重新传全部数据。</p>
+<p>这些问题的根源是一样的：<strong>两台机器加一个裁判，能做的事情是有限的。</strong></p>
+<p>要去掉 ViewServer 这个单点故障，就需要让多台机器自己达成共识——谁是 Primary，当前状态是什么。这正是 Lab 3 的主题：<strong>Paxos</strong>。</p>
+<p>下一步：<br>
+<a href="/professional/distributed/distributed-system-blog-03--paxos/">Distributed System Blog 03 – Paxos</a></p>
+
+
+        </article>
+    </main>
+
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2026 MUKIMASTA</p>
+    </div>
+</footer>
+
+</body>
+
+</html>

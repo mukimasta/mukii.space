@@ -1,0 +1,26 @@
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+        <style>
+            svg {
+              background-color: #f0efea;
+            }
+            @font-face {
+              font-family: 'Newsreader';
+              src: url('../fonts/Newsreader.woff2') format('woff2');
+            }
+            .title, .description {
+              font-family: 'Newsreader', serif;
+              fill: #141413;
+              text-anchor: start;
+              line-height: 1.1;
+            }
+        </style>
+        <rect width="1200" height="630" fill="#f0efea" />
+        <foreignObject x="80" y="200" width="840" height="300">
+            <div xmlns="http://www.w3.org/1999/xhtml">
+                <div style="font-family: Newsreader, serif; font-size: 78px; font-weight: 600; margin-bottom: 20px; word-wrap: break-word;">MUKIMASTA</div>
+                <div style="font-family: Newsreader, serif; font-size: 70px; font-weight: 400; word-wrap: break-word;">从零开始的分布式系统# 在 2026 年 1 月到 3 月的春季学期里，我在 UW 上完了 Distributed System 这一门课程。我的最大感受就是这真的是一门优质的课程，教授带领我们系统性地了解分布式系统的底层思想和原理，并且还设置了4个lab，带我们从零开始一步步实现一个分布式 KV …</div>
+            </div>
+        </foreignObject>
+    </svg>
+    

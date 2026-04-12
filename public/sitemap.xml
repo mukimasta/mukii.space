@@ -47,13 +47,16 @@
     <loc>https://mukii.space/</loc>
     <lastmod>2026-03-03T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://mukii.space/professional/</loc>
+    <loc>https://mukii.space/blogs/</loc>
     <lastmod>2026-03-03T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://mukii.space/professional/algorithm/dp_zh/</loc>
+    <loc>https://mukii.space/blogs/professional/</loc>
     <lastmod>2026-03-03T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://mukii.space/professional/algorithm/</loc>
+    <loc>https://mukii.space/blogs/professional/algorithm/dp_zh/</loc>
+    <lastmod>2026-03-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://mukii.space/blogs/professional/algorithm/</loc>
     <lastmod>2026-03-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://mukii.space/qingyeshu/postface/</loc>
@@ -71,26 +74,30 @@
     <loc>https://mukii.space/qingyeshu/part3-chuzhong/</loc>
     <lastmod>2018-07-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://mukii.space/professional/distributed/distributed-system-blog-00--overview/</loc>
+    <loc>https://mukii.space/blogs/professional/distributed/distributed-system-blog-00--overview/</loc>
   </url><url>
-    <loc>https://mukii.space/professional/distributed/distributed-system-blog-01--exactly-once-rpc/</loc>
+    <loc>https://mukii.space/blogs/professional/distributed/distributed-system-blog-01--exactly-once-rpc/</loc>
   </url><url>
-    <loc>https://mukii.space/professional/distributed/distributed-system-blog-02--primary-backup/</loc>
+    <loc>https://mukii.space/blogs/professional/distributed/distributed-system-blog-02--primary-backup/</loc>
   </url><url>
-    <loc>https://mukii.space/professional/distributed/distributed-system-blog-03--paxos/</loc>
+    <loc>https://mukii.space/blogs/professional/distributed/distributed-system-blog-03--paxos/</loc>
   </url><url>
-    <loc>https://mukii.space/professional/distributed/distributed-system-blog--dynamo/</loc>
+    <loc>https://mukii.space/blogs/professional/distributed/distributed-system-blog--dynamo/</loc>
   </url><url>
-    <loc>https://mukii.space/professional/distributed/distributed-system-blog--google-file-system/</loc>
+    <loc>https://mukii.space/blogs/professional/distributed/distributed-system-blog--google-file-system/</loc>
   </url><url>
-    <loc>https://mukii.space/professional/distributed/distributed-system-blog--tensorflow/</loc>
+    <loc>https://mukii.space/blogs/professional/distributed/distributed-system-blog--tensorflow/</loc>
   </url><url>
-    <loc>https://mukii.space/professional/distributed/distributed-system--consistency/</loc>
+    <loc>https://mukii.space/blogs/professional/distributed/distributed-system--consistency/</loc>
   </url><url>
     <loc>https://mukii.space/categories/</loc>
   </url><url>
+    <loc>https://mukii.space/journey/</loc>
+  </url><url>
+    <loc>https://mukii.space/professional-overview/</loc>
+  </url><url>
     <loc>https://mukii.space/tags/</loc>
   </url><url>
-    <loc>https://mukii.space/professional/distributed/</loc>
+    <loc>https://mukii.space/blogs/professional/distributed/</loc>
   </url>
 </urlset>

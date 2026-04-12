@@ -4,10 +4,8 @@ subtitle: ""
 
 ### Professional
 
-- [Distributed Systems](/professional/distributed/)
-- [Algorithms](/professional/algorithm/)
-
-
+- [Distributed Systems](/blogs/professional/distributed/)
+- [Algorithms](/blogs/professional/algorithm/)
 
 ---
 

@@ -1,0 +1,253 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=DM+Sans:wght@300;400;500&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+.page {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 1rem 0 3rem;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--color-text-primary);
+}
+
+.page-title {
+  font-family: 'Newsreader', serif;
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: -0.3px;
+  margin-bottom: 8px;
+}
+
+.page-subtitle {
+  font-family: 'Newsreader', serif;
+  font-size: 15px;
+  font-style: italic;
+  color: var(--color-text-tertiary);
+  margin-bottom: 3rem;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 32px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 8px;
+  bottom: 0;
+  width: 0.5px;
+  background: var(--color-border-tertiary);
+}
+
+.node {
+  position: relative;
+  padding-bottom: 2.5rem;
+}
+
+.node::before {
+  content: '';
+  position: absolute;
+  left: -32px;
+  top: 7px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-border-secondary);
+  background: var(--color-background-primary);
+  z-index: 1;
+}
+
+.node.highlight::before {
+  border-color: #534AB7;
+  background: #534AB7;
+}
+
+.node-year {
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--color-text-tertiary);
+  margin-bottom: 4px;
+}
+
+.node-title {
+  font-family: 'Newsreader', serif;
+  font-size: 18px;
+  font-weight: 400;
+  margin-bottom: 6px;
+}
+
+.node-text {
+  font-size: 13.5px;
+  line-height: 1.75;
+  color: var(--color-text-secondary);
+  max-width: 520px;
+}
+
+.node-img {
+  margin-top: 12px;
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 16/9;
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-md);
+  border: 0.5px solid var(--color-border-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+}
+
+.audio-row {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-md);
+  max-width: 280px;
+  cursor: pointer;
+}
+
+.play-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+.audio-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.audio-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.audio-sub {
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+}
+
+.node-quote {
+  margin-top: 12px;
+  padding-left: 14px;
+  border-left: 2px solid var(--color-border-tertiary);
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--color-text-tertiary);
+  line-height: 1.6;
+}
+
+.end-mark {
+  position: relative;
+  padding-top: 0.5rem;
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--color-text-tertiary);
+}
+
+.end-mark::before {
+  content: '';
+  position: absolute;
+  left: -32px;
+  top: 14px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 1.5px dashed var(--color-border-tertiary);
+  background: transparent;
+  z-index: 1;
+}
+</style>
+
+<div class="page">
+  <div class="page-title">Journey</div>
+  <div class="page-subtitle">Not a resume. Just the moments that mattered.</div>
+
+  <div class="timeline">
+
+    <div class="node">
+      <div class="node-year">CHILDHOOD</div>
+      <div class="node-title">Taking things apart</div>
+      <div class="node-text">Every device that entered the house eventually got disassembled. Not to break it — to see how it worked. Most of them went back together. Some didn't.</div>
+    </div>
+
+    <div class="node highlight">
+      <div class="node-year">2016</div>
+      <div class="node-title">First contact</div>
+      <div class="node-text">Sophomore year, electrical engineering major. Stumbled into computer systems — how a CPU actually executes instructions, how memory works, how everything connects. Couldn't sleep for days. The university didn't offer this course for my major. So I found MIT's lectures online, worked through them alone, and designed a CPU that ran on an FPGA. No grade. No assignment. Just needed to touch it.</div>
+      <div class="node-img">FPGA board photo</div>
+    </div>
+
+    <div class="node">
+      <div class="node-year">2019</div>
+      <div class="node-title">National scholarship</div>
+      <div class="node-text">Xidian University. One of the few awards I actually cared about — not for the credential, but because it confirmed I wasn't delusional for caring this much.</div>
+    </div>
+
+    <div class="node">
+      <div class="node-year">2022</div>
+      <div class="node-title">Tsinghua AIR Lab</div>
+      <div class="node-text">Research on open-vocabulary robotic grasping. First time working at the intersection of language and physical manipulation. Learned what research rigor actually means.</div>
+    </div>
+
+    <div class="node highlight">
+      <div class="node-year">2023</div>
+      <div class="node-title">The robot moved</div>
+      <div class="node-text">MagicLab Robotics. Fine-tuned a 3.3B parameter VLA model. At the WAIC exhibition, the Franka arm followed spoken commands and picked up objects in real time. A crowd gathered around the demo. Months of debugging JAX code, and then — it just worked.</div>
+      <div class="node-img">WAIC demo photo</div>
+    </div>
+
+    <div class="node">
+      <div class="node-year">2024</div>
+      <div class="node-title">Crossed the Pacific</div>
+      <div class="node-text">Started the ECE Master's at University of Washington. New city, new system, new problems to solve.</div>
+    </div>
+
+    <div class="node highlight">
+      <div class="node-year">2024</div>
+      <div class="node-title">5 million states, one bug</div>
+      <div class="node-text">Course project: build a distributed KV store with Multi-Paxos. Most people stopped when it passed the tests. I wrote a BFS model checker, explored 5 million+ system states, and found a real consensus bug in the P2A retry logic. Fixed it. Then it was actually correct.</div>
+    </div>
+
+    <div class="node">
+      <div class="node-year">SOMETIME</div>
+      <div class="node-title">A melody that wouldn't leave</div>
+      <div class="node-text">Made electronic music because something was stuck in my head and wouldn't go away until I got it out.</div>
+      <div class="audio-row">
+        <div class="play-icon">▶</div>
+        <div class="audio-info">
+          <span class="audio-title">untitled no. 1</span>
+          <span class="audio-sub">electronic · 3:42</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="node-year">NOW</div>
+      <div class="node-title">Building, searching, figuring it out</div>
+      <div class="node-text">Working on Space (an AI agent framework), looking for the right team to join, and trying to understand what I actually want to build for the next few years.</div>
+      <div class="node-quote">I know what good looks like. Now I need to find where to do it.</div>
+    </div>
+
+    <div class="end-mark">to be continued</div>
+
+  </div>
+</div>

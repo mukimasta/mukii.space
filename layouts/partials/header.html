@@ -1,0 +1,21 @@
+<header>
+    <div>
+        <div class="header-left">
+            <h1>
+                <a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a>
+            </h1>
+            <nav class="site-nav" aria-label="Primary">
+                <a href="{{ "professional-overview/" | relURL }}" class="site-nav__link{{ if eq .RelPermalink "/professional-overview/" }} is-active{{ end }}">Professional</a>
+                <a href="{{ "journey/" | relURL }}" class="site-nav__link{{ if eq .RelPermalink "/journey/" }} is-active{{ end }}">Journey</a>
+            </nav>
+        </div>
+        <div class="header-controls">
+            <div class="toggle-switch">
+                <input type="checkbox" id="darkModeToggle" class="toggle-input" aria-label="Toggle dark mode">
+                <label for="darkModeToggle" class="toggle-label">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</header>

@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en-us" dir="ltr" class="kind-page">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="（知乎好文）比喻解释 Paxos 算法： 如何浅显易懂地解说 Paxos 的算法？ - 知乎 Paxos 这里我遇到了两个 bug，以下是修复记录 Bug 1 及修复：P2B 语义混淆导致错误计票# 在实现 Multi-Paxos 分布式 KV Store 的过程中， …">
+    <title>MUKIMASTA</title>
+    <link rel="canonical" href="https://mukii.space/blogs/professional/distributed/distributed-system-blog-03--paxos/">
+
+
+
+<meta property="og:title" content="MUKIMASTA">
+<meta property="og:description" content="（知乎好文）比喻解释 Paxos 算法： 如何浅显易懂地解说 Paxos 的算法？ - 知乎 Paxos 这里我遇到了两个 bug，以下是修复记录 Bug 1 及修复：P2B 语义混淆导致错误计票# 在实现 Multi-Paxos 分布式 KV Store 的过程中， …">
+<meta property="og:image" content="https://mukii.space/og/og-image-a50c179ef2629515debe865ae031e313.svg">
+<meta property="og:image:type" content="image/svg+xml">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mukii.space/blogs/professional/distributed/distributed-system-blog-03--paxos/">
+<meta property="og:locale" content="en-us">
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MUKIMASTA">
+<meta name="twitter:description" content="（知乎好文）比喻解释 Paxos 算法： 如何浅显易懂地解说 Paxos 的算法？ - 知乎 Paxos 这里我遇到了两个 bug，以下是修复记录 Bug 1 及修复：P2B 语义混淆导致错误计票# 在实现 Multi-Paxos 分布式 KV Store 的过程中， …">
+<meta name="twitter:image" content="https://mukii.space/og/og-image-a50c179ef2629515debe865ae031e313.svg">
+
+    <link rel="preload" href="/fonts/Newsreader.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/default.min.fb89c3008d933d5ac0e46af0bee4acd14efae3a00fca1ebbeb11e373ecaf3a64.css" integrity="sha256-&#43;4nDAI2TPVrA5GrwvuSs0U7646APyh676xHjc&#43;yvOmQ=">
+    <link rel="stylesheet" href="/css/custom.min.2bb53c6eee4d45b13e9eaae1c9b943c68bdef23c3691e406fc1a66f7f56fcdb1.css" integrity="sha256-K7U8bu5NRbE&#43;nqrhyblDxove8jw2keQG/Bpm9/VvzbE=">
+    <script src="/js/darkmode.min.9211af6d380489c7cf64d4b18a1e49e75be2bebf92031d2165eb6c20bc59c6a2.js" integrity="sha256-khGvbTgEicfPZNSxih5J51vivr&#43;SAx0hZetsILxZxqI=" defer></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <style>
+    :root { --font-size-base: 18px; --content-max-inline-size: 680px; }
+    h1 { font-size: 2em; }
+    .katex { font-size: 0.95em; }
+    pre code {
+    background: var(--code-bg) !important;
+    color: var(--text-color);
+    padding: 1em;
+    border-radius: var(--radius);
+    }
+    </style><script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+
+
+<body>
+<header>
+    <div>
+        <div class="header-left">
+            <h1>
+                <a href="https://mukii.space/">MUKIMASTA</a>
+            </h1>
+            <nav class="site-nav" aria-label="Primary">
+                <a href="/professional-overview/" class="site-nav__link">Professional</a>
+                <a href="/journey/" class="site-nav__link">Journey</a>
+            </nav>
+        </div>
+        <div class="header-controls">
+            <div class="toggle-switch">
+                <input type="checkbox" id="darkModeToggle" class="toggle-input" aria-label="Toggle dark mode">
+                <label for="darkModeToggle" class="toggle-label">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <main class="content-wrapper">
+        <article class="content-container">
+
+
+    <h1></h1>
+    <h4></h4>
+
+<p>（知乎好文）比喻解释 Paxos 算法：<br>
+<a href="https://www.zhihu.com/question/19787937/answer/107750652">如何浅显易懂地解说 Paxos 的算法？ - 知乎</a></p>
+<p>Paxos 这里我遇到了两个 bug，以下是修复记录</p>
+<h3 id="bug-1-及修复p2b-语义混淆导致错误计票">Bug 1 及修复：P2B 语义混淆导致错误计票<a class="anchor" aria-hidden="true" href="#bug-1-%e5%8f%8a%e4%bf%ae%e5%a4%8dp2b-%e8%af%ad%e4%b9%89%e6%b7%b7%e6%b7%86%e5%af%bc%e8%87%b4%e9%94%99%e8%af%af%e8%ae%a1%e7%a5%a8">#</a></h3>
+<p>在实现 Multi-Paxos 分布式 KV Store 的过程中，我遇到了一个和消息乱序相关的 bug。这个 bug 在正常运行时不会触发，只在 leader 切换叠加网络延迟的特定时序下才会暴露，但一旦触发就会违反 Paxos 的线性一致性（Linearizability）保证。</p>
+<h4 id="背景">背景<a class="anchor" aria-hidden="true" href="#%e8%83%8c%e6%99%af">#</a></h4>
+<p>Multi-Paxos 的 Phase 2 流程是：Leader 向 Acceptor 发送 P2A(ballot, slot, command)，Acceptor 判断这个 ballot 是否不小于自己当前的 acceptorBallot，如果是就接受并回复 P2B，否则拒绝。Leader 收到多数派的 P2B 确认后，将该 slot 标记为 chosen 并提交。</p>
+<h4 id="bug-触发场景">Bug 触发场景<a class="anchor" aria-hidden="true" href="#bug-%e8%a7%a6%e5%8f%91%e5%9c%ba%e6%99%af">#</a></h4>
+<p>假设集群中发生了一次 leader 切换，旧 leader 的 ballot 是 B_old，新 leader 通过 Phase 1 确立了 B_new。<strong>此时网络上仍然存在旧 leader 之前发出的 P2A(B_old)，因为网络延迟刚刚到达某个 Acceptor。</strong></p>
+<p>我最初的实现中，reject 分支仍然会回复一个 P2B(acceptorBallot)。<strong>本意是作为&quot;拒绝&quot;信号</strong>——让旧 leader 看到更高的 ballot 后主动退位。但在特定时序下，这个本意为&quot;拒绝&quot;的回复，<strong>被新 leader 误认为了&quot;同意&quot;。</strong></p>
+<h4 id="修复前reject-回复导致语义混淆">修复前：reject 回复导致语义混淆<a class="anchor" aria-hidden="true" href="#%e4%bf%ae%e5%a4%8d%e5%89%8dreject-%e5%9b%9e%e5%a4%8d%e5%af%bc%e8%87%b4%e8%af%ad%e4%b9%89%e6%b7%b7%e6%b7%86">#</a></h4>
+<pre tabindex="0"><code>时间轴 →
+
+旧 Leader (B_old)          Acceptor                    新 Leader (B_new)
+      |                        |                              |
+      |--- P2A(B_old) -------&gt;|  (网络延迟，迟到)              |
+      |                        |                              |
+      |                        |  acceptorBallot 已是 B_new    |
+      |                        |  B_old &lt; B_new → reject!     |
+      |                        |                              |
+      |                        |--- P2B(B_new) --------------&gt;|
+      |                        |                              |
+      |                        |    本意：拒绝信号              |
+      |                        |    实际：B_new == leaderBallot |
+      |                        |         → 被计入 accept 计数！ |
+      |                        |                              |
+      |                        |              slot 拿到&#34;多数派&#34;确认
+      |                        |              → 错误 chosen → 提交
+      |                        |              → ❌ 线性不一致！
+</code></pre><p>问题的根因在于：P2B 消息承载了两种不同的语义——accept 确认和 reject 通知——但消息本身没有任何字段区分这两种语义。正常情况下可以通过 ballot 大小隐式区分（相等 = accept，更大 = preempt），但在 leader 切换 + 消息乱序的 corner case 下，reject 回复里的 acceptorBallot 恰好等于新 leader 的 ballot，隐式区分失效，导致一个 Acceptor 根本没有 accept 的 slot 被错误计入多数派，最终一个没有被多数派真正接受的值被提交，<strong>违反线性一致性</strong>。</p>
+<h4 id="修复后reject-不回复语义清晰">修复后：reject 不回复，语义清晰<a class="anchor" aria-hidden="true" href="#%e4%bf%ae%e5%a4%8d%e5%90%8ereject-%e4%b8%8d%e5%9b%9e%e5%a4%8d%e8%af%ad%e4%b9%89%e6%b8%85%e6%99%b0">#</a></h4>
+<pre tabindex="0"><code>时间轴 →
+
+旧 Leader (B_old)          Acceptor                    新 Leader (B_new)
+      |                        |                              |
+      |--- P2A(B_old) -------&gt;|  (网络延迟，迟到)              |
+      |                        |                              |
+      |                        |  acceptorBallot 已是 B_new    |
+      |                        |  B_old &lt; B_new → reject!     |
+      |                        |                              |
+      |                        |  直接 return，不发 P2B         |
+      |                        |                              |
+      |                        |              新 Leader 不会收到
+      |                        |              虚假的 accept 回复
+      |                        |              → ✅ 安全
+</code></pre><p>修复方法是 reject 分支直接 return，不发送任何 P2B 回复。旧 leader 不会收到主动的 preempt 通知，但它会通过心跳超时或下一次 Phase 1 失败发现自己已经被抢占，正确性不受影响。</p>
+<p>这个修复牺牲了一点 preemption 检测的速度，换来了消息语义的清晰性和协议的正确性。另一种可行的修法是在 P2B 中增加一个 accepted/rejected 标记字段来显式区分语义，但对于这个场景，不回复是更简单也更安全的方案。</p>
+<h4 id="启发">启发<a class="anchor" aria-hidden="true" href="#%e5%90%af%e5%8f%91">#</a></h4>
+<p>分布式系统中，任何一条消息都可能在&quot;错误&quot;的时间到达&quot;错误&quot;的接收者。设计消息格式时，不能依赖隐式的上下文假设（比如&quot;这个回复一定会回到发送 P2A 的那个 leader&quot;），每条消息的语义必须是自包含且无歧义的。一个本意为&quot;拒绝&quot;的回复，在消息乱序的场景下被误读为&quot;同意&quot;，就足以打破整个系统的线性一致性保证。</p>
+<h2 id="bug-2消息丢失导致-slot-卡在-accepted-状态阻塞日志执行">Bug 2：消息丢失导致 Slot 卡在 ACCEPTED 状态，阻塞日志执行<a class="anchor" aria-hidden="true" href="#bug-2%e6%b6%88%e6%81%af%e4%b8%a2%e5%a4%b1%e5%af%bc%e8%87%b4-slot-%e5%8d%a1%e5%9c%a8-accepted-%e7%8a%b6%e6%80%81%e9%98%bb%e5%a1%9e%e6%97%a5%e5%bf%97%e6%89%a7%e8%a1%8c">#</a></h2>
+<h3 id="问题">问题<a class="anchor" aria-hidden="true" href="#%e9%97%ae%e9%a2%98">#</a></h3>
+<p>Multi-Paxos 要求日志按 slot 顺序执行（apply）——slot 5 必须在 slot 4 之后执行，即使 slot 5 已经被 chosen。这意味着任何一个 slot 如果卡住，后面所有 slot 都会被阻塞。</p>
+<p>在网络不可靠的环境下（消息可能丢失），一个 slot 完成了 Phase 2 的部分流程后，P2A 或 P2B 消息被丢弃，导致该 slot 停留在 ACCEPTED 但始终无法推进到 CHOSEN。后续所有 slot 即使已经 CHOSEN，也无法执行。</p>
+<pre tabindex="0"><code>Slot:     1        2        3        4        5
+状态:   CHOSEN   CHOSEN   ACCEPTED  CHOSEN   CHOSEN
+                           ↑ P2B 丢失，卡住
+                           |
+执行:   ✅ 已执行  ✅ 已执行  ❌ 阻塞    ❌ 等待    ❌ 等待
+                           |
+                    整条流水线停滞 → 客户端超时
+</code></pre><h3 id="为什么仅靠客户端重试不够">为什么仅靠客户端重试不够<a class="anchor" aria-hidden="true" href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e4%bb%85%e9%9d%a0%e5%ae%a2%e6%88%b7%e7%ab%af%e9%87%8d%e8%af%95%e4%b8%8d%e5%a4%9f">#</a></h3>
+<p>一个自然的想法是：客户端超时后重新发送请求，leader 重新走 Phase 2，slot 就能推进了。但这只能覆盖客户端请求对应的 slot。Multi-Paxos 中还有一类特殊的 slot——<strong>NO-OP slot</strong>，它们是 leader 切换后在 Phase 1 中发现的、需要用空操作填补的日志空洞。NO-OP 没有对应的客户端，永远不会有人来重试。如果 NO-OP slot 的 P2A/P2B 丢了，这个 slot 就永远卡在 ACCEPTED，整条日志永久阻塞。</p>
+<pre tabindex="0"><code>场景：Leader 切换后填补日志空洞
+
+Slot:     1        2        3        4        5
+内容:   PUT(a,1)  NO-OP   PUT(b,2)  PUT(c,3)  PUT(d,4)
+状态:   CHOSEN   ACCEPTED  CHOSEN   CHOSEN    CHOSEN
+                  ↑ NO-OP 的 P2B 丢失
+                  |
+                  没有客户端会重试这个 NO-OP
+                  → 永久阻塞
+</code></pre><h3 id="修复在心跳定时器中重试未完成的-phase-2">修复：在心跳定时器中重试未完成的 Phase 2<a class="anchor" aria-hidden="true" href="#%e4%bf%ae%e5%a4%8d%e5%9c%a8%e5%bf%83%e8%b7%b3%e5%ae%9a%e6%97%b6%e5%99%a8%e4%b8%ad%e9%87%8d%e8%af%95%e6%9c%aa%e5%ae%8c%e6%88%90%e7%9a%84-phase-2">#</a></h3>
+<p>我的修复方案是复用已有的 HeartbeatTimer：leader 每次发送心跳时，扫描所有处于 ACCEPTED 但未 CHOSEN 的 slot，重新发送 P2A。</p>
+<pre tabindex="0"><code>修复前：
+
+Leader                     Acceptor
+  |--- P2A(slot=2, NO-OP) ---&gt;|
+  |                            |  accept, 发送 P2B
+  |       X  P2B 丢失  X       |
+  |                            |
+  |  (无人重试，slot 2 永久卡住)  |
+
+
+修复后：
+
+Leader                     Acceptor
+  |--- P2A(slot=2, NO-OP) ---&gt;|
+  |                            |  accept, 发送 P2B
+  |       X  P2B 丢失  X       |
+  |                            |
+  | [HeartbeatTimer 触发]       |
+  |  扫描: slot 2 仍是 ACCEPTED |
+  |--- P2A(slot=2, NO-OP) ---&gt;|  重试！
+  |                            |  accept, 发送 P2B
+  |&lt;------ P2B(slot=2) -------|  这次收到了
+  |                            |
+  |  slot 2 → CHOSEN           |
+  |  slot 2,3,4,5 顺序执行 ✅    |
+</code></pre><h3 id="为什么复用-heartbeattimer-而不是单独加一个-p2atimer">为什么复用 HeartbeatTimer 而不是单独加一个 P2ATimer<a class="anchor" aria-hidden="true" href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e5%a4%8d%e7%94%a8-heartbeattimer-%e8%80%8c%e4%b8%8d%e6%98%af%e5%8d%95%e7%8b%ac%e5%8a%a0%e4%b8%80%e4%b8%aa-p2atimer">#</a></h3>
+<p>实际上两种方案都可行。选择复用 HeartbeatTimer 的考虑是：心跳本身就是周期性触发的，频率适中（不会太频繁浪费带宽，也不会太慢导致长时间阻塞），而且心跳间隔内如果 slot 仍然没有推进到 CHOSEN，大概率说明消息确实丢了，值得重试。单独加一个 P2ATimer 可以更精细地控制重试频率，但增加了额外的定时器管理复杂度，对于这个场景收益不大。</p>
+<h3 id="启发-1">启发<a class="anchor" aria-hidden="true" href="#%e5%90%af%e5%8f%91-1">#</a></h3>
+<p>分布式系统中消息丢失是常态，任何依赖&quot;消息一定能送达&quot;的假设都是隐患。对于关键路径上的操作，必须有重试机制兜底。尤其要注意那些没有外部触发源的操作（比如 NO-OP），它们不会被客户端重试，如果系统自身没有重试逻辑，就会变成永久性的阻塞点。</p>
+
+
+        </article>
+    </main>
+
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2026 MUKIMASTA</p>
+    </div>
+</footer>
+
+</body>
+
+</html>

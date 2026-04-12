@@ -28,6 +28,7 @@
 
     <link rel="preload" href="/fonts/Newsreader.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="/css/default.min.fb89c3008d933d5ac0e46af0bee4acd14efae3a00fca1ebbeb11e373ecaf3a64.css" integrity="sha256-&#43;4nDAI2TPVrA5GrwvuSs0U7646APyh676xHjc&#43;yvOmQ=">
+    <link rel="stylesheet" href="/css/custom.min.2bb53c6eee4d45b13e9eaae1c9b943c68bdef23c3691e406fc1a66f7f56fcdb1.css" integrity="sha256-K7U8bu5NRbE&#43;nqrhyblDxove8jw2keQG/Bpm9/VvzbE=">
     <script src="/js/darkmode.min.9211af6d380489c7cf64d4b18a1e49e75be2bebf92031d2165eb6c20bc59c6a2.js" integrity="sha256-khGvbTgEicfPZNSxih5J51vivr&#43;SAx0hZetsILxZxqI=" defer></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
     <style>
     :root { --font-size-base: 18px; --content-max-inline-size: 680px; }
@@ -49,9 +50,15 @@
 <body>
 <header>
     <div>
-        <h1>
-            <a href="https://mukii.space/">MUKIMASTA</a>
-        </h1>
+        <div class="header-left">
+            <h1>
+                <a href="https://mukii.space/">MUKIMASTA</a>
+            </h1>
+            <nav class="site-nav" aria-label="Primary">
+                <a href="/professional-overview/" class="site-nav__link">Professional</a>
+                <a href="/journey/" class="site-nav__link">Journey</a>
+            </nav>
+        </div>
         <div class="header-controls">
             <div class="toggle-switch">
                 <input type="checkbox" id="darkModeToggle" class="toggle-input" aria-label="Toggle dark mode">
@@ -72,8 +79,8 @@
     <h1 class="smaller"></h1>
 <h3 id="professional">Professional<a class="anchor" aria-hidden="true" href="#professional">#</a></h3>
 <ul>
-<li><a href="/professional/distributed/">Distributed Systems</a></li>
-<li><a href="/professional/algorithm/">Algorithms</a></li>
+<li><a href="/blogs/professional/distributed/">Distributed Systems</a></li>
+<li><a href="/blogs/professional/algorithm/">Algorithms</a></li>
 </ul>
 <hr>
 <p><a href="/qingyeshu/">青叶树</a></p>
@@ -87,6 +94,7 @@
 <footer>
     <div class="footer-content">
         <p>&copy; 2026 MUKIMASTA</p>
+        <p class="footer-contact"><a href="mailto:mukimasta@outlook.com">mukimasta@outlook.com</a></p>
     </div>
 </footer>
 

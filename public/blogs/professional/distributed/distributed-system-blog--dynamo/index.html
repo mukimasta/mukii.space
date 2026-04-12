@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en-us" dir="ltr" class="kind-page">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Part 1 Evaluation of Dynamo# Amazon evaluated Dynamo directly in production scenarios. They chose 99.9th percentile latency as the core indicator …">
+    <title>MUKIMASTA</title>
+    <link rel="canonical" href="https://mukii.space/blogs/professional/distributed/distributed-system-blog--dynamo/">
+
+
+
+<meta property="og:title" content="MUKIMASTA">
+<meta property="og:description" content="Part 1 Evaluation of Dynamo# Amazon evaluated Dynamo directly in production scenarios. They chose 99.9th percentile latency as the core indicator …">
+<meta property="og:image" content="https://mukii.space/og/og-image-bb319dc995bb08e971aa4955dd317d0f.svg">
+<meta property="og:image:type" content="image/svg+xml">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mukii.space/blogs/professional/distributed/distributed-system-blog--dynamo/">
+<meta property="og:locale" content="en-us">
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MUKIMASTA">
+<meta name="twitter:description" content="Part 1 Evaluation of Dynamo# Amazon evaluated Dynamo directly in production scenarios. They chose 99.9th percentile latency as the core indicator …">
+<meta name="twitter:image" content="https://mukii.space/og/og-image-bb319dc995bb08e971aa4955dd317d0f.svg">
+
+    <link rel="preload" href="/fonts/Newsreader.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/default.min.fb89c3008d933d5ac0e46af0bee4acd14efae3a00fca1ebbeb11e373ecaf3a64.css" integrity="sha256-&#43;4nDAI2TPVrA5GrwvuSs0U7646APyh676xHjc&#43;yvOmQ=">
+    <link rel="stylesheet" href="/css/custom.min.2bb53c6eee4d45b13e9eaae1c9b943c68bdef23c3691e406fc1a66f7f56fcdb1.css" integrity="sha256-K7U8bu5NRbE&#43;nqrhyblDxove8jw2keQG/Bpm9/VvzbE=">
+    <script src="/js/darkmode.min.9211af6d380489c7cf64d4b18a1e49e75be2bebf92031d2165eb6c20bc59c6a2.js" integrity="sha256-khGvbTgEicfPZNSxih5J51vivr&#43;SAx0hZetsILxZxqI=" defer></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <style>
+    :root { --font-size-base: 18px; --content-max-inline-size: 680px; }
+    h1 { font-size: 2em; }
+    .katex { font-size: 0.95em; }
+    pre code {
+    background: var(--code-bg) !important;
+    color: var(--text-color);
+    padding: 1em;
+    border-radius: var(--radius);
+    }
+    </style><script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+
+
+<body>
+<header>
+    <div>
+        <div class="header-left">
+            <h1>
+                <a href="https://mukii.space/">MUKIMASTA</a>
+            </h1>
+            <nav class="site-nav" aria-label="Primary">
+                <a href="/professional-overview/" class="site-nav__link">Professional</a>
+                <a href="/journey/" class="site-nav__link">Journey</a>
+            </nav>
+        </div>
+        <div class="header-controls">
+            <div class="toggle-switch">
+                <input type="checkbox" id="darkModeToggle" class="toggle-input" aria-label="Toggle dark mode">
+                <label for="darkModeToggle" class="toggle-label">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <main class="content-wrapper">
+        <article class="content-container">
+
+
+    <h1></h1>
+    <h4></h4>
+
+<h3 id="part-1--evaluation-of-dynamo">Part 1  Evaluation of Dynamo<a class="anchor" aria-hidden="true" href="#part-1--evaluation-of-dynamo">#</a></h3>
+<p>Amazon evaluated Dynamo directly in production scenarios. They chose 99.9th percentile latency as the core indicator because they believed user experience (like adding a cart item) was affected by the slowest requests. Compared to the average latency (~20ms), 99.9th percentile latency reached ~200ms. In terms of partitioning, they compared three strategies. First they used virtual node partitioning, but the performance was not good: the sizes were not balanced and every time a new node came, partitioning boundaries changed. They finally used strategy three that pre-divided the ring into a fixed number of partitions and distributed them evenly to each node. Experimental data shows that this strategy achieved the best efficiency and was clear to maintain. Dynamo designed a vector clock mechanism for concurrent conflict detection. However, in a 24-hour evaluation, 99.94% of requests saw exactly one version, which means that it was rarely triggered in actual scenarios. Overall, in two years of running on Amazon services, Dynamo achieved 99.9995% availability and zero data loss. Dynamo has proven to be a high-performance and robust distributed system in large-scale production environments.</p>
+<h3 id="part-2--later-work-of-dynamo">Part 2  Later Work of Dynamo<a class="anchor" aria-hidden="true" href="#part-2--later-work-of-dynamo">#</a></h3>
+<p>Dynamo is a watershed in distributed systems. Before Dynamo, strongly consistent systems dominated the field, such as those based on Paxos and Raft. Dynamo chose not to ensure consistency, but rather availability, which opened up another choice under the CAP theorem. Dynamo also started the trend of NoSQL. I am interested in two subsequent systems: Cassandra and DynamoDB. Cassandra inherited Dynamo&rsquo;s decentralized architecture and integrated the data model of Bigtable. DynamoDB changed a lot from the original Dynamo: it added a centralized &ldquo;AutoAdmin&rdquo; back, offered an optional strong consistency mode, and enriched the data model. Currently, Cassandra and DynamoDB are widely used in the NoSQL database market.</p>
+
+
+        </article>
+    </main>
+
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2026 MUKIMASTA</p>
+    </div>
+</footer>
+
+</body>
+
+</html>

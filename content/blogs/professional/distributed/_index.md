@@ -12,6 +12,7 @@ aliases:
 - [Distributed System Blog 02 – Primary-Backup](/blogs/professional/distributed/distributed-system-blog-02--primary-backup/)
 - [Distributed System Blog 03 – Paxos](/blogs/professional/distributed/distributed-system-blog-03--paxos/)
 - [Distributed System – Consistency](/blogs/professional/distributed/distributed-system--consistency/)
+- [Distributed System – Multi-Paxos v.s. Raft](/blogs/professional/distributed/distributed-system--multi-paxos-v.s.-raft/)
 
 - [Distributed System Blog – Google File System](/blogs/professional/distributed/distributed-system-blog--google-file-system/)
 - [Distributed System Blog – Dynamo](/blogs/professional/distributed/distributed-system-blog--dynamo/)

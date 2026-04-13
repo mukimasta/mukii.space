@@ -1,0 +1,26 @@
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+        <style>
+            svg {
+              background-color: #f0efea;
+            }
+            @font-face {
+              font-family: 'Newsreader';
+              src: url('../fonts/Newsreader.woff2') format('woff2');
+            }
+            .title, .description {
+              font-family: 'Newsreader', serif;
+              fill: #141413;
+              text-anchor: start;
+              line-height: 1.1;
+            }
+        </style>
+        <rect width="1200" height="630" fill="#f0efea" />
+        <foreignObject x="80" y="200" width="840" height="300">
+            <div xmlns="http://www.w3.org/1999/xhtml">
+                <div style="font-family: Newsreader, serif; font-size: 78px; font-weight: 600; margin-bottom: 20px; word-wrap: break-word;">SoundMat (1) Idea</div>
+                <div style="font-family: Newsreader, serif; font-size: 70px; font-weight: 400; word-wrap: break-word;">我定了四个标准，来评估我真正想做的产品是什么： 我有能力做的 我觉得有意思的，好玩的 可以使用的，看到效果的 有真实需求，有应用潜力的 第一点，因为人数的限制就决定了这个东西只能小型化，并且成本低。 第二点，这个项目一定要好玩，有趣，或者说在其他场景下可能是优雅。我希望是我能看到效果的，自己能玩的不 …</div>
+            </div>
+        </foreignObject>
+    </svg>
+    

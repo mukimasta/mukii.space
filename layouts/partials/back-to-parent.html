@@ -1,0 +1,6 @@
+{{- if and (not .IsHome) .Parent -}}
+  {{- $parent := .Parent -}}
+<nav class="back-to-parent" aria-label="上一级导航">
+  <a class="back-to-parent__link" href="{{ $parent.RelPermalink }}" title="{{ $parent.Title | plainify }}" aria-label="返回 {{ $parent.Title | plainify }}">‹</a>
+</nav>
+{{- end -}}

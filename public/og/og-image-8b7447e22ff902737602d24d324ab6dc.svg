@@ -1,0 +1,26 @@
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+        <style>
+            svg {
+              background-color: #f0efea;
+            }
+            @font-face {
+              font-family: 'Newsreader';
+              src: url('../fonts/Newsreader.woff2') format('woff2');
+            }
+            .title, .description {
+              font-family: 'Newsreader', serif;
+              fill: #141413;
+              text-anchor: start;
+              line-height: 1.1;
+            }
+        </style>
+        <rect width="1200" height="630" fill="#f0efea" />
+        <foreignObject x="80" y="200" width="840" height="300">
+            <div xmlns="http://www.w3.org/1999/xhtml">
+                <div style="font-family: Newsreader, serif; font-size: 78px; font-weight: 600; margin-bottom: 20px; word-wrap: break-word;">MUKIMASTA</div>
+                <div style="font-family: Newsreader, serif; font-size: 70px; font-weight: 400; word-wrap: break-word;">本质关系# Raft 本质上是 Multi-Paxos 的一个特化实现。Lamport 提出 Paxos 时只定义了单值共识，Multi-Paxos 是将多轮 Paxos 串联成连续日志的工程延伸，但论文没给出完整的工程规范，留下了大量实现空间。Raft 的贡献在于：用&amp;#34;可理解性优先&amp;#34;的设计哲学，把 …</div>
+            </div>
+        </foreignObject>
+    </svg>
+    

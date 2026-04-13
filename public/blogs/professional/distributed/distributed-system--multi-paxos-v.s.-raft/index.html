@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en-us" dir="ltr" class="kind-page">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="本质关系# Raft 本质上是 Multi-Paxos 的一个特化实现。Lamport 提出 Paxos 时只定义了单值共识，Multi-Paxos 是将多轮 Paxos 串联成连续日志的工程延伸，但论文没给出完整的工程规范，留下了大量实现空间。Raft 的贡献在于：用&#34;可理解性优先&#34;的设计哲学，把 …">
+    <title>MUKIMASTA</title>
+    <link rel="canonical" href="https://mukii.space/blogs/professional/distributed/distributed-system--multi-paxos-v.s.-raft/">
+
+
+
+<meta property="og:title" content="MUKIMASTA">
+<meta property="og:description" content="本质关系# Raft 本质上是 Multi-Paxos 的一个特化实现。Lamport 提出 Paxos 时只定义了单值共识，Multi-Paxos 是将多轮 Paxos 串联成连续日志的工程延伸，但论文没给出完整的工程规范，留下了大量实现空间。Raft 的贡献在于：用&#34;可理解性优先&#34;的设计哲学，把 …">
+<meta property="og:image" content="https://mukii.space/og/og-image-8b7447e22ff902737602d24d324ab6dc.svg">
+<meta property="og:image:type" content="image/svg+xml">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mukii.space/blogs/professional/distributed/distributed-system--multi-paxos-v.s.-raft/">
+<meta property="og:locale" content="en-us">
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MUKIMASTA">
+<meta name="twitter:description" content="本质关系# Raft 本质上是 Multi-Paxos 的一个特化实现。Lamport 提出 Paxos 时只定义了单值共识，Multi-Paxos 是将多轮 Paxos 串联成连续日志的工程延伸，但论文没给出完整的工程规范，留下了大量实现空间。Raft 的贡献在于：用&#34;可理解性优先&#34;的设计哲学，把 …">
+<meta name="twitter:image" content="https://mukii.space/og/og-image-8b7447e22ff902737602d24d324ab6dc.svg">
+
+    <link rel="preload" href="/fonts/Newsreader.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/default.min.fb89c3008d933d5ac0e46af0bee4acd14efae3a00fca1ebbeb11e373ecaf3a64.css" integrity="sha256-&#43;4nDAI2TPVrA5GrwvuSs0U7646APyh676xHjc&#43;yvOmQ=">
+    <link rel="stylesheet" href="/css/custom.min.38f069b0c9e0928c98b0e6c97a8e238ac3466b6fac163355a89cabaada3541f8.css" integrity="sha256-OPBpsMngkoyYsObJeo4jisNGa2&#43;sFjNVqJyrqto1Qfg=">
+    <script src="/js/darkmode.min.9211af6d380489c7cf64d4b18a1e49e75be2bebf92031d2165eb6c20bc59c6a2.js" integrity="sha256-khGvbTgEicfPZNSxih5J51vivr&#43;SAx0hZetsILxZxqI=" defer></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <style>
+    :root { --font-size-base: 18px; --content-max-inline-size: 680px; }
+    h1 { font-size: 2em; }
+    .katex { font-size: 0.95em; }
+    pre code {
+    background: var(--code-bg) !important;
+    color: var(--text-color);
+    padding: 1em;
+    border-radius: var(--radius);
+    }
+    </style><script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+
+
+<body>
+<header>
+    <div>
+        <div class="header-left">
+            <h1>
+                <a href="https://mukii.space/">MUKIMASTA</a>
+            </h1>
+            <nav class="site-nav" aria-label="Primary">
+                <a href="/professional-overview/" class="site-nav__link">Professional</a>
+                <a href="/journey/" class="site-nav__link">Journey</a>
+            </nav>
+        </div>
+        <div class="header-controls">
+            <div class="toggle-switch">
+                <input type="checkbox" id="darkModeToggle" class="toggle-input" aria-label="Toggle dark mode">
+                <label for="darkModeToggle" class="toggle-label">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <main class="content-wrapper">
+        <article class="content-container">
+
+<nav class="back-to-parent" aria-label="上一级导航">
+  <a class="back-to-parent__link" href="/blogs/professional/distributed/" title="分布式系统" aria-label="返回 分布式系统">‹</a>
+</nav>
+
+
+    <h1></h1>
+    <h4></h4>
+
+<h2 id="本质关系">本质关系<a class="anchor" aria-hidden="true" href="#%e6%9c%ac%e8%b4%a8%e5%85%b3%e7%b3%bb">#</a></h2>
+<p>Raft 本质上是 Multi-Paxos 的一个特化实现。Lamport 提出 Paxos 时只定义了单值共识，Multi-Paxos 是将多轮 Paxos 串联成连续日志的工程延伸，但论文没给出完整的工程规范，留下了大量实现空间。Raft 的贡献在于：用&quot;可理解性优先&quot;的设计哲学，把这些空间填上了，给出了一个开箱即用的完整协议。</p>
+<h2 id="从-multi-paxos-到-raft三条约束的演进">从 Multi-Paxos 到 Raft：三条约束的演进<a class="anchor" aria-hidden="true" href="#%e4%bb%8e-multi-paxos-%e5%88%b0-raft%e4%b8%89%e6%9d%a1%e7%ba%a6%e6%9d%9f%e7%9a%84%e6%bc%94%e8%bf%9b">#</a></h2>
+<h3 id="起点multi-paxos">起点：Multi-Paxos<a class="anchor" aria-hidden="true" href="#%e8%b5%b7%e7%82%b9multi-paxos">#</a></h3>
+<p>Multi-Paxos 把多轮 Basic Paxos 串联成连续的日志槽位（log slots），每个 slot 独立运行一轮共识。它非常自由：</p>
+<ul>
+<li>任何节点都可以做 proposer</li>
+<li>多个 proposer 可以并发提案</li>
+<li>不同 slot 可以被不同 proposer 决议</li>
+<li>日志允许出现空洞</li>
+</ul>
+<p>这种自由带来了极大的灵活性，但也带来了工程上的极大挑战：空洞填补、乱序提交、多 proposer 冲突、leader 切换后状态恢复……Lamport 的论文没有给出这些问题的标准答案。</p>
+<p>Raft 的做法是：在 Multi-Paxos 的基础上，加三条约束，从设计层面优化这些问题。</p>
+<h3 id="约束一强制单-leaderstrong-leader">约束一：强制单 Leader（Strong Leader）<a class="anchor" aria-hidden="true" href="#%e7%ba%a6%e6%9d%9f%e4%b8%80%e5%bc%ba%e5%88%b6%e5%8d%95-leaderstrong-leader">#</a></h3>
+<p>Multi-Paxos： leader 是可选优化。没有 leader 时，任何节点都可以 Prepare → Accept，多个 proposer 靠 proposal number 竞争，可能活锁。实践中大家都会选一个 stable leader 来跳过 Prepare 阶段，但协议本身不保证唯一性。</p>
+<p>Raft： 每个 term 内最多一个 leader，所有客户端写请求必须经过 leader。这不再是优化，而是协议的核心不变量。</p>
+<p>消灭了什么问题： 多 proposer 冲突、活锁、提案冲突解决。</p>
+<h3 id="约束二日志连续不允许空洞no-gaps">约束二：日志连续，不允许空洞（No Gaps）<a class="anchor" aria-hidden="true" href="#%e7%ba%a6%e6%9d%9f%e4%ba%8c%e6%97%a5%e5%bf%97%e8%bf%9e%e7%bb%ad%e4%b8%8d%e5%85%81%e8%ae%b8%e7%a9%ba%e6%b4%9eno-gaps">#</a></h3>
+<p>Multi-Paxos： 每个 slot 独立决议，slot 5 可能已经 committed 但 slot 3 还是空的。新 leader 上任后，需要对每一个空洞 slot 重新跑一轮 Paxos 来确认值。</p>
+<p>Raft： 日志必须严格连续。Leader 用 <code>prevLogIndex</code> + <code>prevLogTerm</code> 做一致性检查，follower 不匹配就拒绝，leader 回退 <code>nextIndex</code> 直到找到分歧点，然后覆盖写。</p>
+<p>消灭了什么问题： 空洞填补逻辑、乱序提交、快照截断的边界情况。日志变成了一个简单的 append-only 数组。</p>
+<h3 id="约束三选举限制election-restriction">约束三：选举限制（Election Restriction）<a class="anchor" aria-hidden="true" href="#%e7%ba%a6%e6%9d%9f%e4%b8%89%e9%80%89%e4%b8%be%e9%99%90%e5%88%b6election-restriction">#</a></h3>
+<p>Multi-Paxos： 任何节点都可以尝试成为新 leader。新 leader 上任后，必须对所有未确认的 slot 跑 Prepare 阶段，从多数派收集可能已经 accept 的值，然后 re-propose，以确保不丢失已提交的决议。正确但复杂。</p>
+<p>Raft： 候选人的日志必须&quot;至少和多数派一样新&quot;（比较 lastLogTerm 和 lastLogIndex）才能赢得选举。这就从选举阶段直接保证了：新 leader 一定已经拥有所有已提交的条目，不需要额外的日志恢复流程。</p>
+<p>消灭了什么问题： leader 切换后的日志恢复（最复杂也最容易出 bug 的部分）。</p>
+<h2 id="共识算法的工业应用从-paxos-到-raft">共识算法的工业应用：从 Paxos 到 Raft<a class="anchor" aria-hidden="true" href="#%e5%85%b1%e8%af%86%e7%ae%97%e6%b3%95%e7%9a%84%e5%b7%a5%e4%b8%9a%e5%ba%94%e7%94%a8%e4%bb%8e-paxos-%e5%88%b0-raft">#</a></h2>
+<h3 id="paxos-时代20062013">Paxos 时代（2006–2013）<a class="anchor" aria-hidden="true" href="#paxos-%e6%97%b6%e4%bb%a320062013">#</a></h3>
+<p>Paxos 1990 年提出，但真正进入工业界是 2006 年 Google 发表 Chubby 和 Spanner 论文之后。问题是 Lamport 只定义了 Basic Paxos（单值共识），Multi-Paxos 怎么工程化，论文里几乎没写。结果每家实现出来的都不一样，GitHub 上大量 Paxos 实现被发现有正确性问题。这个阶段能驾驭 Paxos 的基本只有 Google 级别的团队。</p>
+<p>同期 ZooKeeper 的 ZAB 协议走了折中路线：类 Multi-Paxos 思想 + 大量工程简化，成了 Hadoop 生态的标配。ZAB 的成功其实已经说明了一件事：工业界需要的不是理论优雅，而是能用、能懂、能调试。</p>
+<h3 id="raft-及其生态2014-至今">Raft 及其生态（2014 至今）<a class="anchor" aria-hidden="true" href="#raft-%e5%8f%8a%e5%85%b6%e7%94%9f%e6%80%812014-%e8%87%b3%e4%bb%8a">#</a></h3>
+<p>2014 年 Raft 论文发表，本质就是在 Multi-Paxos 上加三条约束（强制单 Leader、日志无空洞、选举限制），换来完整的伪代码级规范，照着论文就能实现正确的版本。此后新项目几乎一边倒选 Raft：</p>
+<ul>
+<li><strong>etcd</strong> — Raft 的标杆实现，后来成了 Kubernetes 的核心存储，整个云原生基础设施的心脏</li>
+<li><strong>TiKV / TiDB</strong> — Multi-Raft 架构（每个数据分片一个 Raft 组），分片的 split/merge/调度全靠日志连续性才可控</li>
+<li><strong>CockroachDB</strong> — 定位开源版 Spanner，但选了 Raft 而不是 Multi-Paxos，因为开源项目需要社区贡献者能看懂代码</li>
+<li><strong>百度 braft</strong> — 国内 C++ 生态的事实标准 Raft 库，大量国内大厂的分布式存储底层在用</li>
+</ul>
+<p>行业共识基本是：<strong>除非有特殊理由，否则默认选 Raft。</strong></p>
+<h3 id="仍然坚持-paxos-的都有充分理由">仍然坚持 Paxos 的，都有充分理由<a class="anchor" aria-hidden="true" href="#%e4%bb%8d%e7%84%b6%e5%9d%9a%e6%8c%81-paxos-%e7%9a%84%e9%83%bd%e6%9c%89%e5%85%85%e5%88%86%e7%90%86%e7%94%b1">#</a></h3>
+<p><strong>Google Spanner</strong> — 全球级跨数据中心部署，需要精细控制副本放置和 leader 地理位置偏好，Multi-Paxos 的灵活性是刚需，而且 Google 有能力驾驭其复杂性。</p>
+<p><strong>OceanBase（蚂蚁）</strong> — 2024 VLDB 的 PALF 论文解释了原因：Raft 要求候选人日志必须最新才能当选，在三副本场景下，用户指定的高优先级副本可能因为日志稍旧而无法当选。Multi-Paxos 没有这个限制，新 leader 通过 Reconfirmation 补齐日志即可。对金融级数据库来说，&ldquo;哪个机房优先接管&quot;是硬需求。不过 OB 实际上也大量借鉴了 Raft 的设计，已经是两者的混血。</p>
+<p><strong>微信 PaxosStore / PhxPaxos（腾讯）</strong> — 微信存储对并发写入要求极高，Multi-Paxos 天然支持并发提案，Raft 的强制单 Leader 做不到。但 PhxPaxos 开源后几乎没有外部项目敢用——Paxos 出了 bug，日志看不懂。</p>
+<p>一个反向案例：<strong>PolarDB（阿里云）</strong> 用 Parallel-Raft，在 Raft 基础上放松日志连续性约束，允许乱序复制和提交，相当于从 Raft 往 Multi-Paxos 方向退了一步，用实现复杂度换并发性能。</p>
+<p>Paxos 开创了共识算法但太难实现，Raft 通过加约束让它可工程化，拿下了绝大多数场景。仍然选 Paxos 的团队，需要的恰恰是 Raft 为了简洁而牺牲掉的灵活性——并且有能力为这些灵活性买单。</p>
+
+
+        </article>
+    </main>
+
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2026 MUKIMASTA</p>
+    </div>
+</footer>
+
+</body>
+
+</html>

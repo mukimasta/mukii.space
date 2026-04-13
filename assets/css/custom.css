@@ -71,3 +71,40 @@ header > div {
     padding-inline-start: 0;
   }
 }
+
+/* 上一级：小字号 ‹；整体上提、少占垂直空间 */
+header {
+  margin-block-end: 8px;
+}
+
+.back-to-parent {
+  margin-block-start: -0.15rem;
+  margin-block-end: 0.2rem;
+}
+
+.back-to-parent__link {
+  display: inline-block;
+  font-size: 0.82em;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--text-color);
+  opacity: 0.65;
+  text-decoration: none;
+  border-bottom: 0.5px solid transparent;
+  transition: opacity 0.15s ease, border-color 0.15s ease;
+}
+
+.back-to-parent__link:hover {
+  opacity: 1;
+  border-bottom-color: var(--color-border-secondary, currentColor);
+}
+
+/* single：‹ 与文章标题之间不要 h1 默认 1em 顶距 */
+.content-container .back-to-parent + h1 {
+  margin-block-start: 0.35em;
+}
+
+/* section 列表页：‹ 与分区标题 */
+.content-container .back-to-parent + section > h2:first-child {
+  margin-block-start: 0.45em;
+}

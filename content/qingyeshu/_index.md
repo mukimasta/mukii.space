@@ -23,7 +23,7 @@ date: 2025-08-01
 ### 青叶下 · 大学集
 
 - [西北生活](/qingyeshu/part1-daxue/西北生活/)
-- [未来、过去和浪漫主义](/qingyeshu/part1-daxue/未来、过去和浪漫主义/)
+- [未来、过去和浪漫主义](/qingyeshu/part1-daxue/未来过去和浪漫主义/)
 - [外在意义与内在意义](/qingyeshu/part1-daxue/外在意义与内在意义/)
 - [西北日记选集](/qingyeshu/part1-daxue/西北日记选集/)
 - [意象集](/qingyeshu/part1-daxue/意象集/)

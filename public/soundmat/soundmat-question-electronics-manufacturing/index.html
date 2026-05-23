@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en-us" dir="ltr" class="kind-page">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="根据 SoundMat (?) 电子系统设计，接下来我们完成电子系统的制造。宏观角度有三种方案： 方案 面包板（Breadboard） 洞洞板（Perfboard） PCB 连接方式 插接，无需焊接 焊接，手工飞线 蚀刻/印刷铜走线，焊接元件 可靠性 极差，接触不良频发，振动易松脱 好，焊点牢固 最 …">
+    <title>SoundMat (?) 电子系统制造</title>
+    <link rel="canonical" href="https://mukii.space/soundmat/soundmat-question-electronics-manufacturing/">
+
+
+
+<meta property="og:title" content="SoundMat (?) 电子系统制造">
+<meta property="og:description" content="根据 SoundMat (?) 电子系统设计，接下来我们完成电子系统的制造。宏观角度有三种方案： 方案 面包板（Breadboard） 洞洞板（Perfboard） PCB 连接方式 插接，无需焊接 焊接，手工飞线 蚀刻/印刷铜走线，焊接元件 可靠性 极差，接触不良频发，振动易松脱 好，焊点牢固 最 …">
+<meta property="og:image" content="https://mukii.space/og/og-image-1bb593c92f9610a72533797867a5eaf1.svg">
+<meta property="og:image:type" content="image/svg+xml">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mukii.space/soundmat/soundmat-question-electronics-manufacturing/">
+<meta property="og:locale" content="en-us">
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SoundMat (?) 电子系统制造">
+<meta name="twitter:description" content="根据 SoundMat (?) 电子系统设计，接下来我们完成电子系统的制造。宏观角度有三种方案： 方案 面包板（Breadboard） 洞洞板（Perfboard） PCB 连接方式 插接，无需焊接 焊接，手工飞线 蚀刻/印刷铜走线，焊接元件 可靠性 极差，接触不良频发，振动易松脱 好，焊点牢固 最 …">
+<meta name="twitter:image" content="https://mukii.space/og/og-image-1bb593c92f9610a72533797867a5eaf1.svg">
+
+    <link rel="preload" href="/fonts/Newsreader.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/default.min.fb89c3008d933d5ac0e46af0bee4acd14efae3a00fca1ebbeb11e373ecaf3a64.css" integrity="sha256-&#43;4nDAI2TPVrA5GrwvuSs0U7646APyh676xHjc&#43;yvOmQ=">
+    <link rel="stylesheet" href="/css/custom.min.38f069b0c9e0928c98b0e6c97a8e238ac3466b6fac163355a89cabaada3541f8.css" integrity="sha256-OPBpsMngkoyYsObJeo4jisNGa2&#43;sFjNVqJyrqto1Qfg=">
+    <script src="/js/darkmode.min.9211af6d380489c7cf64d4b18a1e49e75be2bebf92031d2165eb6c20bc59c6a2.js" integrity="sha256-khGvbTgEicfPZNSxih5J51vivr&#43;SAx0hZetsILxZxqI=" defer></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <style>
+    :root { --font-size-base: 18px; --content-max-inline-size: 680px; }
+    h1 { font-size: 2em; }
+    .katex { font-size: 0.95em; }
+    pre code {
+    background: var(--code-bg) !important;
+    color: var(--text-color);
+    padding: 1em;
+    border-radius: var(--radius);
+    }
+    </style><script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+
+
+<body>
+<header>
+    <div>
+        <div class="header-left">
+            <h1>
+                <a href="https://mukii.space/">MUKIMASTA</a>
+            </h1>
+            <nav class="site-nav" aria-label="Primary">
+                <a href="/professional-overview/" class="site-nav__link">Professional</a>
+                <a href="/journey/" class="site-nav__link">Journey</a>
+            </nav>
+        </div>
+        <div class="header-controls">
+            <div class="toggle-switch">
+                <input type="checkbox" id="darkModeToggle" class="toggle-input" aria-label="Toggle dark mode">
+                <label for="darkModeToggle" class="toggle-label">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <main class="content-wrapper">
+        <article class="content-container">
+
+<nav class="back-to-parent" aria-label="上一级导航">
+  <a class="back-to-parent__link" href="/soundmat/" title="SoundMat" aria-label="返回 SoundMat">‹</a>
+</nav>
+
+
+    <h1>SoundMat (?) 电子系统制造</h1>
+    <h4></h4>
+
+<p>根据 <a href="/soundmat/soundmat-question-electronics-system-design/">SoundMat (?)  电子系统设计</a>，接下来我们完成电子系统的制造。宏观角度有三种方案：</p>
+<table>
+  <thead>
+      <tr>
+          <th>方案</th>
+          <th>面包板（Breadboard）</th>
+          <th>洞洞板（Perfboard）</th>
+          <th>PCB</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>连接方式</td>
+          <td>插接，无需焊接</td>
+          <td>焊接，手工飞线</td>
+          <td>蚀刻/印刷铜走线，焊接元件</td>
+      </tr>
+      <tr>
+          <td>可靠性</td>
+          <td>极差，接触不良频发，振动易松脱</td>
+          <td>好，焊点牢固</td>
+          <td>最好，工业级连接</td>
+      </tr>
+      <tr>
+          <td>适合阶段</td>
+          <td>早期验证电路原理</td>
+          <td>Prototype 制作</td>
+          <td>量产或高要求 Prototype</td>
+      </tr>
+      <tr>
+          <td>制作时间</td>
+          <td>几分钟</td>
+          <td>几小时</td>
+          <td>设计+打样周期 1-2 周</td>
+      </tr>
+      <tr>
+          <td>迭代灵活性</td>
+          <td>最高，随时改线</td>
+          <td>中等，改线需要拆焊</td>
+          <td>低，改设计要重新打板</td>
+      </tr>
+      <tr>
+          <td>成本</td>
+          <td>低</td>
+          <td>低</td>
+          <td>高（小批量打样费 + 等待时间）</td>
+      </tr>
+      <tr>
+          <td>长时间运行</td>
+          <td>不可靠，公共场景不可接受</td>
+          <td>可靠</td>
+          <td>最可靠</td>
+      </tr>
+      <tr>
+          <td>采用</td>
+          <td>❌</td>
+          <td>✅</td>
+          <td>❌</td>
+      </tr>
+  </tbody>
+</table>
+<p>在传感器制造完成之后，我们先快速用面包板验证传感器效果。后续采用洞洞板方案。</p>
+<h2 id="电路布局规划">电路布局规划<a class="anchor" aria-hidden="true" href="#%e7%94%b5%e8%b7%af%e5%b8%83%e5%b1%80%e8%a7%84%e5%88%92">#</a></h2>
+<p>对于已经有引脚的模块或者芯片，我们统一用 DIP Sockets 或者 Female Pin Header。</p>
+<p><img src="/soundmat/manufacturing-perfboard-layout-1.png" alt=""><br>
+<img src="/soundmat/manufacturing-perfboard-layout-2.png" alt=""></p>
+<p>Rref 用了10kO可调电阻。</p>
+<p>引脚对应</p>
+<p><strong>Rings</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>Ring</th>
+          <th>MCU IO</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Ring0</td>
+          <td>D19</td>
+      </tr>
+      <tr>
+          <td>Ring1</td>
+          <td>D5</td>
+      </tr>
+      <tr>
+          <td>Ring2</td>
+          <td>D21</td>
+      </tr>
+      <tr>
+          <td>Ring3</td>
+          <td>TX2</td>
+      </tr>
+      <tr>
+          <td>Ring4</td>
+          <td>D22</td>
+      </tr>
+      <tr>
+          <td>Ring5</td>
+          <td>D4</td>
+      </tr>
+      <tr>
+          <td>Ring6</td>
+          <td>D23</td>
+      </tr>
+      <tr>
+          <td>Ring7</td>
+          <td>D2</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>MUX</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>Slice</th>
+          <th>MUX PINS</th>
+          <th></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Slice 0-15</td>
+          <td>MUX 0, C0-C15</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>Slice 16-31</td>
+          <td>MUX 1, C0-C15</td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<table>
+  <thead>
+      <tr>
+          <th>MUX PINS</th>
+          <th>MCU IO</th>
+          <th>TYPE</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>S0</td>
+          <td>D26</td>
+          <td>OUTPUT</td>
+      </tr>
+      <tr>
+          <td>S1</td>
+          <td>D25</td>
+          <td>OUTPUT</td>
+      </tr>
+      <tr>
+          <td>S2</td>
+          <td>D33</td>
+          <td>OUTPUT</td>
+      </tr>
+      <tr>
+          <td>S3</td>
+          <td>D32</td>
+          <td>OUTPUT</td>
+      </tr>
+      <tr>
+          <td>EN0</td>
+          <td>D14</td>
+          <td>OUTPUT</td>
+      </tr>
+      <tr>
+          <td>EN1</td>
+          <td>D27</td>
+          <td>OUTPUT</td>
+      </tr>
+      <tr>
+          <td><strong>SIG</strong></td>
+          <td>VP</td>
+          <td>INPUT</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>LED</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>PINS</th>
+          <th>MCU IO</th>
+          <th></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>LED DIN</td>
+          <td>D13</td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="电源模块">电源模块<a class="anchor" aria-hidden="true" href="#%e7%94%b5%e6%ba%90%e6%a8%a1%e5%9d%97">#</a></h2>
+<h3 id="pd-诱骗模块调试">PD 诱骗模块调试<a class="anchor" aria-hidden="true" href="#pd-%e8%af%b1%e9%aa%97%e6%a8%a1%e5%9d%97%e8%b0%83%e8%af%95">#</a></h3>
+<p>模块链接 1： <a href="https://www.amazon.com/gp/product/B0F1YH9P4X/">https://www.amazon.com/gp/product/B0F1YH9P4X/</a><br>
+这个模块不能用，无论怎么调整都只能输出 5V 电压</p>
+<p>模块链接 2： <a href="https://www.amazon.com/dp/B0D7942HWP?ref=ppx_yo2ov_dt_b_fed_asin_title&amp;th=1">https://www.amazon.com/dp/B0D7942HWP?ref=ppx_yo2ov_dt_b_fed_asin_title&amp;th=1</a><br>
+一次成功，小米充电器，小米充电宝均能输出 20V 电压</p>
+<h3 id="降压模块调试">降压模块调试<a class="anchor" aria-hidden="true" href="#%e9%99%8d%e5%8e%8b%e6%a8%a1%e5%9d%97%e8%b0%83%e8%af%95">#</a></h3>
+<p><img src="/soundmat/manufacturing-buck-converter-1.jpeg" alt=""><br>
+<img src="/soundmat/manufacturing-buck-converter-2.jpeg" alt=""><br>
+<img src="/soundmat/manufacturing-buck-converter-3.jpeg" alt=""><br>
+模块链接： <a href="https://www.amazon.com/gp/product/B0GLM6JQ3X/">https://www.amazon.com/gp/product/B0GLM6JQ3X/</a> ，$15.99.</p>
+<p>目标是将 20V 降压至 5V。先接入实验室电源，设置 20V 1A，调节输出电压旋钮至显示输出 5V 电压。</p>
+<p>接着调整最大保护电流，起初使用万用表电流档接入输出正负极调整保护电流，发现不可行，模块会不断重启。后续直接用导线短接输出正负极（没错就是这么吓人，但是这个模块确实就是这么做，没问题），调整最大保护电流至 7A。</p>
+<h3 id="树莓派电源">树莓派电源<a class="anchor" aria-hidden="true" href="#%e6%a0%91%e8%8e%93%e6%b4%be%e7%94%b5%e6%ba%90">#</a></h3>
+<p>一开始我们尝试剪断一根 Micro USB 线，试图将里面的电源线和降压模块输出的电源线焊接在一起，发现非常不可靠且麻烦，因为 Micro USB 里面的电源线只有 28 AWG，太细了，稍微一扯就断了。</p>
+<p>于是还是买了 Micro USB 转接板（Micro USB Breakout Board）。<br>
+链接： <a href="https://www.amazon.com/dp/B0F4KP6MB9?ref=ppx_yo2ov_dt_b_fed_asin_title">https://www.amazon.com/dp/B0F4KP6MB9?ref=ppx_yo2ov_dt_b_fed_asin_title</a></p>
+<h3 id="led-电源连接板">LED 电源连接板<a class="anchor" aria-hidden="true" href="#led-%e7%94%b5%e6%ba%90%e8%bf%9e%e6%8e%a5%e6%9d%bf">#</a></h3>
+<p><img src="/soundmat/manufacturing-led-power-board.png" alt=""></p>
+<p>手焊的</p>
+
+
+        </article>
+    </main>
+
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2026 MUKIMASTA</p>
+    </div>
+</footer>
+
+</body>
+
+</html>

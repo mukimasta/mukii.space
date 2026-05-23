@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en-us" dir="ltr" class="kind-page">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="声音化设计是 SoundMat 的灵魂。我们已经想好了产品哲学，设计好了结构、外观、传感器、硬件等等，但那些只是基础，是不完美产生的地方。声音化设计，也就是如何将石头、将观众的触摸按压转换为音乐，符合我们想象中的音乐艺术装置，是最棘手，最容易平庸的。 除此之外就是 LED 交互设计，这部分相对来说是 …">
+    <title>SoundMat (?) 交互与声音化设计 Interaction and Sonification</title>
+    <link rel="canonical" href="https://mukii.space/soundmat/soundmat-question-interaction-and-sonification/">
+
+
+
+<meta property="og:title" content="SoundMat (?) 交互与声音化设计 Interaction and Sonification">
+<meta property="og:description" content="声音化设计是 SoundMat 的灵魂。我们已经想好了产品哲学，设计好了结构、外观、传感器、硬件等等，但那些只是基础，是不完美产生的地方。声音化设计，也就是如何将石头、将观众的触摸按压转换为音乐，符合我们想象中的音乐艺术装置，是最棘手，最容易平庸的。 除此之外就是 LED 交互设计，这部分相对来说是 …">
+<meta property="og:image" content="https://mukii.space/og/og-image-1e81be42ebdf6c9295f21e0c6e74b933.svg">
+<meta property="og:image:type" content="image/svg+xml">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mukii.space/soundmat/soundmat-question-interaction-and-sonification/">
+<meta property="og:locale" content="en-us">
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SoundMat (?) 交互与声音化设计 Interaction and Sonification">
+<meta name="twitter:description" content="声音化设计是 SoundMat 的灵魂。我们已经想好了产品哲学，设计好了结构、外观、传感器、硬件等等，但那些只是基础，是不完美产生的地方。声音化设计，也就是如何将石头、将观众的触摸按压转换为音乐，符合我们想象中的音乐艺术装置，是最棘手，最容易平庸的。 除此之外就是 LED 交互设计，这部分相对来说是 …">
+<meta name="twitter:image" content="https://mukii.space/og/og-image-1e81be42ebdf6c9295f21e0c6e74b933.svg">
+
+    <link rel="preload" href="/fonts/Newsreader.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/default.min.fb89c3008d933d5ac0e46af0bee4acd14efae3a00fca1ebbeb11e373ecaf3a64.css" integrity="sha256-&#43;4nDAI2TPVrA5GrwvuSs0U7646APyh676xHjc&#43;yvOmQ=">
+    <link rel="stylesheet" href="/css/custom.min.38f069b0c9e0928c98b0e6c97a8e238ac3466b6fac163355a89cabaada3541f8.css" integrity="sha256-OPBpsMngkoyYsObJeo4jisNGa2&#43;sFjNVqJyrqto1Qfg=">
+    <script src="/js/darkmode.min.9211af6d380489c7cf64d4b18a1e49e75be2bebf92031d2165eb6c20bc59c6a2.js" integrity="sha256-khGvbTgEicfPZNSxih5J51vivr&#43;SAx0hZetsILxZxqI=" defer></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <style>
+    :root { --font-size-base: 18px; --content-max-inline-size: 680px; }
+    h1 { font-size: 2em; }
+    .katex { font-size: 0.95em; }
+    pre code {
+    background: var(--code-bg) !important;
+    color: var(--text-color);
+    padding: 1em;
+    border-radius: var(--radius);
+    }
+    </style><script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+
+
+<body>
+<header>
+    <div>
+        <div class="header-left">
+            <h1>
+                <a href="https://mukii.space/">MUKIMASTA</a>
+            </h1>
+            <nav class="site-nav" aria-label="Primary">
+                <a href="/professional-overview/" class="site-nav__link">Professional</a>
+                <a href="/journey/" class="site-nav__link">Journey</a>
+            </nav>
+        </div>
+        <div class="header-controls">
+            <div class="toggle-switch">
+                <input type="checkbox" id="darkModeToggle" class="toggle-input" aria-label="Toggle dark mode">
+                <label for="darkModeToggle" class="toggle-label">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <main class="content-wrapper">
+        <article class="content-container">
+
+<nav class="back-to-parent" aria-label="上一级导航">
+  <a class="back-to-parent__link" href="/soundmat/" title="SoundMat" aria-label="返回 SoundMat">‹</a>
+</nav>
+
+
+    <h1>SoundMat (?) 交互与声音化设计 Interaction and Sonification</h1>
+    <h4></h4>
+
+<p>声音化设计是 SoundMat 的灵魂。我们已经想好了产品哲学，设计好了结构、外观、传感器、硬件等等，但那些只是基础，是不完美产生的地方。声音化设计，也就是如何将石头、将观众的触摸按压转换为音乐，符合我们想象中的音乐艺术装置，是最棘手，最容易平庸的。</p>
+<p>除此之外就是 LED 交互设计，这部分相对来说是锦上添花的，它起到两个功能，提示与反馈。用户通过 LED 的提示，能够明白当前的音乐进行到哪个阶段了，能够感受到当前音乐的氛围；反馈则是在用户与 SoundMat 交互后，除了听觉反馈，还能够得到 LED 的视觉反馈，这能够增加体验感和艺术感。</p>
+<p>现实的硬件不是理想情况，会有误差和不精确的地方。在之前的硬件制造中，我们对整体“放置物品感应”的这部分现实效果有了更充分的了解：</p>
+<ul>
+<li>SoundMat 感应的分辨率是 8 ring * 32 slices 的 256 个小区域。我们能分辨哪个区域有物品，但是无法分辨这个区域有几个物品，无法分辨在这个小区域的哪个位置，无法分辨相邻区域的激活是有两个小物品还是一个大物品导致的。虽然说对于我们的石头大小，我们能保证石头与各区域较好的对应激活关系，但对于设计来说，过于细致的粒度会导致交互体验变差。</li>
+</ul>
+<p>我们将在这个条件下完成交互与声音化设计。</p>
+<h2 id="1--生成音乐自由度与反馈感的矛盾">1  生成音乐：自由度与反馈感的矛盾<a class="anchor" aria-hidden="true" href="#1--%e7%94%9f%e6%88%90%e9%9f%b3%e4%b9%90%e8%87%aa%e7%94%b1%e5%ba%a6%e4%b8%8e%e5%8f%8d%e9%a6%88%e6%84%9f%e7%9a%84%e7%9f%9b%e7%9b%be">#</a></h2>
+<p>从设计理念开始，我们就不断强调，交互要简单直观，怎么放置都好听，但是依然能感受到参与感/反馈感。</p>
+<p>“怎么放都好听 vs 参与感/反馈感”，这其实是一种矛盾。怎么放都好听意味着变化少，系统介入的成分大，而反馈感是来源于我对整个系统施加了某些影响，这是我控制的，不是系统帮助我的。</p>
+<p>所以就有了自由度的两端：</p>
+<ul>
+<li>自由度低：怎么放都好听，沉浸感强；但变化少，控制感弱，容易无聊</li>
+<li>自由度高：反馈感强，变化多；但容易出错、出戏，需要音乐知识</li>
+</ul>
+<p>推向极端就很好理解了，自由度高到尽头就是乐器。钢琴、吉他，变化极其丰富但是难上手；自由度低到尽头就是混音器，只是控制不同乐器播放与否，很容易无聊。</p>
+<p>一个想法是设计不同模式应对不同场景。计划设计三种模式：</p>
+<ul>
+<li><strong>静谧模式 Ambient</strong>：自由度低，酒店大堂、spa</li>
+<li><strong>探索模式 Explore</strong>：中间地带，机场、画廊，有一定反馈感但系统仍然在保护</li>
+<li><strong>合奏模式 Jam</strong>：自由度高，允许不和谐，多人主动参与，更像乐器</li>
+</ul>
+<h2 id="2--控制思路调控与生成">2  控制思路：调控与生成<a class="anchor" aria-hidden="true" href="#2--%e6%8e%a7%e5%88%b6%e6%80%9d%e8%b7%af%e8%b0%83%e6%8e%a7%e4%b8%8e%e7%94%9f%e6%88%90">#</a></h2>
+<p>这部分讨论音乐装置的两种控制思路。</p>
+<p>调控是调整已有音乐的声音参数，例如一段音乐的音量、音色、高低频、速度等等。</p>
+<p>生成则是对于每个操作都实时生成元素，例如演奏音符、打击乐、和声等等。</p>
+<p>在 SoundMat，生成是绝对的主导。用户不是去调整别人已有的音乐，而是自己创造音乐。</p>
+<h2 id="3--交互方式旋转扫描与音池">3  交互方式：旋转扫描与音池<a class="anchor" aria-hidden="true" href="#3--%e4%ba%a4%e4%ba%92%e6%96%b9%e5%bc%8f%e6%97%8b%e8%bd%ac%e6%89%ab%e6%8f%8f%e4%b8%8e%e9%9f%b3%e6%b1%a0">#</a></h2>
+<p>对于 SoundMat，有两种交互思路。</p>
+<p><strong>旋转扫描</strong>：有一根虚拟的指针绕圆心旋转，碰到物体就触发音乐生成。一个圆的循环天然形成了一个 Loop，不同的角度就代表了一个 Loop 内的不同时间。放下石头代表了在乐谱中谱写了一个音乐元素。</p>
+<p><strong>音池 Sound Pool</strong>：一旦物体放下，就会持续触发对应位置的音乐生成机制；物体拿起，则停止。</p>
+<p>音池中，我们可以采用“生成”的思路。</p>
+<h2 id="4--音乐类型简介">4  音乐类型简介<a class="anchor" aria-hidden="true" href="#4--%e9%9f%b3%e4%b9%90%e7%b1%bb%e5%9e%8b%e7%ae%80%e4%bb%8b">#</a></h2>
+<p><a href="/soundmat/soundmat-2-philosophy/">SoundMat (2)  Philosophy 产品设计哲学</a> 中有简单讨论过适合 SoundMat 的音乐类型。在这里详细阐述一下我们选用的音乐类型。</p>
+<p><strong>Ambient / Soundscape</strong>：作为公共艺术装置，使用 Ambient 类音乐可以让它成为可以被注意聆听，也可以被忽略的存在。</p>
+<p>这里可大致分为两种，一种是音乐元素，一种是声景元素。音乐元素是有特定音高的，是乐器发出的或是合成的，受调性系统约束；声景则是在自然中采集的，不受调性约束。</p>
+<p><strong>Lo-Fi</strong>：Lo-fi 的特征是温暖的、带有颗粒感和不完美质感的声音，可以是 Loop 为基础的音乐风格，强节奏的，非常适合我们的节奏模式（旋转扫描）。同时，Lo-Fi 能提供很强的沉浸感。</p>
+<p><strong>Generative Minimal</strong>：</p>
+
+
+        </article>
+    </main>
+
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2026 MUKIMASTA</p>
+    </div>
+</footer>
+
+</body>
+
+</html>

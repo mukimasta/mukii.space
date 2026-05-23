@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="en-us" dir="ltr" class="kind-page">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="固件设计要做的其实是 ESP32 单片机上的软件设计。固件设计作为连接传感器/电路设计和声音化设计的桥梁，将原始的传感器硬件信号发送给电脑，连接后续的音乐生成；同时也将电脑端的 LED 控制信号输出，控制 SoundMat 上的灯光。 固件架构如下，分为四个模块： loop() { …">
+    <title>SoundMat (?) 固件设计</title>
+    <link rel="canonical" href="https://mukii.space/soundmat/soundmat-question-firmware-design/">
+
+
+
+<meta property="og:title" content="SoundMat (?) 固件设计">
+<meta property="og:description" content="固件设计要做的其实是 ESP32 单片机上的软件设计。固件设计作为连接传感器/电路设计和声音化设计的桥梁，将原始的传感器硬件信号发送给电脑，连接后续的音乐生成；同时也将电脑端的 LED 控制信号输出，控制 SoundMat 上的灯光。 固件架构如下，分为四个模块： loop() { …">
+<meta property="og:image" content="https://mukii.space/og/og-image-0686f16443ec0561569de758d089764d.svg">
+<meta property="og:image:type" content="image/svg+xml">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mukii.space/soundmat/soundmat-question-firmware-design/">
+<meta property="og:locale" content="en-us">
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SoundMat (?) 固件设计">
+<meta name="twitter:description" content="固件设计要做的其实是 ESP32 单片机上的软件设计。固件设计作为连接传感器/电路设计和声音化设计的桥梁，将原始的传感器硬件信号发送给电脑，连接后续的音乐生成；同时也将电脑端的 LED 控制信号输出，控制 SoundMat 上的灯光。 固件架构如下，分为四个模块： loop() { …">
+<meta name="twitter:image" content="https://mukii.space/og/og-image-0686f16443ec0561569de758d089764d.svg">
+
+    <link rel="preload" href="/fonts/Newsreader.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/default.min.fb89c3008d933d5ac0e46af0bee4acd14efae3a00fca1ebbeb11e373ecaf3a64.css" integrity="sha256-&#43;4nDAI2TPVrA5GrwvuSs0U7646APyh676xHjc&#43;yvOmQ=">
+    <link rel="stylesheet" href="/css/custom.min.38f069b0c9e0928c98b0e6c97a8e238ac3466b6fac163355a89cabaada3541f8.css" integrity="sha256-OPBpsMngkoyYsObJeo4jisNGa2&#43;sFjNVqJyrqto1Qfg=">
+    <script src="/js/darkmode.min.9211af6d380489c7cf64d4b18a1e49e75be2bebf92031d2165eb6c20bc59c6a2.js" integrity="sha256-khGvbTgEicfPZNSxih5J51vivr&#43;SAx0hZetsILxZxqI=" defer></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <style>
+    :root { --font-size-base: 18px; --content-max-inline-size: 680px; }
+    h1 { font-size: 2em; }
+    .katex { font-size: 0.95em; }
+    pre code {
+    background: var(--code-bg) !important;
+    color: var(--text-color);
+    padding: 1em;
+    border-radius: var(--radius);
+    }
+    </style><script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+
+
+<body>
+<header>
+    <div>
+        <div class="header-left">
+            <h1>
+                <a href="https://mukii.space/">MUKIMASTA</a>
+            </h1>
+            <nav class="site-nav" aria-label="Primary">
+                <a href="/professional-overview/" class="site-nav__link">Professional</a>
+                <a href="/journey/" class="site-nav__link">Journey</a>
+            </nav>
+        </div>
+        <div class="header-controls">
+            <div class="toggle-switch">
+                <input type="checkbox" id="darkModeToggle" class="toggle-input" aria-label="Toggle dark mode">
+                <label for="darkModeToggle" class="toggle-label">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <main class="content-wrapper">
+        <article class="content-container">
+
+<nav class="back-to-parent" aria-label="上一级导航">
+  <a class="back-to-parent__link" href="/soundmat/" title="SoundMat" aria-label="返回 SoundMat">‹</a>
+</nav>
+
+
+    <h1>SoundMat (?) 固件设计</h1>
+    <h4></h4>
+
+<p>固件设计要做的其实是 ESP32 单片机上的软件设计。固件设计作为连接传感器/电路设计和声音化设计的桥梁，将原始的传感器硬件信号发送给电脑，连接后续的音乐生成；同时也将电脑端的 LED 控制信号输出，控制 SoundMat 上的灯光。</p>
+<p>固件架构如下，分为四个模块：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a6e22e">loop</span>() {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">scan_sensors</span>();      <span style="color:#75715e">// 传感器扫描模块
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#a6e22e">send_sensor_data</span>();  <span style="color:#75715e">// 传感器数据发送模块
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#a6e22e">receive_led_data</span>();  <span style="color:#75715e">// LED数据接收模块
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#a6e22e">update_leds</span>();       <span style="color:#75715e">// LED刷新模块
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><pre tabindex="0"><code>初始化（引脚、ADC、Serial、LED）
+
+主循环：
+  1. 扫描传感器阵列 → 得到 pressure_matrix[ring][slice]
+  2. 将 pressure_matrix 发送到电脑
+  3. 接收电脑回传的 LED 状态数据
+  4. 驱动 LED 更新显示
+</code></pre><h2 id="传感器扫描模块">传感器扫描模块<a class="anchor" aria-hidden="true" href="#%e4%bc%a0%e6%84%9f%e5%99%a8%e6%89%ab%e6%8f%8f%e6%a8%a1%e5%9d%97">#</a></h2>
+<p><a href="/soundmat/soundmat-question-sensor-principles-and-design/">SoundMat (?)  传感器原理及设计</a> 中提到了传感器检测的原理。在检测一个坐标 <code>(ring, slice)</code> 时，我们将当前 ring 对应引脚输出设置为 HIGH，其他设置为 LOW，然后读取 slice 端的电压，也就是调整 MUX 控制信号使其输出当前 slice 的信号并读取。</p>
+<p>一些决策：</p>
+<ol>
+<li>ADC 可以用多次采样取平均，降噪，不过目前先仅进行单次采样，效果正常</li>
+</ol>
+<p>伪代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a6e22e">scan_sensors</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 清空压力矩阵，-1 表示未采集
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> all [ring][slice] {
+</span></span><span style="display:flex;"><span>        pressure[ring][slice] <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> ring in <span style="color:#ae81ff">0.</span>.NUM_RINGS<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 激活当前 ring，其余拉低（防止 ghost path）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">set_all_rings</span>(LOW)
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">set_ring</span>(ring, HIGH)
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">delay_ms</span>(RING_SETTLE_MS)  <span style="color:#75715e">// 等待 ring 线电压稳定
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> slice in <span style="color:#ae81ff">0.</span>.NUM_SLICES<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// 设置 MUX 地址线，选通当前 slice 通道
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#a6e22e">mux_select</span>(slice)
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">delay_ms</span>(MUX_SETTLE_MS)  <span style="color:#75715e">// 等待 MUX 切换稳定
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// 读取 ADC
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            raw <span style="color:#f92672">=</span> <span style="color:#a6e22e">adc_read</span>(SIG_PIN)
+</span></span><span style="display:flex;"><span>			pressure[ring][slice] <span style="color:#f92672">=</span> raw
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 当前 ring 扫描完毕，拉低，为下一个 ring 做准备
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">set_ring</span>(ring, LOW)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> pressure
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>我们使用的 CD40678M，使能是是低电平有效。</p>
+<h2 id="串口数据模块">串口数据模块<a class="anchor" aria-hidden="true" href="#%e4%b8%b2%e5%8f%a3%e6%95%b0%e6%8d%ae%e6%a8%a1%e5%9d%97">#</a></h2>
+<p>ESP32 向电脑端发送原始 ADC 值，不做校准或转换；电脑端发送每颗 LED 的控制信号。</p>
+<h3 id="基本约定">基本约定<a class="anchor" aria-hidden="true" href="#%e5%9f%ba%e6%9c%ac%e7%ba%a6%e5%ae%9a">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>项目</th>
+          <th>设定</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>波特率</td>
+          <td>921600</td>
+      </tr>
+      <tr>
+          <td>编码</td>
+          <td>ASCII 文本</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="帧格式">帧格式<a class="anchor" aria-hidden="true" href="#%e5%b8%a7%e6%a0%bc%e5%bc%8f">#</a></h3>
+<p>所有帧遵循统一格式：</p>
+<pre tabindex="0"><code>TYPE:PAYLOAD*XX\n
+</code></pre><table>
+  <thead>
+      <tr>
+          <th>字段</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>TYPE</code></td>
+          <td>单字符帧类型标识</td>
+      </tr>
+      <tr>
+          <td><code>:</code></td>
+          <td>分隔符</td>
+      </tr>
+      <tr>
+          <td><code>PAYLOAD</code></td>
+          <td>帧数据，内容因帧类型而异</td>
+      </tr>
+      <tr>
+          <td><code>*</code></td>
+          <td>校验分隔符</td>
+      </tr>
+      <tr>
+          <td><code>XX</code></td>
+          <td>2 位十六进制校验码</td>
+      </tr>
+      <tr>
+          <td><code>\n</code></td>
+          <td>帧结束符</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>校验码计算：</strong> 对从 <code>TYPE</code> 字符到 <code>*</code> 前最后一个字符（含 <code>TYPE</code> 和 <code>:</code>）的所有字节做 XOR，结果用 2 位大写十六进制表示。</p>
+<h3 id="帧类型">帧类型<a class="anchor" aria-hidden="true" href="#%e5%b8%a7%e7%b1%bb%e5%9e%8b">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>方向</th>
+          <th>帧头</th>
+          <th>用途</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>ESP32 → Pi</td>
+          <td><code>S</code></td>
+          <td>传感器数据帧</td>
+      </tr>
+      <tr>
+          <td>Pi → ESP32</td>
+          <td><code>L</code></td>
+          <td>LED 控制帧</td>
+      </tr>
+      <tr>
+          <td>双向</td>
+          <td><code>#</code></td>
+          <td>注释/调试信息（接收方忽略）</td>
+      </tr>
+  </tbody>
+</table>
+<h4 id="s-帧传感器数据esp32--pi">S 帧：传感器数据（ESP32 → Pi）<a class="anchor" aria-hidden="true" href="#s-%e5%b8%a7%e4%bc%a0%e6%84%9f%e5%99%a8%e6%95%b0%e6%8d%aeesp32--pi">#</a></h4>
+<pre tabindex="0"><code>S:v0,v1,v2,...,v255*XX\n
+</code></pre><p>256 个十进制整数，逗号分隔，值域 -1-4095（12-bit ADC 原始值，加上 -1 表示无效值）。排列顺序为 ring-major：</p>
+<pre tabindex="0"><code>index = ring × 32 + slice
+</code></pre><p>index 0-31 对应 Ring 0 的 Slice 0-31，index 32-63 对应 Ring 1，依此类推。内圈 Ring 0-1 物理上只有 16 个有效区，但仍发送 32 个值，合并交给 Pi 端处理。</p>
+<p><strong>帧大小：</strong> 约 1.2 KB（每个值平均 3-4 字符 + 逗号 + 帧头帧尾）。</p>
+<p><strong>示例：</strong></p>
+<pre tabindex="0"><code>S:4095,4093,4090,2031,...,3500,3498*A7\n
+</code></pre><h4 id="l-帧led-控制pi--esp32">L 帧：LED 控制（Pi → ESP32）<a class="anchor" aria-hidden="true" href="#l-%e5%b8%a7led-%e6%8e%a7%e5%88%b6pi--esp32">#</a></h4>
+<pre tabindex="0"><code>L:RRGGBB,RRGGBB,...,RRGGBB*XX\n
+</code></pre><p>108 个 6 位十六进制 RGB 值，逗号分隔。顺序按灯带物理编号，index 0 对应灯带第一颗 LED。</p>
+<p><strong>帧大小：</strong> 约 760 字节。</p>
+<p><strong>示例：</strong></p>
+<pre tabindex="0"><code>L:000000,0A0500,1A0F00,...,000000*3E\n
+</code></pre><p>值域 0-4095（ESP32 12-bit ADC 原始值）。内圈 Ring 0-1 虽然只有 16 个有效区，仍然发送 32 个值（相邻两个 slice 覆盖同一物理区域），合并逻辑交给 Pi 端，固件保持简单。</p>
+<h4 id="-帧调试信息双向"># 帧：调试信息（双向）<a class="anchor" aria-hidden="true" href="#-%e5%b8%a7%e8%b0%83%e8%af%95%e4%bf%a1%e6%81%af%e5%8f%8c%e5%90%91">#</a></h4>
+<pre tabindex="0"><code># any text\n
+</code></pre><p>以 <code>#</code> 开头的帧无校验，接收方读到后直接丢弃（或打印到 log）。用于启动信息、手动调试等。ESP32 上电时可发送：</p>
+<pre tabindex="0"><code># SoundMat firmware v1.0 ready\n
+</code></pre><h4 id="通信时序">通信时序<a class="anchor" aria-hidden="true" href="#%e9%80%9a%e4%bf%a1%e6%97%b6%e5%ba%8f">#</a></h4>
+<p>两端自由发送，互不阻塞。</p>
+<p>ESP32 每完成一轮扫描立即发送 S 帧，不等待 Pi 回复。Pi 收到 S 帧后异步计算音乐和 LED，准备好了就发 L 帧。ESP32 每次 loop 开头非阻塞检查 Serial buffer，有完整 L 帧就更新 LED buffer，没有就沿用上一帧继续显示。</p>
+<p>在串口连接后，esp32 在 boot 过程中，此时发送 led 信号无效。应等连接稳定后再通信。</p>
+<blockquote>
+<p>Claude:</p>
+<h4 id="容错与工程约束">容错与工程约束<a class="anchor" aria-hidden="true" href="#%e5%ae%b9%e9%94%99%e4%b8%8e%e5%b7%a5%e7%a8%8b%e7%ba%a6%e6%9d%9f">#</a></h4>
+<p><strong>Buffer 配置：</strong> ESP32 端 Serial 接收 buffer 需扩大至 2048 字节（默认 256，装不下 760 字节的 L 帧）。Pi 端 pyserial 默认 buffer 足够。</p>
+<p><strong>半帧保护：</strong> 严格按行读取。只有读到 <code>\n</code> 才处理，buffer 中的不完整帧留待下次 loop 继续拼接。</p>
+<p><strong>校验失败策略：</strong> 直接丢弃，不重传。环境音乐场景下丢一帧完全无感知，重传机制会引入延迟和复杂度，对 prototype 来说得不偿失。</p>
+<p><strong>帧率预算：</strong> 921600 baud ≈ 92 KB/s。双向满载约 2 KB/帧，理论上限 ~46 fps。实际扫描+处理开销后预计稳定在 20-30 fps，对环境音乐响应绰绰有余。</p></blockquote>
+<h3 id="led刷新模块">LED刷新模块<a class="anchor" aria-hidden="true" href="#led%e5%88%b7%e6%96%b0%e6%a8%a1%e5%9d%97">#</a></h3>
+<p>将 LED buffer 中的 RGB 数据写入 WS2812B 灯带。</p>
+<p>驱动方案：</p>
+<p>WS2812B 要求的 800KHz 单线协议。我们使用 ESP-IDF 的 <code>led_strip.h</code>，底层基于 RMT 外设生成 WS2812B 时序。</p>
+<h2 id="esp32-程序设计">ESP32 程序设计<a class="anchor" aria-hidden="true" href="#esp32-%e7%a8%8b%e5%ba%8f%e8%ae%be%e8%ae%a1">#</a></h2>
+<pre tabindex="0"><code>firmware/
+├── main/
+│   ├── main.c
+│   ├── config.h
+│   ├── sensor.h / sensor.c
+│   ├── serial_comm.h / serial_comm.c
+│   └── led_ctrl.h / led_ctrl.c
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// ========== Variables ==========
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>pressure_matrix[NUM_RINGS][NUM_SLICES]
+</span></span><span style="display:flex;"><span>led_buffer[NUM_LEDS]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">app_main</span>()<span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// ========== 初始化阶段 ==========
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">serial_init</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">uart_write</span>(<span style="color:#e6db74">&#34;# SoundMat firmware v1.0 booting</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">sensor_init</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">led_init</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">uart_write</span>(<span style="color:#e6db74">&#34;# init complete, entering main loop</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>	
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> true<span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">sensor_scan</span>()
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">serial_send_sensor_data</span>(pressure_matrix)
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">serial_try_receive_led_data</span>(led_buffer) <span style="color:#75715e">// non-blocking
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#a6e22e">led_update</span>()
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">vTaskDelay</span>(<span style="color:#a6e22e">pdMS_TO_TICKS</span>(LOOP_DELAY_MS)) <span style="color:#75715e">// feed watchdog
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	
+</span></span></code></pre></div><h2 id="常量表">常量表<a class="anchor" aria-hidden="true" href="#%e5%b8%b8%e9%87%8f%e8%a1%a8">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th>常量</th>
+          <th>值</th>
+          <th>含义</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>NUM_RINGS</code></td>
+          <td>8</td>
+          <td>环形电极数量</td>
+      </tr>
+      <tr>
+          <td><code>NUM_SLICES</code></td>
+          <td>32</td>
+          <td>射线电极数量</td>
+      </tr>
+      <tr>
+          <td><code>NUM_LEDS</code></td>
+          <td>108</td>
+          <td>LED 灯珠数量</td>
+      </tr>
+      <tr>
+          <td><code>ADC_SAMPLES</code></td>
+          <td>1</td>
+          <td>每点多采样次数，取平均降噪，1表示单词采样</td>
+      </tr>
+      <tr>
+          <td><code>ADC_BIT</code></td>
+          <td>12</td>
+          <td>ADC Bit 数量</td>
+      </tr>
+      <tr>
+          <td><code>UART_BAUD</code></td>
+          <td>921600</td>
+          <td>串口波特率</td>
+      </tr>
+      <tr>
+          <td><code>UART_RX_BUF_SIZE</code></td>
+          <td>2048</td>
+          <td>接收 buffer，需容纳完整 L 帧</td>
+      </tr>
+      <tr>
+          <td><code>UART_TX_BUF_SIZE</code></td>
+          <td>0</td>
+          <td>发送 buffer，阻塞发送，保证帧完整</td>
+      </tr>
+      <tr>
+          <td><code>RING_SETTLE_US</code></td>
+          <td>20</td>
+          <td>ring 选通后等待电压稳定的延时（us）</td>
+      </tr>
+      <tr>
+          <td><code>MUX_SETTLE_US</code></td>
+          <td>50</td>
+          <td>MUX 地址切换后等待信号稳定的延时（us）</td>
+      </tr>
+      <tr>
+          <td><code>LOOP_DELAY_MS</code></td>
+          <td>1</td>
+          <td>主循环末尾最小延迟 ms；喂看门狗 + 让出 CPU</td>
+      </tr>
+      <tr>
+          <td><code>LED_COLOR_ORDER</code></td>
+          <td>GRB</td>
+          <td>WS2812B 色序</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="延迟分析">延迟分析<a class="anchor" aria-hidden="true" href="#%e5%bb%b6%e8%bf%9f%e5%88%86%e6%9e%90">#</a></h2>
+<h2 id="引脚对应">引脚对应<a class="anchor" aria-hidden="true" href="#%e5%bc%95%e8%84%9a%e5%af%b9%e5%ba%94">#</a></h2>
+<p>引脚对应，与 <a href="/soundmat/soundmat-question-electronics-manufacturing/">SoundMat (?)  电子系统制造</a> 相同。</p>
+<p><strong>Rings</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>Ring</th>
+          <th>MCU IO</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Ring0</td>
+          <td>D19</td>
+      </tr>
+      <tr>
+          <td>Ring1</td>
+          <td>D5</td>
+      </tr>
+      <tr>
+          <td>Ring2</td>
+          <td>D21</td>
+      </tr>
+      <tr>
+          <td>Ring3</td>
+          <td>TX2</td>
+      </tr>
+      <tr>
+          <td>Ring4</td>
+          <td>D22</td>
+      </tr>
+      <tr>
+          <td>Ring5</td>
+          <td>D4</td>
+      </tr>
+      <tr>
+          <td>Ring6</td>
+          <td>D23</td>
+      </tr>
+      <tr>
+          <td>Ring7</td>
+          <td>D2</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>MUX</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>Slice</th>
+          <th>MUX PINS</th>
+          <th></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Slice 0-15</td>
+          <td>MUX 0, C0-C15</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>Slice 16-31</td>
+          <td>MUX 1, C0-C15</td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<table>
+  <thead>
+      <tr>
+          <th>MUX PINS</th>
+          <th>MCU IO</th>
+          <th>TYPE</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>S0</td>
+          <td>D26</td>
+          <td>OUTPUT</td>
+      </tr>
+      <tr>
+          <td>S1</td>
+          <td>D25</td>
+          <td>OUTPUT</td>
+      </tr>
+      <tr>
+          <td>S2</td>
+          <td>D33</td>
+          <td>OUTPUT</td>
+      </tr>
+      <tr>
+          <td>S3</td>
+          <td>D32</td>
+          <td>OUTPUT</td>
+      </tr>
+      <tr>
+          <td>EN0</td>
+          <td>D14</td>
+          <td>OUTPUT</td>
+      </tr>
+      <tr>
+          <td>EN1</td>
+          <td>D27</td>
+          <td>OUTPUT</td>
+      </tr>
+      <tr>
+          <td><strong>SIG</strong></td>
+          <td>VP</td>
+          <td>INPUT</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>LED</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>PINS</th>
+          <th>MCU IO</th>
+          <th></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>LED DIN</td>
+          <td>D13</td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+
+
+        </article>
+    </main>
+
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2026 MUKIMASTA</p>
+    </div>
+</footer>
+
+</body>
+
+</html>

@@ -1,0 +1,26 @@
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+        <style>
+            svg {
+              background-color: #f0efea;
+            }
+            @font-face {
+              font-family: 'Newsreader';
+              src: url('../fonts/Newsreader.woff2') format('woff2');
+            }
+            .title, .description {
+              font-family: 'Newsreader', serif;
+              fill: #141413;
+              text-anchor: start;
+              line-height: 1.1;
+            }
+        </style>
+        <rect width="1200" height="630" fill="#f0efea" />
+        <foreignObject x="80" y="200" width="840" height="300">
+            <div xmlns="http://www.w3.org/1999/xhtml">
+                <div style="font-family: Newsreader, serif; font-size: 78px; font-weight: 600; margin-bottom: 20px; word-wrap: break-word;">SoundMat (?) 传感器原理及设计</div>
+                <div style="font-family: Newsreader, serif; font-size: 70px; font-weight: 400; word-wrap: break-word;">1.1 传感原理# SoundMat 的传感基础是压阻效应。我们选用的传感材料是 Velostat，一种碳粒子填充的聚乙烯薄膜，外表就是一张黑色的纸。原理是：没有压力时，碳粒子之间间距大，导电通路少，电阻很高；施加压力后，薄膜被压缩，碳粒子间距缩小，导电通路增加，电阻显著下降。压力越大，电阻越低。  …</div>
+            </div>
+        </foreignObject>
+    </svg>
+    

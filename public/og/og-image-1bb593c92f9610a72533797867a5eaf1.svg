@@ -1,0 +1,26 @@
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+        <style>
+            svg {
+              background-color: #f0efea;
+            }
+            @font-face {
+              font-family: 'Newsreader';
+              src: url('../fonts/Newsreader.woff2') format('woff2');
+            }
+            .title, .description {
+              font-family: 'Newsreader', serif;
+              fill: #141413;
+              text-anchor: start;
+              line-height: 1.1;
+            }
+        </style>
+        <rect width="1200" height="630" fill="#f0efea" />
+        <foreignObject x="80" y="200" width="840" height="300">
+            <div xmlns="http://www.w3.org/1999/xhtml">
+                <div style="font-family: Newsreader, serif; font-size: 78px; font-weight: 600; margin-bottom: 20px; word-wrap: break-word;">SoundMat (?) 电子系统制造</div>
+                <div style="font-family: Newsreader, serif; font-size: 70px; font-weight: 400; word-wrap: break-word;">根据 SoundMat (?) 电子系统设计，接下来我们完成电子系统的制造。宏观角度有三种方案： 方案 面包板（Breadboard） 洞洞板（Perfboard） PCB 连接方式 插接，无需焊接 焊接，手工飞线 蚀刻/印刷铜走线，焊接元件 可靠性 极差，接触不良频发，振动易松脱 好，焊点牢固 最 …</div>
+            </div>
+        </foreignObject>
+    </svg>
+    

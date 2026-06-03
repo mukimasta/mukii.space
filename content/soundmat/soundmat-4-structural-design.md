@@ -1,9 +1,16 @@
 ---
 title: "SoundMat (4) 结构设计"
+docLang: zh
+translationKey: soundmat-4-structural-design
+alternates:
+  zh: /soundmat/soundmat-4-structural-design/
+  en: /soundmat/en/soundmat-4-structural-design/
 aliases:
   - /soundmat/soundmat-4-structural-design/
   - /soundmat/soundmat-4-jiegou-sheji/
 ---
+
+
 
 
 结构设计就像是连接外观设计与工程实现的桥梁，也就是怎么把传感器、电路、LED 这些电子元件藏进一个艺术的外壳里。
@@ -54,4 +61,4 @@ Velostat + Fabric 电路
 （写于 2026 年 4 月 12 日凌晨）
 （更新于 2026 年 4 月 16 日）
 
-
+下一篇：

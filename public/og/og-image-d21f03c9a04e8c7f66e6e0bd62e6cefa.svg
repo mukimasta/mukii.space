@@ -1,0 +1,26 @@
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+        <style>
+            svg {
+              background-color: #f0efea;
+            }
+            @font-face {
+              font-family: 'Newsreader';
+              src: url('../fonts/Newsreader.woff2') format('woff2');
+            }
+            .title, .description {
+              font-family: 'Newsreader', serif;
+              fill: #141413;
+              text-anchor: start;
+              line-height: 1.1;
+            }
+        </style>
+        <rect width="1200" height="630" fill="#f0efea" />
+        <foreignObject x="80" y="200" width="840" height="300">
+            <div xmlns="http://www.w3.org/1999/xhtml">
+                <div style="font-family: Newsreader, serif; font-size: 78px; font-weight: 600; margin-bottom: 20px; word-wrap: break-word;">SoundMat (12) 软件设计与开发</div>
+                <div style="font-family: Newsreader, serif; font-size: 70px; font-weight: 400; word-wrap: break-word;">本文档描述 SoundMat 上位机的软件层设计与开发方案。硬件、电子系统、传感器原理、ESP32 固件等部分见对应的设计文档；本文档假设硬件已经通过串口提供传感数据帧，专注于树莓派上运行的 Python 程序与 SuperCollider 音频引擎的设计。 1. 运行平台# SoundMat 上位 …</div>
+            </div>
+        </foreignObject>
+    </svg>
+    

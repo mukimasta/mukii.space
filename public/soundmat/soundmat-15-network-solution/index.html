@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en-us" dir="ltr" class="kind-page">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="现在进入到软件设计的最后一个阶段了，就是为树莓派设计网络解决方案。 原因和要求如下： 需要将开发好的代码部署到树莓派上，需要和树莓派通信；要求能通过 ssh 连接到树莓派 需要在使用时通过 Web 控制模式、参数等；要求在同一局域网下实时和树莓派通信 Ambient 模式的一个非必要功能需要实时连接 …">
+    <title>SoundMat (15) 网络解决方案</title>
+    <link rel="canonical" href="https://mukii.space/soundmat/soundmat-15-network-solution/">
+
+
+
+<meta property="og:title" content="SoundMat (15) 网络解决方案">
+<meta property="og:description" content="现在进入到软件设计的最后一个阶段了，就是为树莓派设计网络解决方案。 原因和要求如下： 需要将开发好的代码部署到树莓派上，需要和树莓派通信；要求能通过 ssh 连接到树莓派 需要在使用时通过 Web 控制模式、参数等；要求在同一局域网下实时和树莓派通信 Ambient 模式的一个非必要功能需要实时连接 …">
+<meta property="og:image" content="https://mukii.space/og/og-image-16998c3da3722ac52b1c28b22101c8f8.svg">
+<meta property="og:image:type" content="image/svg+xml">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mukii.space/soundmat/soundmat-15-network-solution/">
+<meta property="og:locale" content="en-us">
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SoundMat (15) 网络解决方案">
+<meta name="twitter:description" content="现在进入到软件设计的最后一个阶段了，就是为树莓派设计网络解决方案。 原因和要求如下： 需要将开发好的代码部署到树莓派上，需要和树莓派通信；要求能通过 ssh 连接到树莓派 需要在使用时通过 Web 控制模式、参数等；要求在同一局域网下实时和树莓派通信 Ambient 模式的一个非必要功能需要实时连接 …">
+<meta name="twitter:image" content="https://mukii.space/og/og-image-16998c3da3722ac52b1c28b22101c8f8.svg">
+
+    <link rel="preload" href="/fonts/Newsreader.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/default.min.fb89c3008d933d5ac0e46af0bee4acd14efae3a00fca1ebbeb11e373ecaf3a64.css" integrity="sha256-&#43;4nDAI2TPVrA5GrwvuSs0U7646APyh676xHjc&#43;yvOmQ=">
+    <link rel="stylesheet" href="/css/custom.min.4ad75db0d4010183f7312823592f18e887d33b8d0901d261b50fad0d64c2ba94.css" integrity="sha256-StddsNQBAYP3MSgjWS8Y6IfTO40JAdJhtQ&#43;tDWTCupQ=">
+    <script src="/js/darkmode.min.9211af6d380489c7cf64d4b18a1e49e75be2bebf92031d2165eb6c20bc59c6a2.js" integrity="sha256-khGvbTgEicfPZNSxih5J51vivr&#43;SAx0hZetsILxZxqI=" defer></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <style>
+    :root { --font-size-base: 18px; --content-max-inline-size: 680px; }
+    h1 { font-size: 2em; }
+    .katex { font-size: 0.95em; }
+    pre code {
+    background: var(--code-bg) !important;
+    color: var(--text-color);
+    padding: 1em;
+    border-radius: var(--radius);
+    }
+    </style><script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+
+
+<body>
+<header>
+    <div>
+        <div class="header-left">
+            <h1>
+                <a href="https://mukii.space/">MUKIMASTA</a>
+            </h1>
+            <nav class="site-nav" aria-label="Primary">
+                <a href="/professional-overview/" class="site-nav__link">Professional</a>
+                <a href="/journey/" class="site-nav__link">Journey</a>
+            </nav>
+        </div>
+        <div class="header-controls">
+            <div class="toggle-switch">
+                <input type="checkbox" id="darkModeToggle" class="toggle-input" aria-label="Toggle dark mode">
+                <label for="darkModeToggle" class="toggle-label">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <main class="content-wrapper">
+        <article class="content-container">
+
+<nav class="back-to-parent" aria-label="上一级导航">
+  <a class="back-to-parent__link" href="/soundmat/" title="SoundMat" aria-label="返回 SoundMat">‹</a>
+</nav>
+
+
+<nav class="soundmat-lang-switch" aria-label="Document language"><a class="soundmat-lang-switch__link is-active" href="/soundmat/soundmat-15-network-solution/" hreflang="zh" lang="zh">中文</a>
+  <span class="soundmat-lang-switch__sep" aria-hidden="true">·</span>
+  <a class="soundmat-lang-switch__link" href="/soundmat/en/soundmat-15-network-solution/" hreflang="en" lang="en">English</a>
+</nav>
+    <h1>SoundMat (15) 网络解决方案</h1>
+    <h4></h4>
+
+<p>现在进入到软件设计的最后一个阶段了，就是为树莓派设计网络解决方案。</p>
+<p>原因和要求如下：</p>
+<ol>
+<li>需要将开发好的代码部署到树莓派上，需要和树莓派通信；要求能通过 ssh 连接到树莓派</li>
+<li>需要在使用时通过 Web 控制模式、参数等；要求在同一局域网下实时和树莓派通信</li>
+<li>Ambient 模式的一个非必要功能需要实时连接互联网</li>
+</ol>
+<p>Pi 开机后，NetworkManager 按优先级尝试自动连接预配置的已知 WiFi。设 60 秒超时，连上即联网工作，60 秒还没拿到 IP，就激活 AP 配置，变成名为 <code>SoundMat</code> 的热点，固定 IP <code>10.42.0.1</code>。</p>
+<p>不管最后是 STA 还是 AP 模式,访问地址永远是 <code>http://soundmat-pi.local:8000</code>。靠 avahi-daemon 提供 mDNS。</p>
+<p>STA 模式下,所有连同一 WiFi 的手机都能用这个地址访问。 AP 模式下,手机连上 SoundMat 这个热点,也用同一个地址访问。</p>
+<p>WIFI 热点设置：</p>
+<p><strong>STA 模式（连已知 WiFi）</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>优先级</th>
+          <th>SSID</th>
+          <th>密码</th>
+          <th>备注</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>100</td>
+          <td><code>soundmat</code></td>
+          <td><code>soundmat2026</code></td>
+          <td>你的手机热点</td>
+      </tr>
+      <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>AP 模式（Pi 自己开热点）</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>项目</th>
+          <th>值</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>SSID</td>
+          <td><code>SoundMat</code></td>
+      </tr>
+      <tr>
+          <td>密码</td>
+          <td><code>soundmat2026</code></td>
+      </tr>
+      <tr>
+          <td>频段</td>
+          <td>2.4 GHz</td>
+      </tr>
+      <tr>
+          <td>Pi IP</td>
+          <td><code>10.42.0.1</code></td>
+      </tr>
+      <tr>
+          <td>控制台</td>
+          <td><code>http://soundmat-pi.local:8000</code></td>
+      </tr>
+  </tbody>
+</table>
+
+
+        </article>
+    </main>
+
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2026 MUKIMASTA</p>
+    </div>
+</footer>
+
+</body>
+
+</html>

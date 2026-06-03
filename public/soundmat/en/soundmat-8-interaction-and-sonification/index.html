@@ -1,0 +1,1398 @@
+<!doctype html>
+<html lang="en-us" dir="ltr" class="kind-page">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Sonification design is the soul of SoundMat. We have already settled the product philosophy and designed the structure, appearance, sensors, hardware, …">
+    <title>SoundMat (8) Interaction and Sonification Design</title>
+    <link rel="canonical" href="https://mukii.space/soundmat/en/soundmat-8-interaction-and-sonification/">
+
+
+
+<meta property="og:title" content="SoundMat (8) Interaction and Sonification Design">
+<meta property="og:description" content="Sonification design is the soul of SoundMat. We have already settled the product philosophy and designed the structure, appearance, sensors, hardware, …">
+<meta property="og:image" content="https://mukii.space/og/og-image-d513573f587f4454484427986d2aa500.svg">
+<meta property="og:image:type" content="image/svg+xml">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mukii.space/soundmat/en/soundmat-8-interaction-and-sonification/">
+<meta property="og:locale" content="en-us">
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SoundMat (8) Interaction and Sonification Design">
+<meta name="twitter:description" content="Sonification design is the soul of SoundMat. We have already settled the product philosophy and designed the structure, appearance, sensors, hardware, …">
+<meta name="twitter:image" content="https://mukii.space/og/og-image-d513573f587f4454484427986d2aa500.svg">
+
+    <link rel="preload" href="/fonts/Newsreader.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/default.min.fb89c3008d933d5ac0e46af0bee4acd14efae3a00fca1ebbeb11e373ecaf3a64.css" integrity="sha256-&#43;4nDAI2TPVrA5GrwvuSs0U7646APyh676xHjc&#43;yvOmQ=">
+    <link rel="stylesheet" href="/css/custom.min.4ad75db0d4010183f7312823592f18e887d33b8d0901d261b50fad0d64c2ba94.css" integrity="sha256-StddsNQBAYP3MSgjWS8Y6IfTO40JAdJhtQ&#43;tDWTCupQ=">
+    <script src="/js/darkmode.min.9211af6d380489c7cf64d4b18a1e49e75be2bebf92031d2165eb6c20bc59c6a2.js" integrity="sha256-khGvbTgEicfPZNSxih5J51vivr&#43;SAx0hZetsILxZxqI=" defer></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <style>
+    :root { --font-size-base: 18px; --content-max-inline-size: 680px; }
+    h1 { font-size: 2em; }
+    .katex { font-size: 0.95em; }
+    pre code {
+    background: var(--code-bg) !important;
+    color: var(--text-color);
+    padding: 1em;
+    border-radius: var(--radius);
+    }
+    </style><script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+
+
+<body>
+<header>
+    <div>
+        <div class="header-left">
+            <h1>
+                <a href="https://mukii.space/">MUKIMASTA</a>
+            </h1>
+            <nav class="site-nav" aria-label="Primary">
+                <a href="/professional-overview/" class="site-nav__link">Professional</a>
+                <a href="/journey/" class="site-nav__link">Journey</a>
+            </nav>
+        </div>
+        <div class="header-controls">
+            <div class="toggle-switch">
+                <input type="checkbox" id="darkModeToggle" class="toggle-input" aria-label="Toggle dark mode">
+                <label for="darkModeToggle" class="toggle-label">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <main class="content-wrapper">
+        <article class="content-container">
+
+<nav class="back-to-parent" aria-label="上一级导航">
+  <a class="back-to-parent__link" href="/soundmat/en/" title="SoundMat" aria-label="返回 SoundMat">‹</a>
+</nav>
+
+
+<nav class="soundmat-lang-switch" aria-label="Document language"><a class="soundmat-lang-switch__link" href="/soundmat/soundmat-8-interaction-and-sonification/" hreflang="zh" lang="zh">中文</a>
+  <span class="soundmat-lang-switch__sep" aria-hidden="true">·</span>
+  <a class="soundmat-lang-switch__link is-active" href="/soundmat/en/soundmat-8-interaction-and-sonification/" hreflang="en" lang="en">English</a>
+</nav>
+    <h1>SoundMat (8) Interaction and Sonification Design</h1>
+    <h4></h4>
+
+<p>Sonification design is the soul of SoundMat. We have already settled the product philosophy and designed the structure, appearance, sensors, hardware, and so on—but those are only the foundation, the places where imperfection arises. Sonification design—how stones and the audience’s touch and pressure become music, in line with the musical art installation we imagine—is the trickiest part, and the easiest to make mediocre.</p>
+<p>Beyond that is LED interaction design. That part is relatively the finishing touch; it serves two functions: cueing and feedback. Through LED cues, users can tell which stage the music has reached and feel the current mood; feedback means that after interacting with SoundMat, besides auditory response, they also get visual LED feedback, which strengthens the sense of participation and artistry.</p>
+<p>Real hardware is not ideal. There is error and imprecision. In earlier hardware manufacturing, we gained a fuller picture of how “object placement sensing” behaves in practice:</p>
+<ul>
+<li>SoundMat sensing resolution is 8 rings × 16/32 slices—224 small regions. We can tell which region has an object, but not how many objects are in that region, not where within the small region, and not whether activation in adjacent regions comes from two small objects or one large one. For our stone sizes we can keep a reasonable correspondence between stones and regions, but for design, overly fine granularity makes the interaction experience worse.</li>
+</ul>
+<p>We will complete interaction and sonification design under these constraints.</p>
+<h2 id="1--generating-music-the-tension-between-freedom-and-feedback">1  Generating Music: The Tension Between Freedom and Feedback<a class="anchor" aria-hidden="true" href="#1--generating-music-the-tension-between-freedom-and-feedback">#</a></h2>
+<p>From the design philosophy onward, we keep stressing that interaction should be simple and intuitive—sounds good however you place things—yet still feel participatory / responsive.</p>
+<p>“Sounds good however you place” vs. “participation / feedback” is really a tension. “Sounds good however you place” means less variation and more system intervention; feedback comes from feeling that <em>I</em> influenced the whole system—that <em>I</em> am in control, not that the system is helping me.</p>
+<p>So there are two poles of freedom:</p>
+<ul>
+<li><strong>Low freedom</strong>: sounds good however you place, strong immersion; but less variation, weak sense of control, easy to bore</li>
+<li><strong>High freedom</strong>: strong feedback, more variation; but easy to go wrong, break immersion, requires musical knowledge</li>
+</ul>
+<p>Push to the extreme and it’s clear: maximum freedom is an instrument. Piano, guitar—enormously rich variation but hard to learn; minimum freedom is a mixer—only controlling which instruments play, easy to bore.</p>
+<p>One idea is different modes for different contexts. Two modes:</p>
+<ul>
+<li><strong>Ambient mode</strong>: low freedom, hotel lobby, provides atmosphere</li>
+<li><strong>Jam mode</strong>: high freedom, allows dissonance, active multi-person participation, more like an instrument</li>
+</ul>
+<h2 id="2--control-approaches-mixing-vs-generation">2  Control Approaches: Mixing vs. Generation<a class="anchor" aria-hidden="true" href="#2--control-approaches-mixing-vs-generation">#</a></h2>
+<p>This section discusses two control approaches for musical installations.</p>
+<p><strong>Mixing</strong> adjusts parameters of existing music—volume, timbre, EQ, tempo, and so on.</p>
+<p><strong>Generation</strong> creates elements in real time for each action—notes, percussion, harmony, musical fragments, and so on.</p>
+<p>In SoundMat, generation is absolutely dominant. Users are not adjusting someone else’s existing music; they are creating their own.</p>
+<h2 id="3--interaction-methods-rotating-scan-and-sound-pool">3  Interaction Methods: Rotating Scan and Sound Pool<a class="anchor" aria-hidden="true" href="#3--interaction-methods-rotating-scan-and-sound-pool">#</a></h2>
+<p>For SoundMat, there are two interaction approaches.</p>
+<p><strong>Rotating scan</strong>: a virtual pointer rotates around the center; when it hits an object, it triggers music generation. One full circle naturally forms a loop; different angles represent different times within that loop. Placing a stone is like writing a musical element on the score.</p>
+<p><strong>Sound pool</strong>: once an object is placed, the music-generation mechanism at that position keeps firing; when the object is lifted, it stops.</p>
+<h2 id="4--brief-overview-of-music-types">4  Brief Overview of Music Types<a class="anchor" aria-hidden="true" href="#4--brief-overview-of-music-types">#</a></h2>
+<p><a href="/soundmat/en/soundmat-2-philosophy/">SoundMat (2) Product Design Philosophy</a> briefly discusses music types suited to SoundMat. Here we expand on the types we chose.</p>
+<p><strong>Ambient / Soundscape</strong>: as public art installation, Ambient-style music lets the piece be noticed and listened to, or ignored.</p>
+<p>Roughly two kinds: musical elements and soundscape elements. Musical elements have definite pitch—they come from instruments or synthesis and obey a tonal system; soundscapes are field recordings, sound fragments, not bound by tonality.</p>
+<p><strong>Lo-Fi</strong>: Lo-fi is warm, grainy, imperfect texture—often loop-based, strongly rhythmic, very suited to our rhythmic mode (rotating scan). Lo-Fi also gives strong immersion.</p>
+<p><strong>Minimal</strong>: generative minimal music is represented by Steve Reich and Philip Glass. Music often rests on extremely simple elements—a few notes, chords, motifs. Classic techniques include phasing and phase-shifting: the same fragment at different speeds across voices, or phase shifts within the piece, weaving new, staggered rhythms that eventually resynchronize—strange and wonderful to hear. A classic is <em>Clapping Music</em>.</p>
+<h2 id="5--ambient-mode-design-narrative-in-sound">5  Ambient Mode Design: Narrative in Sound<a class="anchor" aria-hidden="true" href="#5--ambient-mode-design-narrative-in-sound">#</a></h2>
+<p>Ambient mode aims for music that can be noticed and listened to, or ignored. However many stones are on the surface, music always exists as atmosphere—not jarring, not empty—like a background color for the environment.</p>
+<p>In our Ambient demo we had a basic prototype. Inside to outside maps low to high frequency—eight musical elements total. Sectors within a ring don’t differ; stone count on the same ring controls that layer’s musical content.</p>
+<p>The demo’s choice of eight elements was the most basic: pentatonic drone, pad, synthetic notes, synthetic rain, synthetic water drops—it sounded okay and met our minimum bar.</p>
+<p>But the problem: it’s too ordinary. Add a low layer, some notes, bird calls, bells. After playing I think “nice”—and then what?</p>
+<p>I want <em>art</em>. So I wondered: could we make a “narrative environment”? Previous elements had no connection; but with environmental narrative—a coherent, logical set of musical elements—it wouldn’t be ordinary.</p>
+<p>Environmental narrative lets the user unfold a scene gradually as they place stones. The narrative I most want is a Japanese temple. A cosmic environment also fits—the device shape is literally concentric rings.</p>
+<p><strong>Environmental music mode — <em>Arashiyama, Kyoto</em></strong></p>
+<p>Foundation</p>
+<p><a href="https://locusonus.org/soundmap/">Locus Sonus – Locustream – sound map</a>: yamanashi — yamanakako (Japan)</p>
+<p><strong>Key:</strong></p>
+<p>C major pentatonic</p>
+<p><strong>Ring 0 / Ring 1: bass</strong></p>
+<ul>
+<li>Trigger: heavy drum + large temple bell</li>
+<li>Sustain: synthetic organ drone + breath-like texture</li>
+</ul>
+<p><strong>Ring 2: mid-low</strong></p>
+<ul>
+<li>Sustain: harmonic fragments, transposed to the key</li>
+</ul>
+<p><strong>Ring 3: bamboo grove train</strong></p>
+<ul>
+<li>One stone
+<ul>
+<li>Trigger: footsteps</li>
+<li>Sustain: bamboo wind + stream</li>
+</ul>
+</li>
+<li>Two stones
+<ul>
+<li>Trigger: railway crossing bell / ding-ding-ding</li>
+<li>Sustain: stronger bamboo wind + stream</li>
+</ul>
+</li>
+<li>Three stones
+<ul>
+<li>Trigger: crossing bell + railway sound fragment</li>
+<li>Sustain: stronger bamboo wind + stream</li>
+</ul>
+</li>
+</ul>
+<p><strong>Ring 4: weather — rain, thunder</strong></p>
+<ul>
+<li>One stone
+<ul>
+<li>Sustain: light rain
+<ul>
+<li>If Ring 3 active: rain on bamboo leaves + rain on water</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Two stones
+<ul>
+<li>Sustain: moderate rain + strong wind</li>
+</ul>
+</li>
+<li>Three stones
+<ul>
+<li>Sustain: heavy rain + howling wind</li>
+<li>Effect: wide-scene spatial reverb</li>
+</ul>
+</li>
+<li>Four stones
+<ul>
+<li>Sustain: heavy rain + thunder</li>
+<li>Effect: wide-scene spatial reverb</li>
+</ul>
+</li>
+</ul>
+<p><strong>Ring 5: [mid-high pitch generation]</strong></p>
+<ul>
+<li>Trigger: synthetic marimba</li>
+<li>Sustain: random marimba</li>
+<li>Sector angle maps to pitch; split in half: 0–15, 31–16 symmetric</li>
+</ul>
+<p><strong>Ring 6: melodic fragment loop</strong></p>
+<ul>
+<li>Sustain: material</li>
+</ul>
+<p><strong>Ring 7: events</strong></p>
+<ul>
+<li>Trigger: material</li>
+<li>Sustain: random trigger material</li>
+</ul>
+<p><strong>Special pattern:</strong></p>
+<ul>
+<li>Stones chained across rings: riding the Arashiyama scenic railway</li>
+<li></li>
+</ul>
+<h2 id="6--jam-mode--lo-fi-loop">6  Jam Mode – Lo-Fi Loop<a class="anchor" aria-hidden="true" href="#6--jam-mode--lo-fi-loop">#</a></h2>
+<p>Harmony and drums loop fixed; only mix, not generate.<br>
+Melody (including bass) uses rotating scan.</p>
+<h3 id="61--meter">6.1  Meter<a class="anchor" aria-hidden="true" href="#61--meter">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>Option</th>
+          <th>Time sig.</th>
+          <th>Chord progression loop length</th>
+          <th>Each chord lasts</th>
+          <th>SoundMat one revolution</th>
+          <th>32-slice resolution</th>
+          <th>Grids per bar</th>
+          <th>Quantized grids per bar</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Option 1</td>
+          <td>4/4</td>
+          <td>4 bars</td>
+          <td>1 bar</td>
+          <td>4 bars</td>
+          <td>8th notes</td>
+          <td>8</td>
+          <td>8</td>
+      </tr>
+      <tr>
+          <td>Option 2</td>
+          <td>4/4</td>
+          <td>8 bars</td>
+          <td>2 bars (repeat once)</td>
+          <td>8 bars</td>
+          <td>quarter notes</td>
+          <td>4</td>
+          <td>4</td>
+      </tr>
+      <tr>
+          <td><strong>Option 3</strong></td>
+          <td><strong>4/4</strong></td>
+          <td><strong>8 bars</strong></td>
+          <td><strong>2 bars (repeat once)</strong></td>
+          <td><strong>2 bars</strong></td>
+          <td><strong>16th notes</strong></td>
+          <td><strong>16</strong></td>
+          <td><strong>8</strong></td>
+      </tr>
+      <tr>
+          <td>Option 4</td>
+          <td>4/4</td>
+          <td>4 bars</td>
+          <td>1 bar</td>
+          <td>2 bars</td>
+          <td>16th notes</td>
+          <td>16</td>
+          <td>8</td>
+      </tr>
+  </tbody>
+</table>
+<p>After comparison, we chose Option 3. Reason: balance of repetition and contrast. Same trigger timing → repetition; different trigger pitch → contrast.</p>
+<p>Default tempo is provisionally 120 bpm. (Designed as an adjustable parameter.)</p>
+<p>Thus slice 0–15 is the first bar of each chord; slice 16–31 is the second bar.</p>
+<p>Example:</p>
+<p><strong>Bar 1 — Slice 0–15</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>Beat</th>
+          <th>1</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>2</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>3</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>4</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Slice</strong></td>
+          <td>0</td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>5</td>
+          <td>6</td>
+          <td>7</td>
+          <td>8</td>
+          <td>9</td>
+          <td>10</td>
+          <td>11</td>
+          <td>12</td>
+          <td>13</td>
+          <td>14</td>
+          <td>15</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Bar 2 — Slice 16–31</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>Beat</th>
+          <th>1</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>2</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>3</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>4</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Slice</strong></td>
+          <td>16</td>
+          <td>17</td>
+          <td>18</td>
+          <td>19</td>
+          <td>20</td>
+          <td>21</td>
+          <td>22</td>
+          <td>23</td>
+          <td>24</td>
+          <td>25</td>
+          <td>26</td>
+          <td>27</td>
+          <td>28</td>
+          <td>29</td>
+          <td>30</td>
+          <td>31</td>
+      </tr>
+  </tbody>
+</table>
+<p>0° is slice 0, 90° is slice 8, 180° is slice 16</p>
+<p>Quantization is handled later; see below.</p>
+<h3 id="62--ring-interaction-design">6.2  Ring Interaction Design<a class="anchor" aria-hidden="true" href="#62--ring-interaction-design">#</a></h3>
+<p><strong>Ring 0/1</strong>  No angle—start/stop control and global Lo-Fi mix</p>
+<p>Treat R0/R1 as one unit. Sum of pressure on all R0+R1 cells (raw ADC) determines control state; per-cell threshold (default 500) decides whether that cell has a stone.</p>
+<ul>
+<li>No control stones (pressure sum &lt; <code>control_sum_min</code>, default 250): scan line stationary, global reset; placing stones on R2–R7 immediately previews one hit (default volume 50%) and lights LED preview</li>
+<li>Control stones present (pressure sum ≥ 250): transport starts automatically, scan line advances</li>
+<li>Control stones briefly disappear (ADC glitch): within 100 ms release hold still treated as control stones, avoiding false reset</li>
+<li>Pressure sum maps Lo-Fi 0–1000 (default sum ≤0 → 0, sum ≥ 1000 → 1000); higher → duller, warmer, stronger tape grain</li>
+<li>Lo-Fi adjusted continuously in real time, unaffected by scan line (<code>cutoff</code> + <code>drive</code> → <code>jam_master</code>)</li>
+<li>Placing stones on outer rings during loop playback: optional immediate preview (Control page Place preview slider, default 25%; drag to 0 to disable)</li>
+<li>At end of piece (after 8 drum-sequence passes): must clear R0/R1 and place again to restart</li>
+</ul>
+<p>Deployment defaults match Mat page Calibration: <code>threshold=500</code>, <code>control_sum_min=250</code>, Lo-Fi sum max 1000 (defaults restored on reboot, not persisted).</p>
+<p><strong>Ring 4–6</strong>  Melody</p>
+<p>Different instruments per ring</p>
+<blockquote>
+<p><strong>Forward legato (deprecated; not implemented)</strong></p>
+<p>One beat divided into a group of four trigger notes. Each cell stores only one trigger; when the scan line hits a cell, not only that cell sounds—a random forward burst from that cell within the group (so hitting one cell may produce 1–4 notes), legato.</p>
+<p>Burst must not cross the current group boundary. If downstream in the same ring and group there is another stone, burst stops before that stone.</p>
+<p>In practice, forward legato could be a parameter: max legato count, range 1–4; 1 means no legato.</p></blockquote>
+<p>Melody quantized to 8 eighth-note trigger positions per bar (2× quantization, merge pairs: eighth notes; odd slices merge down to even, trigger timing merges to even—e.g. slice 1 functionally equals slice 0, triggers at slice 0).</p>
+<p><strong>Ring 2/3</strong>  Bass melody</p>
+<p>Bass voice also quantized to 8 trigger positions (2× quantization, eighth-note merge).</p>
+<p><strong>Ring names and roles</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>Ring</th>
+          <th>Role</th>
+          <th>Timbre</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>R7 (outermost)</td>
+          <td>Melody</td>
+          <td>Marimba</td>
+      </tr>
+      <tr>
+          <td>R6</td>
+          <td>Melody</td>
+          <td>Lo-Fi electric piano</td>
+      </tr>
+      <tr>
+          <td>R5</td>
+          <td>Melody</td>
+          <td>Lo-Fi electric piano</td>
+      </tr>
+      <tr>
+          <td>R4</td>
+          <td>Melody</td>
+          <td>Pad-Pluck</td>
+      </tr>
+      <tr>
+          <td>R3</td>
+          <td>Bass</td>
+          <td>Pluck bass</td>
+      </tr>
+      <tr>
+          <td>R2 (innermost)</td>
+          <td>BASS</td>
+          <td>Sub bass</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="63--harmony--chord-progression">6.3  Harmony / Chord Progression<a class="anchor" aria-hidden="true" href="#63--harmony--chord-progression">#</a></h3>
+<p><strong>Pitch notation</strong></p>
+<p>Digits 1–7 are scale degrees in the current key (movable do, not fixed pitch).</p>
+<p><strong>Accidentals</strong> after the digit: <code>#</code> half step up, <code>b</code> half step down.<br>
+<strong>Octave</strong> at the end: <code>^</code> up one octave, <code>_</code> down one octave, stackable (<code>^^</code> / <code>__</code>). No octave mark = 4th octave.<br>
+<strong>Fixed order</strong>: digit → accidental → octave, e.g. <code>1#^</code>.<br>
+<strong>null</strong> = same as previous.</p>
+<p>Examples (C major):</p>
+<table>
+  <thead>
+      <tr>
+          <th>Notation</th>
+          <th>Actual pitch</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>1</code></td>
+          <td>C4</td>
+      </tr>
+      <tr>
+          <td><code>1#</code></td>
+          <td>C#4</td>
+      </tr>
+      <tr>
+          <td><code>1^</code></td>
+          <td>C5</td>
+      </tr>
+      <tr>
+          <td><code>1#^</code></td>
+          <td>C#5</td>
+      </tr>
+      <tr>
+          <td><code>6__</code></td>
+          <td>A2</td>
+      </tr>
+      <tr>
+          <td><code>4b_</code></td>
+          <td>E3</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Transposition</strong>: change manifest <code>[music].key</code>; all notation shifts with the key root. E.g. <code>1^</code> is C5 in C major; after key → B it becomes B4. Entire piece—melody, bass, chord voicing—transposes consistently.</p>
+<table>
+  <thead>
+      <tr>
+          <th><strong>No.</strong></th>
+          <th><strong>Degrees / chord cycle</strong></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>1</strong></td>
+          <td>2m9 → 513 → 1maj9 → 69</td>
+      </tr>
+      <tr>
+          <td><strong>1B</strong></td>
+          <td>2m9 → 2m9/5, 57b9 → 1maj9 → 16, 1#dim</td>
+      </tr>
+      <tr>
+          <td><strong>1C</strong></td>
+          <td>2m9 → 59 → 3m7 → 67</td>
+      </tr>
+  </tbody>
+</table>
+<p>Harmony 1 voicing</p>
+<pre tabindex="0"><code>2m9: 2_ · 4_ · 6_ · 1 · 3
+513: 5__ · 2_ · 4_ · 7_ · 3
+1maj9: 1_ · 3_ · 5_ · 7_ · 2
+69: 6__ · 3_ · 5_ · 7_ · 1#
+</code></pre><p>Prototype implements harmony 1 first.</p>
+<h3 id="64--melody-trigger-notes">6.4  Melody Trigger Notes<a class="anchor" aria-hidden="true" href="#64--melody-trigger-notes">#</a></h3>
+<p>Design approach:</p>
+<p>Beats 1 and 3: same—chord tones minus root, placed in melody; adjacent chords on the same ring link.<br>
+BASS uses root.</p>
+<p>Beats 2 and 4</p>
+<p>Harmony 1 trigger notes:</p>
+<p><strong>Chord 1: 2m9</strong></p>
+<p>(2 4 6 1^ 3^)</p>
+<table>
+  <thead>
+      <tr>
+          <th>Ring</th>
+          <th>1</th>
+          <th>&amp;</th>
+          <th>2</th>
+          <th>&amp;</th>
+          <th>3</th>
+          <th>&amp;</th>
+          <th>4</th>
+          <th>&amp;</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Sector</td>
+          <td>0</td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>5</td>
+          <td>6</td>
+          <td>7</td>
+      </tr>
+      <tr>
+          <td><strong>R7</strong></td>
+          <td>3^</td>
+          <td>1^</td>
+          <td>2^</td>
+          <td>3^</td>
+          <td>3^</td>
+          <td>2^</td>
+          <td>1^</td>
+          <td>6</td>
+      </tr>
+      <tr>
+          <td><strong>R6</strong></td>
+          <td>1^</td>
+          <td>5</td>
+          <td>6</td>
+          <td>1^</td>
+          <td>1^</td>
+          <td>5</td>
+          <td>6</td>
+          <td>3^</td>
+      </tr>
+      <tr>
+          <td><strong>R5</strong></td>
+          <td>6</td>
+          <td>3</td>
+          <td>4</td>
+          <td>6</td>
+          <td>6</td>
+          <td>4</td>
+          <td>3</td>
+          <td>2</td>
+      </tr>
+      <tr>
+          <td><strong>R4</strong></td>
+          <td>4</td>
+          <td>3</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>3</td>
+          <td>2</td>
+          <td>3</td>
+      </tr>
+      <tr>
+          <td><strong>R3</strong> bass</td>
+          <td>4_</td>
+          <td>4_</td>
+          <td>6_</td>
+          <td>6_</td>
+          <td>4_</td>
+          <td>4_</td>
+          <td>6_</td>
+          <td>6_</td>
+      </tr>
+      <tr>
+          <td><strong>R2</strong> BASS</td>
+          <td>2_</td>
+          <td>2_</td>
+          <td>2_</td>
+          <td>2_</td>
+          <td>2_</td>
+          <td>2_</td>
+          <td>2_</td>
+          <td>2_</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Chord 2: 513</strong></p>
+<p>(5_ 7_ 2 4 6 1^ 3^)</p>
+<table>
+  <thead>
+      <tr>
+          <th>Ring</th>
+          <th>1</th>
+          <th>&amp;</th>
+          <th>2</th>
+          <th>&amp;</th>
+          <th>3</th>
+          <th>&amp;</th>
+          <th>4</th>
+          <th>&amp;</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Sector</td>
+          <td>0</td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>5</td>
+          <td>6</td>
+          <td>7</td>
+      </tr>
+      <tr>
+          <td><strong>R7</strong></td>
+          <td>3^</td>
+          <td>1^</td>
+          <td>2^</td>
+          <td>3^</td>
+          <td>3^</td>
+          <td>2^</td>
+          <td>1^</td>
+          <td>5</td>
+      </tr>
+      <tr>
+          <td><strong>R6</strong></td>
+          <td>7</td>
+          <td>5</td>
+          <td>6</td>
+          <td>7</td>
+          <td>7</td>
+          <td>5</td>
+          <td>6</td>
+          <td>5</td>
+      </tr>
+      <tr>
+          <td><strong>R5</strong></td>
+          <td>5</td>
+          <td>2</td>
+          <td>3</td>
+          <td>5</td>
+          <td>5</td>
+          <td>3</td>
+          <td>2</td>
+          <td>7_</td>
+      </tr>
+      <tr>
+          <td><strong>R4</strong></td>
+          <td>2</td>
+          <td>3</td>
+          <td>1</td>
+          <td>2</td>
+          <td>2</td>
+          <td>3</td>
+          <td>7_</td>
+          <td>1</td>
+      </tr>
+      <tr>
+          <td><strong>R3</strong> bass</td>
+          <td>4_</td>
+          <td>4_</td>
+          <td>5_</td>
+          <td>5_</td>
+          <td>4_</td>
+          <td>4_</td>
+          <td>5_</td>
+          <td>5_</td>
+      </tr>
+      <tr>
+          <td><strong>R2</strong> BASS</td>
+          <td>5__</td>
+          <td>5__</td>
+          <td>5__</td>
+          <td>5__</td>
+          <td>5__</td>
+          <td>5__</td>
+          <td>5__</td>
+          <td>5_</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Chord 3: 1maj9</strong></p>
+<p>(1 3 5 7 2^)</p>
+<table>
+  <thead>
+      <tr>
+          <th>Ring</th>
+          <th>1</th>
+          <th>&amp;</th>
+          <th>2</th>
+          <th>&amp;</th>
+          <th>3</th>
+          <th>&amp;</th>
+          <th>4</th>
+          <th>&amp;</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Sector</td>
+          <td>0</td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>5</td>
+          <td>6</td>
+          <td>7</td>
+      </tr>
+      <tr>
+          <td><strong>R7</strong></td>
+          <td>2^</td>
+          <td>7</td>
+          <td>1^</td>
+          <td>2^</td>
+          <td>2^</td>
+          <td>1^</td>
+          <td>3^</td>
+          <td>5</td>
+      </tr>
+      <tr>
+          <td><strong>R6</strong></td>
+          <td>7</td>
+          <td>6</td>
+          <td>5</td>
+          <td>6</td>
+          <td>7</td>
+          <td>6</td>
+          <td>5</td>
+          <td>3</td>
+      </tr>
+      <tr>
+          <td><strong>R5</strong></td>
+          <td>5</td>
+          <td>2</td>
+          <td>3</td>
+          <td>5</td>
+          <td>5</td>
+          <td>3</td>
+          <td>2</td>
+          <td>1</td>
+      </tr>
+      <tr>
+          <td><strong>R4</strong></td>
+          <td>3</td>
+          <td>2</td>
+          <td>1</td>
+          <td>3</td>
+          <td>3</td>
+          <td>1</td>
+          <td>7_</td>
+          <td>1</td>
+      </tr>
+      <tr>
+          <td><strong>R3</strong> bass</td>
+          <td>3_</td>
+          <td>3_</td>
+          <td>5_</td>
+          <td>5_</td>
+          <td>3_</td>
+          <td>3_</td>
+          <td>5_</td>
+          <td>5_</td>
+      </tr>
+      <tr>
+          <td><strong>R2</strong> BASS</td>
+          <td>1_</td>
+          <td>1_</td>
+          <td>1_</td>
+          <td>1_</td>
+          <td>1_</td>
+          <td>1_</td>
+          <td>1_</td>
+          <td>1_</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Chord 4: 69</strong></p>
+<p>(6_ 1# 3 5 7)</p>
+<table>
+  <thead>
+      <tr>
+          <th>Ring</th>
+          <th>1</th>
+          <th>&amp;</th>
+          <th>2</th>
+          <th>&amp;</th>
+          <th>3</th>
+          <th>&amp;</th>
+          <th>4</th>
+          <th>&amp;</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Sector</td>
+          <td>0</td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>5</td>
+          <td>6</td>
+          <td>7</td>
+      </tr>
+      <tr>
+          <td><strong>R7</strong></td>
+          <td>1#^</td>
+          <td>2^</td>
+          <td>3^</td>
+          <td>2^</td>
+          <td>1#^</td>
+          <td>2^</td>
+          <td>3^</td>
+          <td>1#^</td>
+      </tr>
+      <tr>
+          <td><strong>R6</strong></td>
+          <td>6</td>
+          <td>3</td>
+          <td>5</td>
+          <td>6</td>
+          <td>6</td>
+          <td>5</td>
+          <td>3</td>
+          <td>6_</td>
+      </tr>
+      <tr>
+          <td><strong>R5</strong></td>
+          <td>5</td>
+          <td>2</td>
+          <td>3</td>
+          <td>5</td>
+          <td>5</td>
+          <td>3</td>
+          <td>2</td>
+          <td>1#</td>
+      </tr>
+      <tr>
+          <td><strong>R4</strong></td>
+          <td>3</td>
+          <td>2</td>
+          <td>1#</td>
+          <td>2</td>
+          <td>3</td>
+          <td>2</td>
+          <td>1#</td>
+          <td>3</td>
+      </tr>
+      <tr>
+          <td><strong>R3</strong> bass</td>
+          <td>3_</td>
+          <td>3_</td>
+          <td>5_</td>
+          <td>5_</td>
+          <td>3_</td>
+          <td>3_</td>
+          <td>5_</td>
+          <td>5_</td>
+      </tr>
+      <tr>
+          <td><strong>R2</strong> BASS</td>
+          <td>6__</td>
+          <td>6__</td>
+          <td>6__</td>
+          <td>6__</td>
+          <td>6__</td>
+          <td>6__</td>
+          <td>6__</td>
+          <td>6__</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="65--drums">6.5  Drums<a class="anchor" aria-hidden="true" href="#65--drums">#</a></h3>
+<p><code>X</code> = accent hit, <code>x</code> = ghost / light hit.</p>
+<p><strong>Loop A: empty</strong></p>
+<p><strong>Loop B</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>Instrument</th>
+          <th>1</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>2</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>3</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>4</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Kick</strong></td>
+          <td>X</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><strong>Snare</strong></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><strong>Hi-hat</strong></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Loop C</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>Instrument</th>
+          <th>1</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>2</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>3</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>4</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Kick</strong></td>
+          <td>X</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><strong>Snare</strong></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><strong>Hi-hat</strong></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Loop D</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>Instrument</th>
+          <th>1</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>2</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>3</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>4</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Kick</strong></td>
+          <td>X</td>
+          <td></td>
+          <td></td>
+          <td>x</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>x</td>
+          <td></td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><strong>Snare</strong></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><strong>Hi-hat</strong></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td>x</td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td>x</td>
+      </tr>
+  </tbody>
+</table>
+<p>Two approaches:</p>
+<ol>
+<li>Fixed number of passes
+<ul>
+<li>Option 1 meter (4 bar): A×1→B×1→C×2→A×2→D×2→A×2</li>
+<li>Option 3 meter (2 bar): A×1→B×1→C×2→A×1→D×1→A×1</li>
+</ul>
+</li>
+<li>ABCD determined by object count</li>
+</ol>
+<p>We use fixed passes: <strong>A×1→B×1→C×2→A×1→D×2→A×1</strong></p>
+<p>After that, scan stops and harmony/drums no longer advance; must clear R0/R1 to restart.</p>
+<p>Harmony and drums are both synthesized in real time (not samples); multiple stones in one sector attenuate velocity by 1/√N.</p>
+<h3 id="66--jam-led-scheme">6.6  Jam LED Scheme<a class="anchor" aria-hidden="true" href="#66--jam-led-scheme">#</a></h3>
+<p>108 LEDs evenly around the ring, aligned with 32 melody sectors. This section describes on/off and color only—not implementation.</p>
+<h4 id="layout">Layout<a class="anchor" aria-hidden="true" href="#layout">#</a></h4>
+<ul>
+<li><strong>#0</strong> at 12 o’clock; indices increase <strong>clockwise</strong> (0 → 107 → 0).</li>
+<li>Sector <code>n</code> center LED: <code>round(n ÷ 32 × 108) mod 108</code>.</li>
+<li>Recommended refresh <strong>≥ 60 Hz</strong>, 108-channel RGB per frame.</li>
+</ul>
+<h4 id="colors-rgb-0255">Colors (RGB 0–255)<a class="anchor" aria-hidden="true" href="#colors-rgb-0255">#</a></h4>
+<table>
+  <thead>
+      <tr>
+          <th>Name</th>
+          <th>R</th>
+          <th>G</th>
+          <th>B</th>
+          <th>Used for</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>White</td>
+          <td>255</td>
+          <td>255</td>
+          <td>255</td>
+          <td>Idle breathing, scan trail</td>
+      </tr>
+      <tr>
+          <td>True red</td>
+          <td>255</td>
+          <td>48</td>
+          <td>48</td>
+          <td>12 o’clock marker #0</td>
+      </tr>
+      <tr>
+          <td>Light red</td>
+          <td>255</td>
+          <td>140</td>
+          <td>140</td>
+          <td>E/S/W markers #27 #54 #81</td>
+      </tr>
+      <tr>
+          <td>R0</td>
+          <td>100</td>
+          <td>108</td>
+          <td>128</td>
+          <td>Transport (preview/hit/marker generally unused)</td>
+      </tr>
+      <tr>
+          <td>R1</td>
+          <td>148</td>
+          <td>112</td>
+          <td>88</td>
+          <td>Transport</td>
+      </tr>
+      <tr>
+          <td>R2</td>
+          <td>88</td>
+          <td>72</td>
+          <td>210</td>
+          <td>Bass</td>
+      </tr>
+      <tr>
+          <td>R3</td>
+          <td>32</td>
+          <td>188</td>
+          <td>148</td>
+          <td>Bass</td>
+      </tr>
+      <tr>
+          <td>R4</td>
+          <td>48</td>
+          <td>152</td>
+          <td>255</td>
+          <td>Melody</td>
+      </tr>
+      <tr>
+          <td>R5</td>
+          <td>200</td>
+          <td>72</td>
+          <td>168</td>
+          <td>Melody</td>
+      </tr>
+      <tr>
+          <td>R6</td>
+          <td>218</td>
+          <td>158</td>
+          <td>48</td>
+          <td>Melody</td>
+      </tr>
+      <tr>
+          <td>R7</td>
+          <td>255</td>
+          <td>108</td>
+          <td>32</td>
+          <td>Melody</td>
+      </tr>
+  </tbody>
+</table>
+<h4 id="cardinal-markers">Cardinal markers<a class="anchor" aria-hidden="true" href="#cardinal-markers">#</a></h4>
+<p>Fixed LEDs <strong>#0, #27, #54, #81</strong> (N/E/S/W). Breathing period ~ <strong>4.6 s</strong> (<code>sin(t×1.35)</code>).</p>
+<ul>
+<li><strong>#0</strong>: true red; <strong>#27 / #54 / #81</strong>: light red</li>
+<li><strong>All states</strong> (idle, playing, finished): four markers share red breathing, opacity <strong>75%–100%</strong> (relative to color peak)</li>
+<li><strong>Non-markers</strong>: only in <strong>idle</strong>—full-ring dim white breathing <strong>0–20</strong> (RGB); no ambient white field while playing / finished</li>
+</ul>
+<p><strong>Logic ↔ physical alignment</strong> (Mat page Calibration, defaults): <code>sector_offset=4</code> (S→L logical sector rotation), <code>led_offset=101</code> (strip physical rotation, applied uniformly in <code>set_buffer</code>), <code>wire_slice_mirror=on</code> (column mirror—aligns physical CW with software CW sector). LED #0 and slice 0 align via these offsets—not “unmeasured.”</p>
+<h4 id="modes">Modes<a class="anchor" aria-hidden="true" href="#modes">#</a></h4>
+<p>Priority top to bottom; first match wins.</p>
+<ul>
+<li><strong>Finished</strong> — Piece ended and not playing: all off except four markers; markers still true/light red breathing. Clear R0/R1 or reset to exit.</li>
+<li><strong>Playing</strong> — Active playback: no full-ring ambient breathing; LEDs with no effect <strong>off</strong>; only white scan trail, R2–R7 stone dim markers, marker red breathing. Placing R0/R1 <strong>starts transport</strong> automatically.</li>
+<li><strong>Idle</strong> — Not playing and not finished: non-markers full-ring dim white breathing <strong>0–20</strong>; four markers red breathing <strong>75%–100%</strong> (including melody stones only, control sum not yet reached).</li>
+</ul>
+<h4 id="during-playback">During playback<a class="anchor" aria-hidden="true" href="#during-playback">#</a></h4>
+<p><strong>Scan (white)</strong></p>
+<ul>
+<li>Only <strong>behind</strong> the scan head lit, not ahead; head advances clockwise.</li>
+<li>Brightness ratios for 0–10 LEDs trailing the head: <strong>1.00 · 0.75 · 0.40 · 0.30 · 0.22 · 0.15 · 0.10 · 0.06 · 0.03 · 0.01 · 0</strong>.</li>
+<li>No scan, no stones, not a marker: <strong>off</strong>.</li>
+</ul>
+<p><strong>Stone markers (R2–R7)</strong></p>
+<ul>
+<li>Per stone: sector center LED plus one each side (<del>3 LEDs), ring color overlaid (</del> <strong>22% opacity × 55% mix</strong> on white base)</li>
+</ul>
+<h4 id="short-effects">Short effects<a class="anchor" aria-hidden="true" href="#short-effects">#</a></h4>
+<p><strong>Preview</strong> (stone placed on R2–R7)</p>
+<ul>
+<li><strong>Idle</strong>: sector center ±2 LEDs, ring color, <strong>100%</strong> brightness, <strong>1000 ms</strong> cosine fade; corresponding single-note preview (default <strong>50%</strong> volume)</li>
+<li><strong>During loop</strong> (Place preview &gt; 0): same LED preview + immediate one hit (default <strong>25%</strong> volume), marked triggered to avoid scan duplicate</li>
+</ul>
+<p><strong>Scan hit</strong> (scan passes stone while playing)</p>
+<ul>
+<li>Sector center and clockwise indices <strong>+1, 0, −1, −2</strong>—<strong>4 LEDs</strong> total (excludes <strong>+2</strong>), ring color, <strong>180 ms</strong> total (~10 ms rise, hold to 50 ms, then squared decay).</li>
+<li>Brightness: <strong>100%</strong> (center) · <strong>82%</strong> (±1) · <strong>52%</strong> (−2).</li>
+<li>Composited with scan white by <strong>brighter</strong> of the two—no dimming, no punching hole in trail; independent of whether mat shows scan line.</li>
+</ul>
+<p>Finished state: no preview overlay; no hit flash when not playing.</p>
+<h2 id="synthesis-order">Synthesis order<a class="anchor" aria-hidden="true" href="#synthesis-order">#</a></h2>
+<p>Per LED per frame: mode base → preview overlay (if any) → hit overlay (if any, brighter-wins with base). Markers in playing and finished states still override same index per red-breathing rules.</p>
+<h2 id="timbre-and-effects-table">Timbre and effects table<a class="anchor" aria-hidden="true" href="#timbre-and-effects-table">#</a></h2>
+<p>See Web Demo</p>
+<p>src/soundmat/jam/synths</p>
+<hr>
+<p>Initial trigger notes (deprecated)</p>
+<blockquote>
+<table>
+  <thead>
+      <tr>
+          <th>Beat</th>
+          <th>1</th>
+          <th>2</th>
+          <th>3</th>
+          <th>4</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Chord</strong></td>
+          <td>2m9</td>
+          <td>513</td>
+          <td>1maj9</td>
+          <td>69</td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td>3 4 6 1^ 3^</td>
+          <td>3 4 6 7 3^</td>
+          <td>2 3 6 7 2^</td>
+          <td>3 5 7 1#^ 2</td>
+      </tr>
+      <tr>
+          <td>1&amp;</td>
+          <td>2 1^ 2^ 3^ 4^</td>
+          <td>1 2 5 1^ 4^</td>
+          <td>3 4 7 1^ 3^</td>
+          <td>1# 3 6 2^ 3^</td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td>1 4 6 1^ 3^</td>
+          <td>4 5 7 2^ 3^</td>
+          <td>2 5 6 7 2^</td>
+          <td>7_ 4 5 7 1#^</td>
+      </tr>
+      <tr>
+          <td>2&amp;</td>
+          <td>2 6 1^ 3^ 4^</td>
+          <td>2 3 5 1^ 4^</td>
+          <td>3 4 7 2^ 3^</td>
+          <td>1# 3 6 1#^ 2^</td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td>3 4 6 1^ 3^</td>
+          <td>3 4 6 7 3^</td>
+          <td>2 3 6 7 2^</td>
+          <td>3 5 7 1#^ 2</td>
+      </tr>
+      <tr>
+          <td>3&amp;</td>
+          <td>5 6 1^ 6 2^</td>
+          <td>1 3 5 1^ 2^</td>
+          <td>1 2 5 6 1^</td>
+          <td>1# 3 5 6 1#^</td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td>3 4 6 1^ 1^</td>
+          <td>7_ 2 4 7 1^</td>
+          <td>7_ 1 3 5 7</td>
+          <td>6_ 3 6 1#^ 3^</td>
+      </tr>
+      <tr>
+          <td>4&amp;</td>
+          <td>1 3 4 3^ 6</td>
+          <td>5_ 1 2 4 5</td>
+          <td>1 7_ 2 3 5</td>
+          <td>5_ 1# 3 6 1#^</td>
+      </tr>
+  </tbody>
+</table>
+<p>Each group of five numbers in the table is the trigger note for rings 3–7 at that beat</p></blockquote>
+
+
+        </article>
+    </main>
+
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2026 MUKIMASTA</p>
+    </div>
+</footer>
+
+</body>
+
+</html>

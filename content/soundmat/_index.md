@@ -1,5 +1,10 @@
 ---
 title: "SoundMat"
+docLang: zh
+translationKey: soundmat-index
+alternates:
+  zh: /soundmat/
+  en: /soundmat/en/
 description: "基于触觉传感与音乐的交互装置 · 设计笔记"
 ---
 
@@ -7,13 +12,22 @@ description: "基于触觉传感与音乐的交互装置 · 设计笔记"
 - [SoundMat (2) Philosophy 产品设计哲学](/soundmat/soundmat-2-philosophy/)
 - [SoundMat (3) 外观设计](/soundmat/soundmat-3-exterior-design/)
 - [SoundMat (4) 结构设计](/soundmat/soundmat-4-structural-design/)
-- [SoundMat (?) 传感器原理及设计](/soundmat/soundmat-question-sensor-principles-and-design/)
-- [SoundMat (?) 电子系统设计](/soundmat/soundmat-question-electronics-system-design/)
-- [SoundMat (?) 固件设计](/soundmat/soundmat-question-firmware-design/)
-- [SoundMat (?)](/soundmat/soundmat-question-placeholder/)
-- [SoundMat (?) 交互与声音化设计 Interaction and Sonification](/soundmat/soundmat-question-interaction-and-sonification/)
-- [SoundMat (?) 结构制造](/soundmat/soundmat-question-structural-manufacturing/)
-- [SoundMat (?) 传感器制造](/soundmat/soundmat-question-sensor-manufacturing/)
-- [SoundMat (?) 电子系统制造](/soundmat/soundmat-question-electronics-manufacturing/)
-- [SoundMat 尾声与总结](/soundmat/soundmat-epilogue-and-summary/)
-- [SoundMat 时间线](/soundmat/soundmat-timeline/)
+- [SoundMat (5) 传感器原理及设计](/soundmat/soundmat-5-sensor-principles-and-design/)
+- [SoundMat (6) 电子系统设计](/soundmat/soundmat-6-electronics-system-design/)
+- [SoundMat (7) 固件设计](/soundmat/soundmat-7-firmware-design/)
+- [SoundMat (8) 交互与声音化设计 Interaction and Sonification](/soundmat/soundmat-8-interaction-and-sonification/)
+- [SoundMat (9) 结构制造](/soundmat/soundmat-9-structural-manufacturing/)
+- [SoundMat (10) 传感器制造](/soundmat/soundmat-10-sensor-manufacturing/)
+- [SoundMat (11) 电子系统制造](/soundmat/soundmat-11-electronics-manufacturing/)
+- [SoundMat (12) 软件设计与开发](/soundmat/soundmat-12-software-design-and-development/)
+- [SoundMat (13) 尾声与总结](/soundmat/soundmat-13-epilogue-and-summary/)
+
+附录
+
+- [SoundMat (14) 时间线](/soundmat/soundmat-14-timeline/)
+- [SoundMat (15) 网络解决方案](/soundmat/soundmat-15-network-solution/)
+- [SoundMat (16) 软件部署性能优化](/soundmat/soundmat-16-software-deployment-performance/)
+
+其他相关文档
+
+- [SoundMat Presentation](/soundmat/soundmat-presentation/)

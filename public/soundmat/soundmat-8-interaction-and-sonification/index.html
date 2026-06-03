@@ -1,0 +1,1398 @@
+<!doctype html>
+<html lang="en-us" dir="ltr" class="kind-page">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="声音化设计是 SoundMat 的灵魂。我们已经想好了产品哲学，设计好了结构、外观、传感器、硬件等等，但那些只是基础，是不完美产生的地方。声音化设计，也就是如何将石头、将观众的触摸按压转换为音乐，符合我们想象中的音乐艺术装置，是最棘手，最容易平庸的。 除此之外就是 LED 交互设计，这部分相对来说是 …">
+    <title>SoundMat (8) 交互与声音化设计 Interaction and Sonification</title>
+    <link rel="canonical" href="https://mukii.space/soundmat/soundmat-8-interaction-and-sonification/">
+
+
+
+<meta property="og:title" content="SoundMat (8) 交互与声音化设计 Interaction and Sonification">
+<meta property="og:description" content="声音化设计是 SoundMat 的灵魂。我们已经想好了产品哲学，设计好了结构、外观、传感器、硬件等等，但那些只是基础，是不完美产生的地方。声音化设计，也就是如何将石头、将观众的触摸按压转换为音乐，符合我们想象中的音乐艺术装置，是最棘手，最容易平庸的。 除此之外就是 LED 交互设计，这部分相对来说是 …">
+<meta property="og:image" content="https://mukii.space/og/og-image-e8e3d2ff4a32466df2a67f18c2f5142b.svg">
+<meta property="og:image:type" content="image/svg+xml">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mukii.space/soundmat/soundmat-8-interaction-and-sonification/">
+<meta property="og:locale" content="en-us">
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SoundMat (8) 交互与声音化设计 Interaction and Sonification">
+<meta name="twitter:description" content="声音化设计是 SoundMat 的灵魂。我们已经想好了产品哲学，设计好了结构、外观、传感器、硬件等等，但那些只是基础，是不完美产生的地方。声音化设计，也就是如何将石头、将观众的触摸按压转换为音乐，符合我们想象中的音乐艺术装置，是最棘手，最容易平庸的。 除此之外就是 LED 交互设计，这部分相对来说是 …">
+<meta name="twitter:image" content="https://mukii.space/og/og-image-e8e3d2ff4a32466df2a67f18c2f5142b.svg">
+
+    <link rel="preload" href="/fonts/Newsreader.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/default.min.fb89c3008d933d5ac0e46af0bee4acd14efae3a00fca1ebbeb11e373ecaf3a64.css" integrity="sha256-&#43;4nDAI2TPVrA5GrwvuSs0U7646APyh676xHjc&#43;yvOmQ=">
+    <link rel="stylesheet" href="/css/custom.min.4ad75db0d4010183f7312823592f18e887d33b8d0901d261b50fad0d64c2ba94.css" integrity="sha256-StddsNQBAYP3MSgjWS8Y6IfTO40JAdJhtQ&#43;tDWTCupQ=">
+    <script src="/js/darkmode.min.9211af6d380489c7cf64d4b18a1e49e75be2bebf92031d2165eb6c20bc59c6a2.js" integrity="sha256-khGvbTgEicfPZNSxih5J51vivr&#43;SAx0hZetsILxZxqI=" defer></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <style>
+    :root { --font-size-base: 18px; --content-max-inline-size: 680px; }
+    h1 { font-size: 2em; }
+    .katex { font-size: 0.95em; }
+    pre code {
+    background: var(--code-bg) !important;
+    color: var(--text-color);
+    padding: 1em;
+    border-radius: var(--radius);
+    }
+    </style><script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+
+
+<body>
+<header>
+    <div>
+        <div class="header-left">
+            <h1>
+                <a href="https://mukii.space/">MUKIMASTA</a>
+            </h1>
+            <nav class="site-nav" aria-label="Primary">
+                <a href="/professional-overview/" class="site-nav__link">Professional</a>
+                <a href="/journey/" class="site-nav__link">Journey</a>
+            </nav>
+        </div>
+        <div class="header-controls">
+            <div class="toggle-switch">
+                <input type="checkbox" id="darkModeToggle" class="toggle-input" aria-label="Toggle dark mode">
+                <label for="darkModeToggle" class="toggle-label">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <main class="content-wrapper">
+        <article class="content-container">
+
+<nav class="back-to-parent" aria-label="上一级导航">
+  <a class="back-to-parent__link" href="/soundmat/" title="SoundMat" aria-label="返回 SoundMat">‹</a>
+</nav>
+
+
+<nav class="soundmat-lang-switch" aria-label="Document language"><a class="soundmat-lang-switch__link is-active" href="/soundmat/soundmat-8-interaction-and-sonification/" hreflang="zh" lang="zh">中文</a>
+  <span class="soundmat-lang-switch__sep" aria-hidden="true">·</span>
+  <a class="soundmat-lang-switch__link" href="/soundmat/en/soundmat-8-interaction-and-sonification/" hreflang="en" lang="en">English</a>
+</nav>
+    <h1>SoundMat (8) 交互与声音化设计 Interaction and Sonification</h1>
+    <h4></h4>
+
+<p>声音化设计是 SoundMat 的灵魂。我们已经想好了产品哲学，设计好了结构、外观、传感器、硬件等等，但那些只是基础，是不完美产生的地方。声音化设计，也就是如何将石头、将观众的触摸按压转换为音乐，符合我们想象中的音乐艺术装置，是最棘手，最容易平庸的。</p>
+<p>除此之外就是 LED 交互设计，这部分相对来说是锦上添花的，它起到两个功能，提示与反馈。用户通过 LED 的提示，能够明白当前的音乐进行到哪个阶段了，能够感受到当前音乐的氛围；反馈则是在用户与 SoundMat 交互后，除了听觉反馈，还能够得到 LED 的视觉反馈，这能够增加体验感和艺术感。</p>
+<p>现实的硬件不是理想情况，会有误差和不精确的地方。在之前的硬件制造中，我们对整体“放置物品感应”的这部分现实效果有了更充分的了解：</p>
+<ul>
+<li>SoundMat 感应的分辨率是 8 ring * 16/32 slices 的 224 个小区域。我们能分辨哪个区域有物品，但是无法分辨这个区域有几个物品，无法分辨在这个小区域的哪个位置，无法分辨相邻区域的激活是有两个小物品还是一个大物品导致的。虽然说对于我们的石头大小，我们能保证石头与各区域较好的对应激活关系，但对于设计来说，过于细致的粒度会导致交互体验变差。</li>
+</ul>
+<p>我们将在这个条件下完成交互与声音化设计。</p>
+<h2 id="1--生成音乐自由度与反馈感的矛盾">1  生成音乐：自由度与反馈感的矛盾<a class="anchor" aria-hidden="true" href="#1--%e7%94%9f%e6%88%90%e9%9f%b3%e4%b9%90%e8%87%aa%e7%94%b1%e5%ba%a6%e4%b8%8e%e5%8f%8d%e9%a6%88%e6%84%9f%e7%9a%84%e7%9f%9b%e7%9b%be">#</a></h2>
+<p>从设计理念开始，我们就不断强调，交互要简单直观，怎么放置都好听，但是依然能感受到参与感/反馈感。</p>
+<p>“怎么放都好听 vs 参与感/反馈感”，这其实是一种矛盾。怎么放都好听意味着变化少，系统介入的成分大，而反馈感是来源于我对整个系统施加了某些影响，这是我控制的，不是系统帮助我的。</p>
+<p>所以就有了自由度的两端：</p>
+<ul>
+<li>自由度低：怎么放都好听，沉浸感强；但变化少，控制感弱，容易无聊</li>
+<li>自由度高：反馈感强，变化多；但容易出错、出戏，需要音乐知识</li>
+</ul>
+<p>推向极端就很好理解了，自由度高到尽头就是乐器。钢琴、吉他，变化极其丰富但是难上手；自由度低到尽头就是混音器，只是控制不同乐器播放与否，很容易无聊。</p>
+<p>一个想法是设计不同模式应对不同场景。设计两种模式：</p>
+<ul>
+<li><strong>氛围模式 Ambient</strong>：自由度低，酒店大堂，提供氛围感</li>
+<li><strong>合奏模式 Jam</strong>：自由度高，允许不和谐，多人主动参与，更像乐器</li>
+</ul>
+<h2 id="2--控制思路调控与生成">2  控制思路：调控与生成<a class="anchor" aria-hidden="true" href="#2--%e6%8e%a7%e5%88%b6%e6%80%9d%e8%b7%af%e8%b0%83%e6%8e%a7%e4%b8%8e%e7%94%9f%e6%88%90">#</a></h2>
+<p>这部分讨论音乐装置的两种控制思路。</p>
+<p>调控是调整已有音乐的声音参数，例如一段音乐的音量、音色、高低频、速度等等。</p>
+<p>生成则是对于每个操作都实时生成元素，例如演奏音符、打击乐、和声、音乐片段等等。</p>
+<p>在 SoundMat，生成是绝对的主导。用户不是去调整别人已有的音乐，而是自己创造音乐。</p>
+<h2 id="3--交互方式旋转扫描与音池">3  交互方式：旋转扫描与音池<a class="anchor" aria-hidden="true" href="#3--%e4%ba%a4%e4%ba%92%e6%96%b9%e5%bc%8f%e6%97%8b%e8%bd%ac%e6%89%ab%e6%8f%8f%e4%b8%8e%e9%9f%b3%e6%b1%a0">#</a></h2>
+<p>对于 SoundMat，有两种交互思路。</p>
+<p><strong>旋转扫描</strong>：有一根虚拟的指针绕圆心旋转，碰到物体就触发音乐生成。一个圆的循环天然形成了一个 Loop，不同的角度就代表了一个 Loop 内的不同时间。放下石头代表了在乐谱中谱写了一个音乐元素。</p>
+<p><strong>音池 Sound Pool</strong>：一旦物体放下，就会持续触发对应位置的音乐生成机制；物体拿起，则停止。</p>
+<h2 id="4--音乐类型简介">4  音乐类型简介<a class="anchor" aria-hidden="true" href="#4--%e9%9f%b3%e4%b9%90%e7%b1%bb%e5%9e%8b%e7%ae%80%e4%bb%8b">#</a></h2>
+<p><a href="/soundmat/soundmat-2-philosophy/">SoundMat (2)  Philosophy 产品设计哲学</a> 中有简单讨论过适合 SoundMat 的音乐类型。在这里详细阐述一下我们选用的音乐类型。</p>
+<p><strong>Ambient / Soundscape</strong>：作为公共艺术装置，使用 Ambient 类音乐可以让它成为可以被注意聆听，也可以被忽略的存在。</p>
+<p>这里可大致分为两种，一种是音乐元素，一种是声景元素。音乐元素是有特定音高的，是乐器发出的或是电子合成的，受调性系统约束；声景则是在自然中采集的，是声音片段，不受调性约束。</p>
+<p><strong>Lo-Fi</strong>：Lo-fi 的特征是温暖的、带有颗粒感和不完美质感的声音，可以是 Loop 为基础的音乐风格，强节奏的，非常适合我们的节奏模式（旋转扫描）。同时，Lo-Fi 能提供很强的沉浸感。</p>
+<p><strong>Minimal</strong>：生成式极简音乐风格的代表音乐家有 Steve Reich 和 Philip Glass。音乐往往只建立在极简单的音乐元素上，例如几个简单的音符、和弦、动机。一个经典技法是相位渐变 （Phasing）与相位步进（Phase-Shifting），通过对相同音乐片段的不同声部使用不同速度，或在乐曲中改变相位，交织出全新的、错落有致的奇妙节奏，最后又重新同步，形成奇妙的听感。一个经典之作是《拍手音乐》（Clapping Music）</p>
+<h2 id="5--ambient-氛围模式设计声音的叙事">5  Ambient 氛围模式设计：声音的叙事<a class="anchor" aria-hidden="true" href="#5--ambient-%e6%b0%9b%e5%9b%b4%e6%a8%a1%e5%bc%8f%e8%ae%be%e8%ae%a1%e5%a3%b0%e9%9f%b3%e7%9a%84%e5%8f%99%e4%ba%8b">#</a></h2>
+<p>氛围模式想达到的目标是：它的音乐可以被注意聆听，也可以被忽略。无论上面有多少个石头，音乐总是作为一种氛围存在，不会突兀，也不会空虚，就像为环境提供了一种背景色。</p>
+<p>在我们的 Ambient Demo 中，形成了基本的雏形。从内到外代表低频到高频，总共八种音乐元素，不同扇区之间没有区别，同一个圆环上石头的数量可以调控该层的音乐内容。</p>
+<p>Demo 中对于八种音乐元素的选择是最基础的，只是用五声音阶的 Drone 音、Pad、合成音符、合成雨声、合成水滴声，听起来确实还行，能达到我们目标的及格线。</p>
+<p>但问题是，这太普通了吧！这做出来，一会加个低频，一会响点音符，一会加个鸟叫，然后加点铃铛。我玩完之后会觉得不错，然后呢？</p>
+<p>我要的是艺术啊，所以我在想，能不能做一种“叙事的环境”，之前的那些元素没有联系，但如果有个环境叙事，里面有一整套连贯的有逻辑的音乐元素，就不普通了吧？</p>
+<p>环境叙事让用户在放石头的过程中慢慢展开一个场景。我最想做的环境叙事就是日本寺院。除此之外，宇宙环境也很适合，因为我们的装置的形状刚好就是一组同心圆环。</p>
+<p><strong>环境音乐模式——《京都岚山》</strong></p>
+<p>底音</p>
+<p><a href="https://locusonus.org/soundmap/">Locus Sonus – Locustream – sound map</a>：yamanashi — yamanakako (Japan)</p>
+<p><strong>调性：</strong></p>
+<p>C 调五声音阶</p>
+<p><strong>Ring 0/Ring1：低音</strong></p>
+<ul>
+<li>触发：重鼓声 + 大梵钟声</li>
+<li>持续：合成管风琴 Drone 音 + 呼吸感</li>
+</ul>
+<p>**Ring 2：中低频</p>
+<ul>
+<li>持续：和声片段，移调到对应调上</li>
+</ul>
+<p><strong>Ring 3：竹林火车</strong></p>
+<ul>
+<li>一颗石头
+<ul>
+<li>触发：走路声</li>
+<li>持续：竹林风声 + 溪流声</li>
+</ul>
+</li>
+<li>两颗石头
+<ul>
+<li>触发：铁路警报声/踏切/叮叮叮</li>
+<li>持续：更大的竹林风声 + 溪流声</li>
+</ul>
+</li>
+<li>三颗石头
+<ul>
+<li>触发：铁路警报声/踏切/叮叮叮 + 铁路声音片段</li>
+<li>持续：更大的竹林风声 + 溪流声</li>
+</ul>
+</li>
+</ul>
+<p><strong>Ring 4：天气，雨、雷</strong></p>
+<ul>
+<li>一颗石头
+<ul>
+<li>持续：小雨声
+<ul>
+<li>如果 Ring 3 激活：雨打竹叶 + 雨打水面</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>两颗石头
+<ul>
+<li>持续：中雨声 + 大风声</li>
+</ul>
+</li>
+<li>三颗石头
+<ul>
+<li>持续：大雨声 + 风声呼啸</li>
+<li>效果器：开阔场景空间混响</li>
+</ul>
+</li>
+<li>四颗石头
+<ul>
+<li>持续：大雨声 + 雷声</li>
+<li>效果器：开阔场景空间混响</li>
+</ul>
+</li>
+</ul>
+<p><strong>Ring 5：【中高频乐音生成】</strong></p>
+<ul>
+<li>触发：合成马林巴</li>
+<li>持续：随机马林巴</li>
+<li>扇区角度对应音高，分为两半，0-15, 31-16 对称</li>
+</ul>
+<p><strong>Ring 6：旋律片段 Loop</strong></p>
+<ul>
+<li>持续：素材</li>
+</ul>
+<p><strong>Ring 7：事件</strong></p>
+<ul>
+<li>触发：素材</li>
+<li>持续：随机触发素材</li>
+</ul>
+<p><strong>特殊 Pattern：</strong></p>
+<ul>
+<li>石头在各 Ring 上摆成一条链：乘坐岚山小火车</li>
+<li></li>
+</ul>
+<h2 id="6--jam-mode--lo-fi-loop">6  Jam Mode – Lo-Fi Loop<a class="anchor" aria-hidden="true" href="#6--jam-mode--lo-fi-loop">#</a></h2>
+<p>和声和鼓点固定循环播放，只调控不生成。<br>
+旋律（包括Bass）采用旋转扫描方式生成。</p>
+<h3 id="61--节拍">6.1  节拍<a class="anchor" aria-hidden="true" href="#61--%e8%8a%82%e6%8b%8d">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>方案</th>
+          <th>拍号</th>
+          <th>和弦进行 Loop 长度</th>
+          <th>每个和弦持续</th>
+          <th>SoundMat 一圈</th>
+          <th>32 扇区分辨率</th>
+          <th>每小节分辨率格数</th>
+          <th>量化后每小节分辨率格数</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>方案 1</td>
+          <td>4/4</td>
+          <td>4 小节</td>
+          <td>1 小节</td>
+          <td>4 小节</td>
+          <td>8 分音符</td>
+          <td>8</td>
+          <td>8</td>
+      </tr>
+      <tr>
+          <td>方案 2</td>
+          <td>4/4</td>
+          <td>8 小节</td>
+          <td>2 小节（重复一次）</td>
+          <td>8 小节</td>
+          <td>4 分音符</td>
+          <td>4</td>
+          <td>4</td>
+      </tr>
+      <tr>
+          <td><strong>方案 3</strong></td>
+          <td><strong>4/4</strong></td>
+          <td><strong>8 小节</strong></td>
+          <td><strong>2 小节（重复一次）</strong></td>
+          <td><strong>2 小节</strong></td>
+          <td><strong>16 分音符</strong></td>
+          <td><strong>16</strong></td>
+          <td><strong>8</strong></td>
+      </tr>
+      <tr>
+          <td>方案 4</td>
+          <td>4/4</td>
+          <td>4 小节</td>
+          <td>1 小节</td>
+          <td>2 小节</td>
+          <td>16 分音符</td>
+          <td>16</td>
+          <td>8</td>
+      </tr>
+  </tbody>
+</table>
+<p>经过对比，选择方案 3。理由：重复和对比的平衡。触发时机相同→重复，触发音不同→对比。</p>
+<p>默认速度暂定为 120bpm. （设计为参数可调）</p>
+<p>这样，slice 0-15 是每个和弦的第一小节，slice 16-31 是每个和弦的第二小节。</p>
+<p>例子：</p>
+<p><strong>第 1 小节 — Slice 0–15</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>拍位</th>
+          <th>1</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>2</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>3</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>4</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Slice</strong></td>
+          <td>0</td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>5</td>
+          <td>6</td>
+          <td>7</td>
+          <td>8</td>
+          <td>9</td>
+          <td>10</td>
+          <td>11</td>
+          <td>12</td>
+          <td>13</td>
+          <td>14</td>
+          <td>15</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>第 2 小节 — Slice 16–31</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>拍位</th>
+          <th>1</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>2</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>3</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>4</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Slice</strong></td>
+          <td>16</td>
+          <td>17</td>
+          <td>18</td>
+          <td>19</td>
+          <td>20</td>
+          <td>21</td>
+          <td>22</td>
+          <td>23</td>
+          <td>24</td>
+          <td>25</td>
+          <td>26</td>
+          <td>27</td>
+          <td>28</td>
+          <td>29</td>
+          <td>30</td>
+          <td>31</td>
+      </tr>
+  </tbody>
+</table>
+<p>0° 即为 slice 0，90° 为 slice 8，180° 为 slice 16</p>
+<p>后续有处理量化，详见下文。</p>
+<h3 id="62--ring-交互设计">6.2  Ring 交互设计<a class="anchor" aria-hidden="true" href="#62--ring-%e4%ba%a4%e4%ba%92%e8%ae%be%e8%ae%a1">#</a></h3>
+<p><strong>Ring 0/1</strong>  无角度，开始和结束控制，以及调控全局 Lo-Fi 效果</p>
+<p>将 R0/R1 看作一个整体。R0+R1 全部格压力之和（原始 ADC）决定控制状态；单格 threshold（默认 500）判定该格是否有石头。</p>
+<ul>
+<li>无控制石（压力之和 &lt; <code>control_sum_min</code>，默认 250）：扫描线静止，全局 Reset；此时在 R2–R7 放石会立刻 preview 一声（默认音量 50%），并亮 LED 预览</li>
+<li>有控制石（压力之和 ≥ 250）：自动开拍，扫描线推进</li>
+<li>控制石短暂消失（ADC 闪断）：100ms 释放 hold 内仍视为有控制石，避免误 Reset</li>
+<li>压力之和映射 Lo-Fi 0–1000（默认 sum ≤0 → 0，sum ≥ 1000 → 1000）；越高越闷、越温暖、磁带颗粒感越强</li>
+<li>Lo-Fi 连续实时调控，不受扫描线影响（<code>cutoff</code> + <code>drive</code> → <code>jam_master</code>）</li>
+<li>Loop 播放中在外圈放石：可选立刻 preview（Control 页 Place preview 滑条，默认 25%；拖至 0 则关闭）</li>
+<li>曲终（8 遍鼓序列播完）须清空 R0/R1 再放下，才能重新开始</li>
+</ul>
+<p>部署默认与 Mat 页 Calibration 一致：<code>threshold=500</code>、<code>control_sum_min=250</code>、Lo-Fi sum max 1000（重启恢复默认，不持久化）。</p>
+<p><strong>Ring 4-6</strong>  旋律音</p>
+<p>分为不同乐器</p>
+<blockquote>
+<p><strong>前向连奏（废除，不实现）</strong></p>
+<p>将一拍分为一组，一组 4 个触发音。每一格只存 一个触发音，扫线命中某格时，不只响这一格，而是从该格起在组内做随机前向连发（所以扫中一格时可能会有 1-4 个音符响起），各音连奏。</p>
+<p>连发不得越过当前组末尾。若同环、同组内、当前格下游还有石头，连发在碰到该石之前提前截止。</p>
+<p>实际上，可以将前向连奏设计为参数，即最大连奏数，范围 1-4，1即为不连奏。</p></blockquote>
+<p>每小节旋律量化至 8 个八分音符触发位（两倍量化，二合一，八分音符，奇数slice向下合并到偶数，触发时机也合并至偶数，例如 slice1功能上相当于slice0，触发时机也在 slice0处触发）。</p>
+<p><strong>Ring 2/3</strong>  Bass 旋律音</p>
+<p>Bass 声部同样量化至 8 个触发位（两倍量化，二合一，八分音符量化）。</p>
+<p><strong>Ring 命名与定位</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>Ring</th>
+          <th>角色</th>
+          <th>音色</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>R7（最外）</td>
+          <td>旋律</td>
+          <td>Marimba</td>
+      </tr>
+      <tr>
+          <td>R6</td>
+          <td>旋律</td>
+          <td>Lo-Fi 电钢</td>
+      </tr>
+      <tr>
+          <td>R5</td>
+          <td>旋律</td>
+          <td>Lo-Fi 电钢</td>
+      </tr>
+      <tr>
+          <td>R4</td>
+          <td>旋律</td>
+          <td>Pad-Pluck</td>
+      </tr>
+      <tr>
+          <td>R3</td>
+          <td>Bass</td>
+          <td>Pluck bass</td>
+      </tr>
+      <tr>
+          <td>R2（最内）</td>
+          <td>BASS</td>
+          <td>Sub bass</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="63--和声和弦进行">6.3  和声/和弦进行<a class="anchor" aria-hidden="true" href="#63--%e5%92%8c%e5%a3%b0%e5%92%8c%e5%bc%a6%e8%bf%9b%e8%a1%8c">#</a></h3>
+<p><strong>音高记号</strong></p>
+<p>数字 1–7 表示当前 key 音阶的音级（首调，不绑定固定音高）。</p>
+<p><strong>升降</strong>写在数字后：<code>#</code> 升半音，<code>b</code> 降半音。<br>
+<strong>八度</strong>写在最后：<code>^</code> 升一八度，<code>_</code> 降一八度，可叠加（<code>^^</code> / <code>__</code>）。无八度记号 = 第 4 八度。<br>
+<strong>顺序固定</strong>：数字 → 升降 → 八度，例如 <code>1#^</code>。<br>
+<strong>null</strong> = 和上一个相同。</p>
+<p>例（C 大调）:</p>
+<table>
+  <thead>
+      <tr>
+          <th>记号</th>
+          <th>实际音</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>1</code></td>
+          <td>C4</td>
+      </tr>
+      <tr>
+          <td><code>1#</code></td>
+          <td>C#4</td>
+      </tr>
+      <tr>
+          <td><code>1^</code></td>
+          <td>C5</td>
+      </tr>
+      <tr>
+          <td><code>1#^</code></td>
+          <td>C#5</td>
+      </tr>
+      <tr>
+          <td><code>6__</code></td>
+          <td>A2</td>
+      </tr>
+      <tr>
+          <td><code>4b_</code></td>
+          <td>E3</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>转调</strong>：改 manifest 的 <code>[music].key</code>,所有记号自动跟着 key 的根音平移。例:<code>1^</code> 在 C 调下是 C5,key 改成 B 后变为 B4。整首曲子的旋律、bass、和弦 voicing 一致移调。</p>
+<table>
+  <thead>
+      <tr>
+          <th><strong>序号</strong></th>
+          <th><strong>级数 / 和弦循环</strong></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>1</strong></td>
+          <td>2m9 → 513 → 1maj9 → 69</td>
+      </tr>
+      <tr>
+          <td><strong>1B</strong></td>
+          <td>2m9 → 2m9/5, 57b9 → 1maj9 → 16, 1#dim</td>
+      </tr>
+      <tr>
+          <td><strong>1C</strong></td>
+          <td>2m9 → 59 → 3m7 → 67</td>
+      </tr>
+  </tbody>
+</table>
+<p>和弦 1 播放音</p>
+<pre tabindex="0"><code>2m9: 2_ · 4_ · 6_ · 1 · 3
+513: 5__ · 2_ · 4_ · 7_ · 3
+1maj9: 1_ · 3_ · 5_ · 7_ · 2
+69: 6__ · 3_ · 5_ · 7_ · 1#
+</code></pre><p>Prototype 先实现和声 1.</p>
+<h3 id="64--旋律触发音">6.4  旋律触发音<a class="anchor" aria-hidden="true" href="#64--%e6%97%8b%e5%be%8b%e8%a7%a6%e5%8f%91%e9%9f%b3">#</a></h3>
+<p>设计思路：</p>
+<p>1，3 拍相同，都为构成音去掉根音，放到旋律里，相邻和弦同一 Ring 就进链接。<br>
+BASS 就用根音。</p>
+<p>2，4 拍</p>
+<p>和声 1 触发音：</p>
+<p><strong>和弦 1：2m9</strong></p>
+<p>(2 4 6 1^ 3^)</p>
+<table>
+  <thead>
+      <tr>
+          <th>Ring</th>
+          <th>1</th>
+          <th>&amp;</th>
+          <th>2</th>
+          <th>&amp;</th>
+          <th>3</th>
+          <th>&amp;</th>
+          <th>4</th>
+          <th>&amp;</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>扇区</td>
+          <td>0</td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>5</td>
+          <td>6</td>
+          <td>7</td>
+      </tr>
+      <tr>
+          <td><strong>R7</strong></td>
+          <td>3^</td>
+          <td>1^</td>
+          <td>2^</td>
+          <td>3^</td>
+          <td>3^</td>
+          <td>2^</td>
+          <td>1^</td>
+          <td>6</td>
+      </tr>
+      <tr>
+          <td><strong>R6</strong></td>
+          <td>1^</td>
+          <td>5</td>
+          <td>6</td>
+          <td>1^</td>
+          <td>1^</td>
+          <td>5</td>
+          <td>6</td>
+          <td>3^</td>
+      </tr>
+      <tr>
+          <td><strong>R5</strong></td>
+          <td>6</td>
+          <td>3</td>
+          <td>4</td>
+          <td>6</td>
+          <td>6</td>
+          <td>4</td>
+          <td>3</td>
+          <td>2</td>
+      </tr>
+      <tr>
+          <td><strong>R4</strong></td>
+          <td>4</td>
+          <td>3</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>3</td>
+          <td>2</td>
+          <td>3</td>
+      </tr>
+      <tr>
+          <td><strong>R3</strong> bass</td>
+          <td>4_</td>
+          <td>4_</td>
+          <td>6_</td>
+          <td>6_</td>
+          <td>4_</td>
+          <td>4_</td>
+          <td>6_</td>
+          <td>6_</td>
+      </tr>
+      <tr>
+          <td><strong>R2</strong> BASS</td>
+          <td>2_</td>
+          <td>2_</td>
+          <td>2_</td>
+          <td>2_</td>
+          <td>2_</td>
+          <td>2_</td>
+          <td>2_</td>
+          <td>2_</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>和弦 2：513</strong></p>
+<p>(5_ 7_ 2 4 6 1^ 3^)</p>
+<table>
+  <thead>
+      <tr>
+          <th>Ring</th>
+          <th>1</th>
+          <th>&amp;</th>
+          <th>2</th>
+          <th>&amp;</th>
+          <th>3</th>
+          <th>&amp;</th>
+          <th>4</th>
+          <th>&amp;</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>扇区</td>
+          <td>0</td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>5</td>
+          <td>6</td>
+          <td>7</td>
+      </tr>
+      <tr>
+          <td><strong>R7</strong></td>
+          <td>3^</td>
+          <td>1^</td>
+          <td>2^</td>
+          <td>3^</td>
+          <td>3^</td>
+          <td>2^</td>
+          <td>1^</td>
+          <td>5</td>
+      </tr>
+      <tr>
+          <td><strong>R6</strong></td>
+          <td>7</td>
+          <td>5</td>
+          <td>6</td>
+          <td>7</td>
+          <td>7</td>
+          <td>5</td>
+          <td>6</td>
+          <td>5</td>
+      </tr>
+      <tr>
+          <td><strong>R5</strong></td>
+          <td>5</td>
+          <td>2</td>
+          <td>3</td>
+          <td>5</td>
+          <td>5</td>
+          <td>3</td>
+          <td>2</td>
+          <td>7_</td>
+      </tr>
+      <tr>
+          <td><strong>R4</strong></td>
+          <td>2</td>
+          <td>3</td>
+          <td>1</td>
+          <td>2</td>
+          <td>2</td>
+          <td>3</td>
+          <td>7_</td>
+          <td>1</td>
+      </tr>
+      <tr>
+          <td><strong>R3</strong> bass</td>
+          <td>4_</td>
+          <td>4_</td>
+          <td>5_</td>
+          <td>5_</td>
+          <td>4_</td>
+          <td>4_</td>
+          <td>5_</td>
+          <td>5_</td>
+      </tr>
+      <tr>
+          <td><strong>R2</strong> BASS</td>
+          <td>5__</td>
+          <td>5__</td>
+          <td>5__</td>
+          <td>5__</td>
+          <td>5__</td>
+          <td>5__</td>
+          <td>5__</td>
+          <td>5_</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>和弦 3：1maj9</strong></p>
+<p>(1 3 5 7 2^)</p>
+<table>
+  <thead>
+      <tr>
+          <th>Ring</th>
+          <th>1</th>
+          <th>&amp;</th>
+          <th>2</th>
+          <th>&amp;</th>
+          <th>3</th>
+          <th>&amp;</th>
+          <th>4</th>
+          <th>&amp;</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>扇区</td>
+          <td>0</td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>5</td>
+          <td>6</td>
+          <td>7</td>
+      </tr>
+      <tr>
+          <td><strong>R7</strong></td>
+          <td>2^</td>
+          <td>7</td>
+          <td>1^</td>
+          <td>2^</td>
+          <td>2^</td>
+          <td>1^</td>
+          <td>3^</td>
+          <td>5</td>
+      </tr>
+      <tr>
+          <td><strong>R6</strong></td>
+          <td>7</td>
+          <td>6</td>
+          <td>5</td>
+          <td>6</td>
+          <td>7</td>
+          <td>6</td>
+          <td>5</td>
+          <td>3</td>
+      </tr>
+      <tr>
+          <td><strong>R5</strong></td>
+          <td>5</td>
+          <td>2</td>
+          <td>3</td>
+          <td>5</td>
+          <td>5</td>
+          <td>3</td>
+          <td>2</td>
+          <td>1</td>
+      </tr>
+      <tr>
+          <td><strong>R4</strong></td>
+          <td>3</td>
+          <td>2</td>
+          <td>1</td>
+          <td>3</td>
+          <td>3</td>
+          <td>1</td>
+          <td>7_</td>
+          <td>1</td>
+      </tr>
+      <tr>
+          <td><strong>R3</strong> bass</td>
+          <td>3_</td>
+          <td>3_</td>
+          <td>5_</td>
+          <td>5_</td>
+          <td>3_</td>
+          <td>3_</td>
+          <td>5_</td>
+          <td>5_</td>
+      </tr>
+      <tr>
+          <td><strong>R2</strong> BASS</td>
+          <td>1_</td>
+          <td>1_</td>
+          <td>1_</td>
+          <td>1_</td>
+          <td>1_</td>
+          <td>1_</td>
+          <td>1_</td>
+          <td>1_</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>和弦 4：69</strong></p>
+<p>(6_ 1# 3 5 7)</p>
+<table>
+  <thead>
+      <tr>
+          <th>Ring</th>
+          <th>1</th>
+          <th>&amp;</th>
+          <th>2</th>
+          <th>&amp;</th>
+          <th>3</th>
+          <th>&amp;</th>
+          <th>4</th>
+          <th>&amp;</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>扇区</td>
+          <td>0</td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>5</td>
+          <td>6</td>
+          <td>7</td>
+      </tr>
+      <tr>
+          <td><strong>R7</strong></td>
+          <td>1#^</td>
+          <td>2^</td>
+          <td>3^</td>
+          <td>2^</td>
+          <td>1#^</td>
+          <td>2^</td>
+          <td>3^</td>
+          <td>1#^</td>
+      </tr>
+      <tr>
+          <td><strong>R6</strong></td>
+          <td>6</td>
+          <td>3</td>
+          <td>5</td>
+          <td>6</td>
+          <td>6</td>
+          <td>5</td>
+          <td>3</td>
+          <td>6_</td>
+      </tr>
+      <tr>
+          <td><strong>R5</strong></td>
+          <td>5</td>
+          <td>2</td>
+          <td>3</td>
+          <td>5</td>
+          <td>5</td>
+          <td>3</td>
+          <td>2</td>
+          <td>1#</td>
+      </tr>
+      <tr>
+          <td><strong>R4</strong></td>
+          <td>3</td>
+          <td>2</td>
+          <td>1#</td>
+          <td>2</td>
+          <td>3</td>
+          <td>2</td>
+          <td>1#</td>
+          <td>3</td>
+      </tr>
+      <tr>
+          <td><strong>R3</strong> bass</td>
+          <td>3_</td>
+          <td>3_</td>
+          <td>5_</td>
+          <td>5_</td>
+          <td>3_</td>
+          <td>3_</td>
+          <td>5_</td>
+          <td>5_</td>
+      </tr>
+      <tr>
+          <td><strong>R2</strong> BASS</td>
+          <td>6__</td>
+          <td>6__</td>
+          <td>6__</td>
+          <td>6__</td>
+          <td>6__</td>
+          <td>6__</td>
+          <td>6__</td>
+          <td>6__</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="65--鼓组">6.5  鼓组<a class="anchor" aria-hidden="true" href="#65--%e9%bc%93%e7%bb%84">#</a></h3>
+<p><code>X</code> = 强击，<code>x</code> = 幽灵音/轻击。</p>
+<p><strong>Loop A：空</strong></p>
+<p><strong>Loop B</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>乐器</th>
+          <th>1</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>2</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>3</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>4</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Kick</strong></td>
+          <td>X</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><strong>Snare</strong></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><strong>Hi-hat</strong></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Loop C</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>乐器</th>
+          <th>1</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>2</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>3</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>4</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Kick</strong></td>
+          <td>X</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><strong>Snare</strong></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><strong>Hi-hat</strong></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Loop D</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>乐器</th>
+          <th>1</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>2</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>3</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+          <th>4</th>
+          <th>e</th>
+          <th>&amp;</th>
+          <th>a</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Kick</strong></td>
+          <td>X</td>
+          <td></td>
+          <td></td>
+          <td>x</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>x</td>
+          <td></td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><strong>Snare</strong></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><strong>Hi-hat</strong></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td>x</td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td></td>
+          <td>X</td>
+          <td>x</td>
+      </tr>
+  </tbody>
+</table>
+<p>两种思路：</p>
+<ol>
+<li>固定遍数
+<ul>
+<li>方案 1 节拍（4bar）：A×1→B×1→C×2→A×2→D×2→A×2</li>
+<li>方案 3 节拍（2bar）：A×1→B×1→C×2→A×1→D×1→A×1</li>
+</ul>
+</li>
+<li>根据物体数量决定 ABCD</li>
+</ol>
+<p>我们采用固定遍数，<strong>A×1→B×1→C×2→A×1→D×2→A×1</strong></p>
+<p>结束之后扫描停、和声/鼓不再推进，须清空 R0/R1 才能重开。</p>
+<p>和声与鼓组均实时合成（非采样），同扇区多石力度按 1/√N 衰减。</p>
+<h3 id="66--jam-led-方案">6.6  Jam LED 方案<a class="anchor" aria-hidden="true" href="#66--jam-led-%e6%96%b9%e6%a1%88">#</a></h3>
+<p>108 颗灯等距围成一圈，与 32 扇区旋律格对齐。本文只描述亮灭与颜色，不涉及实现。</p>
+<h4 id="布局">布局<a class="anchor" aria-hidden="true" href="#%e5%b8%83%e5%b1%80">#</a></h4>
+<ul>
+<li><strong>#0</strong> 在 12 点；编号沿<strong>顺时针</strong>递增（0 → 107 → 0）。</li>
+<li>扇区 <code>n</code> 的中心 LED：<code>round(n ÷ 32 × 108) mod 108</code>。</li>
+<li>建议刷新 <strong>≥ 60 Hz</strong>，每帧输出 108 路 RGB。</li>
+</ul>
+<h4 id="颜色rgb-0255">颜色（RGB 0–255）<a class="anchor" aria-hidden="true" href="#%e9%a2%9c%e8%89%b2rgb-0255">#</a></h4>
+<table>
+  <thead>
+      <tr>
+          <th>名称</th>
+          <th>R</th>
+          <th>G</th>
+          <th>B</th>
+          <th>用于</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>白</td>
+          <td>255</td>
+          <td>255</td>
+          <td>255</td>
+          <td>空闲呼吸、扫描尾迹</td>
+      </tr>
+      <tr>
+          <td>正红</td>
+          <td>255</td>
+          <td>48</td>
+          <td>48</td>
+          <td>12 点卡位 #0</td>
+      </tr>
+      <tr>
+          <td>淡红</td>
+          <td>255</td>
+          <td>140</td>
+          <td>140</td>
+          <td>东/南/西卡位 #27 #54 #81</td>
+      </tr>
+      <tr>
+          <td>R0</td>
+          <td>100</td>
+          <td>108</td>
+          <td>128</td>
+          <td>传输（预览/命中/标记一般不用）</td>
+      </tr>
+      <tr>
+          <td>R1</td>
+          <td>148</td>
+          <td>112</td>
+          <td>88</td>
+          <td>传输</td>
+      </tr>
+      <tr>
+          <td>R2</td>
+          <td>88</td>
+          <td>72</td>
+          <td>210</td>
+          <td>低音</td>
+      </tr>
+      <tr>
+          <td>R3</td>
+          <td>32</td>
+          <td>188</td>
+          <td>148</td>
+          <td>低音</td>
+      </tr>
+      <tr>
+          <td>R4</td>
+          <td>48</td>
+          <td>152</td>
+          <td>255</td>
+          <td>旋律</td>
+      </tr>
+      <tr>
+          <td>R5</td>
+          <td>200</td>
+          <td>72</td>
+          <td>168</td>
+          <td>旋律</td>
+      </tr>
+      <tr>
+          <td>R6</td>
+          <td>218</td>
+          <td>158</td>
+          <td>48</td>
+          <td>旋律</td>
+      </tr>
+      <tr>
+          <td>R7</td>
+          <td>255</td>
+          <td>108</td>
+          <td>32</td>
+          <td>旋律</td>
+      </tr>
+  </tbody>
+</table>
+<h4 id="方位卡位">方位卡位<a class="anchor" aria-hidden="true" href="#%e6%96%b9%e4%bd%8d%e5%8d%a1%e4%bd%8d">#</a></h4>
+<p>固定 LED <strong>#0、#27、#54、#81</strong>（北/东/南/西）。呼吸周期约 <strong>4.6 s</strong>（<code>sin(t×1.35)</code>）。</p>
+<ul>
+<li><strong>#0</strong>：正红；<strong>#27 / #54 / #81</strong>：淡红</li>
+<li><strong>所有状态</strong>（空闲、播放中、播完）：四卡位统一红呼吸，opacity <strong>75%～100%</strong>（相对该色峰值）</li>
+<li><strong>非卡位</strong>：仅在<strong>空闲</strong>时有全环暗白呼吸 <strong>0–20</strong>（RGB）；播放中 / 播完无环境白场</li>
+</ul>
+<p><strong>逻辑 ↔ 物理对齐</strong>（Mat 页 Calibration，默认）：<code>sector_offset=4</code>（S→L 逻辑 sector 旋转）、<code>led_offset=101</code>（灯带物理旋转，在 <code>set_buffer</code> 时统一施加）、<code>wire_slice_mirror=开</code>（列镜像，对齐实物顺时针与软件 CW sector）。LED #0 与 slice 0 通过上述 offset 对齐，不再「未测量」。</p>
+<h4 id="模式">模式<a class="anchor" aria-hidden="true" href="#%e6%a8%a1%e5%bc%8f">#</a></h4>
+<p>优先级自上而下；满足上条即采用，不再落入下条。</p>
+<ul>
+<li><strong>播完</strong> — 一曲结束且未在播：除四个卡位外<strong>全灭</strong>；卡位仍为正红/淡红呼吸。收走 R0/R1 或重置后退出此态。</li>
+<li><strong>播放</strong> — 正在播：无全环环境呼吸；无效果的灯<strong>不亮</strong>；仅白色扫描尾迹、R2–R7 石头淡标记、卡位红呼吸。R0/R1 放上会<strong>自动开拍</strong>。</li>
+<li><strong>空闲</strong> — 未在播且未播完：非卡位全环暗白呼吸 <strong>0–20</strong>；四卡位红呼吸 <strong>75%～100%</strong>（含仅摆旋律石、尚未达到 control sum 时）。</li>
+</ul>
+<h4 id="播放中">播放中<a class="anchor" aria-hidden="true" href="#%e6%92%ad%e6%94%be%e4%b8%ad">#</a></h4>
+<p><strong>扫描（白）</strong></p>
+<ul>
+<li>仅<strong>扫描头后方</strong>发光，前方不亮；头随顺时针推进。</li>
+<li>相对扫描头的落后颗数 0～10 的亮度比例：<strong>1.00 · 0.75 · 0.40 · 0.30 · 0.22 · 0.15 · 0.10 · 0.06 · 0.03 · 0.01 · 0</strong>。</li>
+<li>无扫描、无石头、非卡位：<strong>不亮</strong>。</li>
+</ul>
+<p><strong>石头标记（R2–R7）</strong></p>
+<ul>
+<li>每个石头：扇区中心 LED 及左右各 1 颗（约 3 颗），叠对应 Ring 色（约 <strong>22% opacity × 55% mix</strong> 叠在白底上）</li>
+</ul>
+<h4 id="短效">短效<a class="anchor" aria-hidden="true" href="#%e7%9f%ad%e6%95%88">#</a></h4>
+<p><strong>预览</strong>（R2–R7 放石）</p>
+<ul>
+<li><strong>空闲</strong>：扇区中心 ±2 颗，Ring 色，<strong>100%</strong> 亮度，<strong>1000 ms</strong> 余弦渐灭；对应单音 preview（默认 <strong>50%</strong> 音量）</li>
+<li><strong>Loop 播放中</strong>（Place preview &gt; 0）：同上 LED 预览 + 立刻响一声（默认 <strong>25%</strong> 音量），并标记已触发避免扫描重复</li>
+</ul>
+<p><strong>扫描命中</strong>（播放中扫到石头）</p>
+<ul>
+<li>扇区中心及沿顺时针编号 <strong>+1、0、−1、−2</strong> 共 <strong>4 颗</strong>（不含 <strong>+2</strong>），Ring 色，总 <strong>180 ms</strong>（约 10 ms 起、至 50 ms 保持、随后平方衰减）。</li>
+<li>亮度：<strong>100%</strong>（中心）· <strong>82%</strong>（±1）· <strong>52%</strong>（−2）。</li>
+<li>与扫描白光合成取<strong>更亮</strong>一侧，不压暗、不挖空尾迹；与垫子是否显示扫描线无关。</li>
+</ul>
+<p>播完态不叠预览；未播放时不产生命中闪。</p>
+<h2 id="合成顺序">合成顺序<a class="anchor" aria-hidden="true" href="#%e5%90%88%e6%88%90%e9%a1%ba%e5%ba%8f">#</a></h2>
+<p>对每一颗 LED 每帧：先定模式基底 → 再叠预览（若有）→ 再叠命中（若有，与基底取更亮）。卡位在播放与播完时仍按红呼吸规则覆盖同索引其它效果。</p>
+<h2 id="音色与效果器表">音色与效果器表<a class="anchor" aria-hidden="true" href="#%e9%9f%b3%e8%89%b2%e4%b8%8e%e6%95%88%e6%9e%9c%e5%99%a8%e8%a1%a8">#</a></h2>
+<p>见 Web Demo</p>
+<p>src/soundmat/jam/synths</p>
+<hr>
+<p>初版触发音（废除）</p>
+<blockquote>
+<table>
+  <thead>
+      <tr>
+          <th>节拍</th>
+          <th>1</th>
+          <th>2</th>
+          <th>3</th>
+          <th>4</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>和弦</strong></td>
+          <td>2m9</td>
+          <td>513</td>
+          <td>1maj9</td>
+          <td>69</td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td>3 4 6 1^ 3^</td>
+          <td>3 4 6 7 3^</td>
+          <td>2 3 6 7 2^</td>
+          <td>3 5 7 1#^ 2</td>
+      </tr>
+      <tr>
+          <td>1&amp;</td>
+          <td>2 1^ 2^ 3^ 4^</td>
+          <td>1 2 5 1^ 4^</td>
+          <td>3 4 7 1^ 3^</td>
+          <td>1# 3 6 2^ 3^</td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td>1 4 6 1^ 3^</td>
+          <td>4 5 7 2^ 3^</td>
+          <td>2 5 6 7 2^</td>
+          <td>7_ 4 5 7 1#^</td>
+      </tr>
+      <tr>
+          <td>2&amp;</td>
+          <td>2 6 1^ 3^ 4^</td>
+          <td>2 3 5 1^ 4^</td>
+          <td>3 4 7 2^ 3^</td>
+          <td>1# 3 6 1#^ 2^</td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td>3 4 6 1^ 3^</td>
+          <td>3 4 6 7 3^</td>
+          <td>2 3 6 7 2^</td>
+          <td>3 5 7 1#^ 2</td>
+      </tr>
+      <tr>
+          <td>3&amp;</td>
+          <td>5 6 1^ 6 2^</td>
+          <td>1 3 5 1^ 2^</td>
+          <td>1 2 5 6 1^</td>
+          <td>1# 3 5 6 1#^</td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td>3 4 6 1^ 1^</td>
+          <td>7_ 2 4 7 1^</td>
+          <td>7_ 1 3 5 7</td>
+          <td>6_ 3 6 1#^ 3^</td>
+      </tr>
+      <tr>
+          <td>4&amp;</td>
+          <td>1 3 4 3^ 6</td>
+          <td>5_ 1 2 4 5</td>
+          <td>1 7_ 2 3 5</td>
+          <td>5_ 1# 3 6 1#^</td>
+      </tr>
+  </tbody>
+</table>
+<p>表中每五个数字都对应 ring3-ring7 对应节拍的触发音符</p></blockquote>
+
+
+        </article>
+    </main>
+
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2026 MUKIMASTA</p>
+    </div>
+</footer>
+
+</body>
+
+</html>

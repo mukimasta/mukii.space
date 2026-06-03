@@ -1,0 +1,8 @@
+{{- with .Params.alternates -}}
+<nav class="soundmat-lang-switch" aria-label="Document language">
+  {{- $lang := $.Params.docLang | default "zh" -}}
+  <a class="soundmat-lang-switch__link{{ if eq $lang "zh" }} is-active{{ end }}" href="{{ .zh }}" hreflang="zh" lang="zh">中文</a>
+  <span class="soundmat-lang-switch__sep" aria-hidden="true">·</span>
+  <a class="soundmat-lang-switch__link{{ if eq $lang "en" }} is-active{{ end }}" href="{{ .en }}" hreflang="en" lang="en">English</a>
+</nav>
+{{- end -}}

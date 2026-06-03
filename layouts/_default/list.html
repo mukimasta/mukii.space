@@ -1,5 +1,6 @@
 {{- define "main" }}
     <section>
+{{ partial "soundmat-lang-switch.html" . }}
         <h2>{{ .Title | .RenderString }}</h2>
         {{ .Content }}
     </section>

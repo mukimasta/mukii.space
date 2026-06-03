@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>SoundMat on MUKIMASTA</title>
+    <link>https://mukii.space/soundmat/en/</link>
+    <description>Recent content in SoundMat on MUKIMASTA</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <atom:link href="https://mukii.space/soundmat/en/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>SoundMat (1) Idea</title>
+      <link>https://mukii.space/soundmat/en/soundmat-1-idea/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mukii.space/soundmat/en/soundmat-1-idea/</guid>
+      <description>&lt;p&gt;I set four criteria to decide what product I actually wanted to build:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;Something I could realistically build&lt;/li&gt;&#xA;&lt;li&gt;Something I found genuinely fun and interesting&lt;/li&gt;&#xA;&lt;li&gt;Something usable—you could see it working&lt;/li&gt;&#xA;&lt;li&gt;Something with real need or clear application potential&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;On the first point: because this was a course project with a small team, the device had to stay compact and low-cost.&lt;/p&gt;&#xA;&lt;p&gt;On the second: the project had to be playful—something I could enjoy myself and that would make others’ eyes light up when I showed it.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>SoundMat (10) Sensor Manufacturing</title>
+      <link>https://mukii.space/soundmat/en/soundmat-10-sensor-manufacturing/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mukii.space/soundmat/en/soundmat-10-sensor-manufacturing/</guid>
+      <description>&lt;p&gt;In &lt;a href=&#34;https://mukii.space/soundmat/en/soundmat-5-sensor-principles-and-design/&#34;&gt;SoundMat (5) Sensor Principles and Design&lt;/a&gt; we covered theory and layout. This chapter covers &lt;strong&gt;manufacturing&lt;/strong&gt;.&lt;/p&gt;&#xA;&lt;p&gt;Stack bottom to top:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;Board&lt;/li&gt;&#xA;&lt;li&gt;Concentric ring electrodes (Rings)&lt;/li&gt;&#xA;&lt;li&gt;Velostat (piezoresistive layer)&lt;/li&gt;&#xA;&lt;li&gt;Sector electrodes (Slices)&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;That is also build order.&lt;/p&gt;&#xA;&lt;h2 id=&#34;1-laser-cutting-overview&#34;&gt;1 Laser cutting overview&lt;a class=&#34;anchor&#34; aria-hidden=&#34;true&#34; href=&#34;#1-laser-cutting-overview&#34;&gt;#&lt;/a&gt;&lt;/h2&gt;&#xA;&lt;p&gt;Laser cutting focuses a high-energy beam on the material surface, melting/vaporizing/ablation in milliseconds. Two jobs: &lt;strong&gt;cut&lt;/strong&gt; (through-cut) and &lt;strong&gt;etch&lt;/strong&gt; (surface pattern).&lt;/p&gt;&#xA;&lt;p&gt;Input is vector art (SVG, PDF, etc.) with colors/layers marking cut vs etch, plus power/speed per material.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>SoundMat (11) Electronics Manufacturing</title>
+      <link>https://mukii.space/soundmat/en/soundmat-11-electronics-manufacturing/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mukii.space/soundmat/en/soundmat-11-electronics-manufacturing/</guid>
+      <description>&lt;p&gt;Following &lt;a href=&#34;https://mukii.space/soundmat/en/soundmat-6-electronics-system-design/&#34;&gt;SoundMat (6) Electronics System Design&lt;/a&gt;, this chapter covers building the electronics. At a high level there are three approaches:&lt;/p&gt;&#xA;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;Approach&lt;/th&gt;&#xA;          &lt;th&gt;Breadboard&lt;/th&gt;&#xA;          &lt;th&gt;Perfboard&lt;/th&gt;&#xA;          &lt;th&gt;PCB&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Connection&lt;/td&gt;&#xA;          &lt;td&gt;Plug-in, no solder&lt;/td&gt;&#xA;          &lt;td&gt;Soldered, hand wires&lt;/td&gt;&#xA;          &lt;td&gt;Etched/printed copper, soldered parts&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Reliability&lt;/td&gt;&#xA;          &lt;td&gt;Poor; loose contacts, vibration&lt;/td&gt;&#xA;          &lt;td&gt;Good; solid joints&lt;/td&gt;&#xA;          &lt;td&gt;Best; industrial-grade&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Best for&lt;/td&gt;&#xA;          &lt;td&gt;Early proof of concept&lt;/td&gt;&#xA;          &lt;td&gt;Prototype build&lt;/td&gt;&#xA;          &lt;td&gt;Production or demanding prototype&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Build time&lt;/td&gt;&#xA;          &lt;td&gt;Minutes&lt;/td&gt;&#xA;          &lt;td&gt;Hours&lt;/td&gt;&#xA;          &lt;td&gt;Design + fab 1–2 weeks&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Iteration&lt;/td&gt;&#xA;          &lt;td&gt;Highest; rewire anytime&lt;/td&gt;&#xA;          &lt;td&gt;Medium; desolder to change&lt;/td&gt;&#xA;          &lt;td&gt;Low; respin board&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Cost&lt;/td&gt;&#xA;          &lt;td&gt;Low&lt;/td&gt;&#xA;          &lt;td&gt;Low&lt;/td&gt;&#xA;          &lt;td&gt;Higher (NRE + wait)&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Long-run install&lt;/td&gt;&#xA;          &lt;td&gt;Unacceptable in public&lt;/td&gt;&#xA;          &lt;td&gt;Reliable&lt;/td&gt;&#xA;          &lt;td&gt;Most reliable&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Chosen&lt;/td&gt;&#xA;          &lt;td&gt;❌&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;          &lt;td&gt;❌&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;After sensor fabrication we briefly validated on breadboard, then moved to &lt;strong&gt;perfboard&lt;/strong&gt; for the main electronics.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>SoundMat (12) Software Design and Development</title>
+      <link>https://mukii.space/soundmat/en/soundmat-12-software-design-and-development/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mukii.space/soundmat/en/soundmat-12-software-design-and-development/</guid>
+      <description>&lt;p&gt;This document describes the host-software layer design and development for SoundMat. Hardware, electronics, sensor principles, ESP32 firmware, and related topics are covered in their own design docs. Here we assume hardware already delivers sensor frames over serial and focus on the Python program and SuperCollider audio engine running on the Raspberry Pi.&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;1-runtime-platform&#34;&gt;1. Runtime platform&lt;a class=&#34;anchor&#34; aria-hidden=&#34;true&#34; href=&#34;#1-runtime-platform&#34;&gt;#&lt;/a&gt;&lt;/h2&gt;&#xA;&lt;p&gt;The SoundMat host runs on a &lt;strong&gt;Raspberry Pi 3B V1.2&lt;/strong&gt; with &lt;strong&gt;Raspberry Pi OS Lite&lt;/strong&gt; (no desktop). Reasons for this stack:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>SoundMat (13) Epilogue and Summary</title>
+      <link>https://mukii.space/soundmat/en/soundmat-13-epilogue-and-summary/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mukii.space/soundmat/en/soundmat-13-epilogue-and-summary/</guid>
+      <description>&lt;p&gt;Product vision and technical implementation moving toward each other—joint decisions, mutual constraints.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>SoundMat (14) Timeline</title>
+      <link>https://mukii.space/soundmat/en/soundmat-14-timeline/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mukii.space/soundmat/en/soundmat-14-timeline/</guid>
+      <description>&lt;p&gt;4/8 — Idea&lt;br&gt;&#xA;4/16 – 4/25 — Mini sensor build&lt;br&gt;&#xA;4/30 – 5/7 — Sensor manufacturing&lt;br&gt;&#xA;5/12 – 5/18 — Electronics system design and manufacturing&lt;br&gt;&#xA;5/21 — Firmware design and development&lt;br&gt;&#xA;5/1 – 5/29 — Structural assembly&lt;br&gt;&#xA;5/29 – 6/1 — Cover design and manufacturing (Po-yu and Fei)&lt;br&gt;&#xA;5/25 – 5/30 — Sonification design&lt;br&gt;&#xA;5/28 – 6/1 — Software system design and development&lt;br&gt;&#xA;6/4 — Presentation&lt;/p&gt;&#xA;&lt;p&gt;5/30&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Finished harmony and melody trigger-note design&lt;/li&gt;&#xA;&lt;li&gt;Finished LED design and demo implementation&lt;/li&gt;&#xA;&lt;li&gt;Finished all timbre specifications&lt;/li&gt;&#xA;&lt;li&gt;Finished sonification design and documentation&lt;/li&gt;&#xA;&lt;li&gt;Finished software architecture design&lt;/li&gt;&#xA;&lt;li&gt;Finished software development&lt;/li&gt;&#xA;&lt;li&gt;Finished Raspberry Pi network solution&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
+    </item>
+    <item>
+      <title>SoundMat (15) Network Solution</title>
+      <link>https://mukii.space/soundmat/en/soundmat-15-network-solution/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mukii.space/soundmat/en/soundmat-15-network-solution/</guid>
+      <description>&lt;p&gt;The last stage of software design is the Raspberry Pi &lt;strong&gt;network solution&lt;/strong&gt;.&lt;/p&gt;&#xA;&lt;p&gt;Requirements:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;Deploy developed code to the Pi and communicate with it—&lt;strong&gt;SSH&lt;/strong&gt; must work&lt;/li&gt;&#xA;&lt;li&gt;During use, control modes and parameters via &lt;strong&gt;Web&lt;/strong&gt;—real-time LAN communication&lt;/li&gt;&#xA;&lt;li&gt;One optional Ambient-mode feature needs live internet&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;On boot, NetworkManager tries known WiFi networks in priority order. &lt;strong&gt;60 s timeout&lt;/strong&gt;: if connected, normal STA operation; if no IP after 60 s, activate AP config—a hotspot named &lt;code&gt;SoundMat&lt;/code&gt;, fixed IP &lt;code&gt;10.42.0.1&lt;/code&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>SoundMat (16) Software Deployment Performance Optimization</title>
+      <link>https://mukii.space/soundmat/en/soundmat-16-software-deployment-performance/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mukii.space/soundmat/en/soundmat-16-software-deployment-performance/</guid>
+      <description>&lt;h2 id=&#34;background&#34;&gt;Background&lt;a class=&#34;anchor&#34; aria-hidden=&#34;true&#34; href=&#34;#background&#34;&gt;#&lt;/a&gt;&lt;/h2&gt;&#xA;&lt;p&gt;On a Pi 4 in Jam mock mode with 50 stones and playback running, scsynth sat at 99.9% and the jam loop at ~90%, with continuous JACK XRuns and audio stuttering to the point of being unlistenable. The same scenario on a Mac was fine (roughly 5–10× CPU headroom). Goal: stable performance on the Pi with anywhere from 10 to 50 stones.&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;optimization-checklist-by-layer&#34;&gt;Optimization checklist (by layer)&lt;a class=&#34;anchor&#34; aria-hidden=&#34;true&#34; href=&#34;#optimization-checklist-by-layer&#34;&gt;#&lt;/a&gt;&lt;/h2&gt;&#xA;&lt;h3 id=&#34;a-frontend-mathtml&#34;&gt;A. Frontend (mat.html)&lt;a class=&#34;anchor&#34; aria-hidden=&#34;true&#34; href=&#34;#a-frontend-mathtml&#34;&gt;#&lt;/a&gt;&lt;/h3&gt;&#xA;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;Change&lt;/th&gt;&#xA;          &lt;th&gt;File&lt;/th&gt;&#xA;          &lt;th&gt;Benefit&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;strong&gt;Pi mode toggle&lt;/strong&gt;&lt;/td&gt;&#xA;          &lt;td&gt;&lt;code&gt;web/static/mat.html&lt;/code&gt;&lt;/td&gt;&#xA;          &lt;td&gt;Heatmap 30 fps → 10 fps (numbers kept); LED 40 fps → 20 fps, SVG &lt;code&gt;feGaussianBlur&lt;/code&gt; glow off; button + &lt;code&gt;localStorage&lt;/code&gt; persistence&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;Enable when viewing &lt;code&gt;/mat&lt;/code&gt; in Chromium on the Pi itself—saves ~50% GPU/CPU in the browser.&lt;br&gt;&#xA;Remote access or not opening the mat page: zero impact.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>SoundMat (2) Product Design Philosophy</title>
+      <link>https://mukii.space/soundmat/en/soundmat-2-philosophy/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mukii.space/soundmat/en/soundmat-2-philosophy/</guid>
+      <description>&lt;p&gt;This chapter is about what kind of product SoundMat is—and what makes it a &lt;em&gt;good&lt;/em&gt; one. The idea is genuinely interesting and has potential. But a product isn’t validated by looking cool alone; it needs real demand. We might imagine something beautiful that nobody actually wants to walk up and place objects on. Whether SoundMat succeeds comes down to this: do people want to play with it?&lt;/p&gt;&#xA;&lt;p&gt;First, who is it for? When I first had the idea, I imagined multi-person ensemble play: people standing together, building loop music from nothing—layering elements, shifting rhythm and harmony, knowing what they’re doing. That’s the “musicians jamming in the moment” scenario.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>SoundMat (3) Exterior Design</title>
+      <link>https://mukii.space/soundmat/en/soundmat-3-exterior-design/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mukii.space/soundmat/en/soundmat-3-exterior-design/</guid>
+      <description>&lt;p&gt;This chapter covers SoundMat’s exterior design. Two constraints matter upfront: &lt;strong&gt;structure&lt;/strong&gt;—electronics must fit inside, so sci-fi fantasy shapes are out; design must be buildable—and &lt;strong&gt;prototype reality&lt;/strong&gt;—lab hand-build, limited time; nothing too wild or complex.&lt;/p&gt;&#xA;&lt;p&gt;What follows is ideal design &lt;em&gt;within&lt;/em&gt; what we can actually make—appearance first, pushing complexity where we can, then trimming during engineering.&lt;/p&gt;&#xA;&lt;p&gt;The previous chapter ended with: &lt;em&gt;it’s there, and that alone is aesthetic&lt;/em&gt;. SoundMat must read as art object—aligned with the first two user scenarios: restraint, nature, refinement.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>SoundMat (4) Structural Design</title>
+      <link>https://mukii.space/soundmat/en/soundmat-4-structural-design/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mukii.space/soundmat/en/soundmat-4-structural-design/</guid>
+      <description>&lt;p&gt;Structural design bridges exterior vision and engineering—how to hide sensors, electronics, and LEDs inside an artful shell.&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Internal stack (top to bottom)&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;Felt surface&lt;/li&gt;&#xA;&lt;li&gt;Sensor and LED layer&lt;/li&gt;&#xA;&lt;li&gt;Rigid board&lt;/li&gt;&#xA;&lt;li&gt;Board support&lt;/li&gt;&#xA;&lt;li&gt;Cavity&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h3 id=&#34;1-felt-surface&#34;&gt;1 Felt surface&lt;a class=&#34;anchor&#34; aria-hidden=&#34;true&#34; href=&#34;#1-felt-surface&#34;&gt;#&lt;/a&gt;&lt;/h3&gt;&#xA;&lt;p&gt;Pure wool felt&lt;br&gt;&#xA;or cork sheet&lt;/p&gt;&#xA;&lt;h3 id=&#34;2-sensor-layer&#34;&gt;2 Sensor layer&lt;a class=&#34;anchor&#34; aria-hidden=&#34;true&#34; href=&#34;#2-sensor-layer&#34;&gt;#&lt;/a&gt;&lt;/h3&gt;&#xA;&lt;p&gt;Velostat + fabric circuit&lt;/p&gt;&#xA;&lt;p&gt;See &lt;a href=&#34;https://mukii.space/soundmat/en/soundmat-5-sensor-principles-and-design/&#34;&gt;SoundMat (5) Sensor Principles and Design&lt;/a&gt;&lt;/p&gt;&#xA;&lt;h3 id=&#34;3-rigid-board&#34;&gt;3 Rigid board&lt;a class=&#34;anchor&#34; aria-hidden=&#34;true&#34; href=&#34;#3-rigid-board&#34;&gt;#&lt;/a&gt;&lt;/h3&gt;&#xA;&lt;h3 id=&#34;4-cavity-and-board-support&#34;&gt;4 Cavity and board support&lt;a class=&#34;anchor&#34; aria-hidden=&#34;true&#34; href=&#34;#4-cavity-and-board-support&#34;&gt;#&lt;/a&gt;&lt;/h3&gt;&#xA;&lt;p&gt;We use a bowl-shaped planter as base and cavity; the bottom has a built-in drain hole. Power and audio cables exit through it.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>SoundMat (5) Sensor Principles and Design</title>
+      <link>https://mukii.space/soundmat/en/soundmat-5-sensor-principles-and-design/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mukii.space/soundmat/en/soundmat-5-sensor-principles-and-design/</guid>
+      <description>&lt;h3 id=&#34;11-sensing-principle&#34;&gt;1.1 Sensing principle&lt;a class=&#34;anchor&#34; aria-hidden=&#34;true&#34; href=&#34;#11-sensing-principle&#34;&gt;#&lt;/a&gt;&lt;/h3&gt;&#xA;&lt;p&gt;SoundMat sensing is based on the &lt;strong&gt;piezoresistive effect&lt;/strong&gt;. We use &lt;strong&gt;Velostat&lt;/strong&gt;—carbon-filled polyethylene film that looks like black paper. With no pressure, carbon particles are far apart, few conductive paths, high resistance. Under pressure the film compresses, particles move closer, more paths form, resistance drops sharply. More pressure → lower resistance.&lt;/p&gt;&#xA;&lt;p&gt;So we sense pressure by sensing Velostat resistance. Read resistance → know where something is and roughly how heavy it is.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>SoundMat (6) Electronics System Design</title>
+      <link>https://mukii.space/soundmat/en/soundmat-6-electronics-system-design/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mukii.space/soundmat/en/soundmat-6-electronics-system-design/</guid>
+      <description>&lt;p&gt;This chapter designs the SoundMat electronics system. The electronics are a central part of the overall product. If the software is the brain, the electronics are the body: they provide the platform for software and implement the hardware functions.&lt;/p&gt;&#xA;&lt;p&gt;As a public art installation, the electronics design is constrained as follows:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;strong&gt;Aesthetics:&lt;/strong&gt; All components must fit inside the cavity; minimize external cables.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Power:&lt;/strong&gt; Prefer operation outdoors without a wall outlet.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Reliability:&lt;/strong&gt; Long, stable runtime; mechanically sound structure.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Audio quality:&lt;/strong&gt; Sound is core to the piece; output must sound good.&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;For (1), hidden parts imply size and thermal limits; ideally only one power cable and one audio cable leave the enclosure.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>SoundMat (7) Firmware Design</title>
+      <link>https://mukii.space/soundmat/en/soundmat-7-firmware-design/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mukii.space/soundmat/en/soundmat-7-firmware-design/</guid>
+      <description>&lt;p&gt;Firmware here means software on the ESP32 MCU. It bridges sensor/electronics and sonification: raw sensor readings go to the host computer for music generation; LED commands from the host drive the strip on SoundMat.&lt;/p&gt;&#xA;&lt;p&gt;Firmware architecture splits into four modules:&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;loop&lt;/span&gt;() {&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#a6e22e&#34;&gt;scan_sensors&lt;/span&gt;();      &lt;span style=&#34;color:#75715e&#34;&gt;// Sensor scan module&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#a6e22e&#34;&gt;send_sensor_data&lt;/span&gt;();  &lt;span style=&#34;color:#75715e&#34;&gt;// Sensor data transmit module&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#a6e22e&#34;&gt;receive_led_data&lt;/span&gt;();  &lt;span style=&#34;color:#75715e&#34;&gt;// LED data receive module&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#a6e22e&#34;&gt;update_leds&lt;/span&gt;();       &lt;span style=&#34;color:#75715e&#34;&gt;// LED refresh module&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Initialization (pins, ADC, Serial, LEDs)&#xA;&#xA;Main loop:&#xA;  1. Scan sensor array → pressure_matrix[ring][slice]&#xA;  2. Send pressure_matrix to host&#xA;  3. Receive LED state from host&#xA;  4. Update LED display&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;sensor-scan-module&#34;&gt;Sensor scan module&lt;a class=&#34;anchor&#34; aria-hidden=&#34;true&#34; href=&#34;#sensor-scan-module&#34;&gt;#&lt;/a&gt;&lt;/h2&gt;&#xA;&lt;p&gt;Detection principles are in &lt;a href=&#34;https://mukii.space/soundmat/en/soundmat-5-sensor-principles-and-design/&#34;&gt;SoundMat (5) Sensor Principles and Design&lt;/a&gt;. To read coordinate &lt;code&gt;(ring, slice)&lt;/code&gt;, drive the active ring HIGH and all others LOW, configure the MUX to route that slice, then read slice-side voltage.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>SoundMat (8) Interaction and Sonification Design</title>
+      <link>https://mukii.space/soundmat/en/soundmat-8-interaction-and-sonification/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mukii.space/soundmat/en/soundmat-8-interaction-and-sonification/</guid>
+      <description>&lt;p&gt;Sonification design is the soul of SoundMat. We have already settled the product philosophy and designed the structure, appearance, sensors, hardware, and so on—but those are only the foundation, the places where imperfection arises. Sonification design—how stones and the audience’s touch and pressure become music, in line with the musical art installation we imagine—is the trickiest part, and the easiest to make mediocre.&lt;/p&gt;&#xA;&lt;p&gt;Beyond that is LED interaction design. That part is relatively the finishing touch; it serves two functions: cueing and feedback. Through LED cues, users can tell which stage the music has reached and feel the current mood; feedback means that after interacting with SoundMat, besides auditory response, they also get visual LED feedback, which strengthens the sense of participation and artistry.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>SoundMat (9) Structural Manufacturing</title>
+      <link>https://mukii.space/soundmat/en/soundmat-9-structural-manufacturing/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mukii.space/soundmat/en/soundmat-9-structural-manufacturing/</guid>
+      <description>&lt;p&gt;&lt;em&gt;(To be written.)&lt;/em&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>SoundMat Presentation</title>
+      <link>https://mukii.space/soundmat/en/soundmat-presentation/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mukii.space/soundmat/en/soundmat-presentation/</guid>
+      <description>&lt;h2 id=&#34;i-design-philosophy&#34;&gt;I. Design philosophy&lt;a class=&#34;anchor&#34; aria-hidden=&#34;true&#34; href=&#34;#i-design-philosophy&#34;&gt;#&lt;/a&gt;&lt;/h2&gt;&#xA;&lt;p&gt;The deck is not one visual style all the way through—it mixes three slide types for rhythm:&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Hero Slide&lt;/strong&gt; — Pure typography, one full-screen line, e.g. “Place stones. Make music.” Use for section openers, key claims, emotional turns.&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Bento Slide&lt;/strong&gt; — Multi-card grid, 4–6 features on one screen. Use to show several facets of one module (e.g. sensor: “design principle / product photo / spec numbers / comparison decision” as a quartet).&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

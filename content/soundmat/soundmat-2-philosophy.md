@@ -1,8 +1,15 @@
 ---
 title: "SoundMat (2) Philosophy 产品设计哲学"
+docLang: zh
+translationKey: soundmat-2-philosophy
+alternates:
+  zh: /soundmat/soundmat-2-philosophy/
+  en: /soundmat/en/soundmat-2-philosophy/
 aliases:
   - /soundmat/soundmat-2-philosophy/
 ---
+
+
 
 
 这篇文章讨论的是 SoundMat 是什么样的一个产品，以及它如何成为一个好的产品。这个 Idea 确实有意思并且有潜力。但是一个产品不仅仅是看起来有意思就可以，而是是否真的有这个需求。或许我们想象的很美好，但是实际上根本没有人想要来摆放物品。SoundMat 能否成功的关键就在这里：是不是真的有人想要玩它？

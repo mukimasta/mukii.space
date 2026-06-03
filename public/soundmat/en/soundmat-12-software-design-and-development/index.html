@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="en-us" dir="ltr" class="kind-page">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="This document describes the host-software layer design and development for SoundMat. Hardware, electronics, sensor principles, ESP32 firmware, and …">
+    <title>SoundMat (12) Software Design and Development</title>
+    <link rel="canonical" href="https://mukii.space/soundmat/en/soundmat-12-software-design-and-development/">
+
+
+
+<meta property="og:title" content="SoundMat (12) Software Design and Development">
+<meta property="og:description" content="This document describes the host-software layer design and development for SoundMat. Hardware, electronics, sensor principles, ESP32 firmware, and …">
+<meta property="og:image" content="https://mukii.space/og/og-image-c5480f2240808ff22186b6025f7d3b69.svg">
+<meta property="og:image:type" content="image/svg+xml">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mukii.space/soundmat/en/soundmat-12-software-design-and-development/">
+<meta property="og:locale" content="en-us">
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SoundMat (12) Software Design and Development">
+<meta name="twitter:description" content="This document describes the host-software layer design and development for SoundMat. Hardware, electronics, sensor principles, ESP32 firmware, and …">
+<meta name="twitter:image" content="https://mukii.space/og/og-image-c5480f2240808ff22186b6025f7d3b69.svg">
+
+    <link rel="preload" href="/fonts/Newsreader.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/default.min.fb89c3008d933d5ac0e46af0bee4acd14efae3a00fca1ebbeb11e373ecaf3a64.css" integrity="sha256-&#43;4nDAI2TPVrA5GrwvuSs0U7646APyh676xHjc&#43;yvOmQ=">
+    <link rel="stylesheet" href="/css/custom.min.4ad75db0d4010183f7312823592f18e887d33b8d0901d261b50fad0d64c2ba94.css" integrity="sha256-StddsNQBAYP3MSgjWS8Y6IfTO40JAdJhtQ&#43;tDWTCupQ=">
+    <script src="/js/darkmode.min.9211af6d380489c7cf64d4b18a1e49e75be2bebf92031d2165eb6c20bc59c6a2.js" integrity="sha256-khGvbTgEicfPZNSxih5J51vivr&#43;SAx0hZetsILxZxqI=" defer></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <style>
+    :root { --font-size-base: 18px; --content-max-inline-size: 680px; }
+    h1 { font-size: 2em; }
+    .katex { font-size: 0.95em; }
+    pre code {
+    background: var(--code-bg) !important;
+    color: var(--text-color);
+    padding: 1em;
+    border-radius: var(--radius);
+    }
+    </style><script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+
+
+<body>
+<header>
+    <div>
+        <div class="header-left">
+            <h1>
+                <a href="https://mukii.space/">MUKIMASTA</a>
+            </h1>
+            <nav class="site-nav" aria-label="Primary">
+                <a href="/professional-overview/" class="site-nav__link">Professional</a>
+                <a href="/journey/" class="site-nav__link">Journey</a>
+            </nav>
+        </div>
+        <div class="header-controls">
+            <div class="toggle-switch">
+                <input type="checkbox" id="darkModeToggle" class="toggle-input" aria-label="Toggle dark mode">
+                <label for="darkModeToggle" class="toggle-label">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <main class="content-wrapper">
+        <article class="content-container">
+
+<nav class="back-to-parent" aria-label="上一级导航">
+  <a class="back-to-parent__link" href="/soundmat/en/" title="SoundMat" aria-label="返回 SoundMat">‹</a>
+</nav>
+
+
+<nav class="soundmat-lang-switch" aria-label="Document language"><a class="soundmat-lang-switch__link" href="/soundmat/soundmat-12-software-design-and-development/" hreflang="zh" lang="zh">中文</a>
+  <span class="soundmat-lang-switch__sep" aria-hidden="true">·</span>
+  <a class="soundmat-lang-switch__link is-active" href="/soundmat/en/soundmat-12-software-design-and-development/" hreflang="en" lang="en">English</a>
+</nav>
+    <h1>SoundMat (12) Software Design and Development</h1>
+    <h4></h4>
+
+<p>This document describes the host-software layer design and development for SoundMat. Hardware, electronics, sensor principles, ESP32 firmware, and related topics are covered in their own design docs. Here we assume hardware already delivers sensor frames over serial and focus on the Python program and SuperCollider audio engine running on the Raspberry Pi.</p>
+<hr>
+<h2 id="1-runtime-platform">1. Runtime platform<a class="anchor" aria-hidden="true" href="#1-runtime-platform">#</a></h2>
+<p>The SoundMat host runs on a <strong>Raspberry Pi 3B V1.2</strong> with <strong>Raspberry Pi OS Lite</strong> (no desktop). Reasons for this stack:</p>
+<ul>
+<li><strong>Enough performance</strong>. Pi 3B’s quad-core 1.2 GHz Cortex-A53 and 1 GB RAM can run the Python music logic and SuperCollider synthesis together.</li>
+<li><strong>Full I/O</strong>. Four USB-A ports: ESP32 (serial), USB DAC (audio out), debug USB stick; Ethernet/Wi‑Fi for dev-time SSH and Web console.</li>
+<li><strong>Small and low power</strong>. Fits inside the enclosure cavity; see the electronics design doc.</li>
+<li><strong>Mature stack</strong>. Linux + Python + SuperCollider is a proven real-time audio combination.</li>
+</ul>
+<p>Pi OS Lite frees background resources for audio. No GUI at runtime—all interaction is SSH or the Web console.</p>
+<p><strong>Dev machine</strong>: Same stack runs on macOS (<code>uv run soundmat</code>); <code>SOUNDMAT_SCSYNTH</code> overrides the scsynth path; on Mac the serial device is <code>/dev/cu.usbserial-*</code>. Deployment target remains Pi + USB DAC.</p>
+<hr>
+<h2 id="2-system-overview">2. System overview<a class="anchor" aria-hidden="true" href="#2-system-overview">#</a></h2>
+<p>End-to-end data flow:</p>
+<pre tabindex="0"><code>                                                    +-----------+
+   +-------+   serial    +-----------+    OSC       |  scsynth  |
+   | ESP32 |  ---------&gt; |    Pi     |  ----------&gt; |    (SC)   | 
+   |       |   S frames  |  Python   |             |           |
+   |       |  &lt;--------- |           |        +-----+-----------+
+   +-------+   L frames  +-----------+        +-&gt; USB DAC --&gt; speakers
+       ↓
+   LED strip
+</code></pre><p>Steps:</p>
+<ol>
+<li><strong>Sensor ingest</strong>. The Pi receives S frames from the ESP32 over USB serial (256× 12-bit ADC values per frame, ~20–30 fps).</li>
+<li><strong>Parsing</strong>. Python turns the raw ADC matrix into a snapshot of which <code>(ring, slice)</code> cells have objects, then edge events such as place / lift.</li>
+<li><strong>Music logic</strong>. From sensor state and events, the logic layer decides what to play and which parameters to change. It does not output audio directly—only abstract music events.</li>
+<li><strong>Synthesis</strong>. Events become OSC messages to SuperCollider’s scsynth, which instantiates SynthDefs, synthesizes or plays samples, and outputs via USB DAC to external speakers.</li>
+<li><strong>LED reverse path</strong>. Python also builds LED color buffers from state, encodes L frames on the same serial link back to the ESP32, which drives WS2812B strips.</li>
+</ol>
+<hr>
+<h2 id="3-audio-engine-supercollider">3. Audio engine: SuperCollider<a class="anchor" aria-hidden="true" href="#3-audio-engine-supercollider">#</a></h2>
+<p>SoundMat uses <strong>SuperCollider</strong> (SC)—an open real-time synthesis and algorithmic composition platform (James McCartney, 1996). Two processes:</p>
+<ul>
+<li><strong>scsynth</strong>: synthesis server; OSC in, real-time audio out; hundreds of voices are feasible.</li>
+<li><strong>sclang</strong>: SC language interpreter; defines SynthDefs, music logic, sends OSC to scsynth.</li>
+</ul>
+<p>Why SC:</p>
+<ul>
+<li><strong>Strong real-time behavior</strong>. scsynth is built for low-latency audio with low CPU use.</li>
+<li><strong>Samples and synthesis</strong>. Long ambient samples and complex Jam synths both fit.</li>
+<li><strong>Native OSC</strong>. Natural fit for driving from another language.</li>
+<li><strong>Cross-platform</strong>. Good Linux ARM support; headless on the Pi.</li>
+</ul>
+<hr>
+<h2 id="4-audio-engine-software-architecture">4. Audio engine software architecture<a class="anchor" aria-hidden="true" href="#4-audio-engine-software-architecture">#</a></h2>
+<h3 id="design-intent">Design intent<a class="anchor" aria-hidden="true" href="#design-intent">#</a></h3>
+<p>Logic is Python’s strength; audio is SuperCollider’s. <strong>Keep logic in Python where possible</strong>—but that does not mean micromanaging SC from Python. Abstract well on the SC side so Python gets “sound building blocks,” not raw audio plumbing.</p>
+<h3 id="python--sc-integration-options">Python ↔ SC integration options<a class="anchor" aria-hidden="true" href="#python--sc-integration-options">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>Approach</th>
+          <th>Description</th>
+          <th>Assessment</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Hand-written OSC</strong></td>
+          <td>Python sends <code>/s_new</code>, <code>/n_set</code>, etc. via <code>python-osc</code></td>
+          <td>Flexible but verbose; node IDs and params are manual</td>
+      </tr>
+      <tr>
+          <td><strong>subprocess + sclang</strong></td>
+          <td>Python spawns sclang, text interface</td>
+          <td>Indirect, slow, brittle</td>
+      </tr>
+      <tr>
+          <td><strong>python supercollider library</strong></td>
+          <td>Library API over scsynth; OSC inside</td>
+          <td>Right abstraction level, readable</td>
+      </tr>
+  </tbody>
+</table>
+<p>We use the third: the <strong>python supercollider</strong> library. It wraps scsynth nodes, SynthDefs, buffers, etc.—higher than raw OSC, more direct than a sclang subprocess.</p>
+<h3 id="sclang-vs-scsynth">sclang vs scsynth<a class="anchor" aria-hidden="true" href="#sclang-vs-scsynth">#</a></h3>
+<ul>
+<li><strong>sclang</strong>: interpreter for SC language.</li>
+<li><strong>scsynth</strong>: server that actually synthesizes.</li>
+</ul>
+<p>Normally sclang compiles logic to OSC for scsynth. We can skip sclang at runtime and drive scsynth from Python because the link is OSC.</p>
+<h3 id="our-architecture">Our architecture<a class="anchor" aria-hidden="true" href="#our-architecture">#</a></h3>
+<pre tabindex="0"><code>[ Past: pure SuperCollider ]
+Music logic (sclang) ──&gt; instantiate SC Synth classes ──&gt; drive scsynth nodes
+                                ▼
+                      [SynthDefs defined in sclang]
+
+
+[ Now: Python + supercollider library + SC ]
+Music logic (python) ──&gt; library Synth classes ──&gt; drive scsynth nodes
+                                ▼                          ▼
+                    [Python-side mirror classes]    [precompiled SynthDefs]
+                                                           ▼
+                                              [SynthDefs authored in sclang]
+</code></pre><p>In short:</p>
+<ul>
+<li><strong>SC side</strong>: SynthDefs still written in sclang, <strong>precompiled to <code>.scsyndef</code></strong>; no sclang at runtime.</li>
+<li><strong>Python side</strong>: library instantiates synths, sets params, starts/stops nodes; OSC to scsynth internally.</li>
+<li><strong>scsynth</strong>: standalone service loading all <code>.scsyndef</code>, waiting for Python commands.</li>
+</ul>
+<p>Benefit: <strong>all music logic in Python</strong> (data structures, yaml/toml, HTTP, web frameworks); <strong>all sound from scsynth</strong> with stable performance. Clear boundary: <strong>Python decides when and what; SC decides how it sounds.</strong></p>
+<p>Workflow: author SynthDefs → compile to <code>.scsyndef</code> → Python logic controls playback.</p>
+<hr>
+<h2 id="5-detailed-software-architecture">5. Detailed software architecture<a class="anchor" aria-hidden="true" href="#5-detailed-software-architecture">#</a></h2>
+<h3 id="51-overall-design">5.1 Overall design<a class="anchor" aria-hidden="true" href="#51-overall-design">#</a></h3>
+<p>SoundMat has two playback modes:</p>
+<ul>
+<li><strong>Ambient</strong>: environmental music for public installation (e.g. Kyoto Arashiyama theme)</li>
+<li><strong>Jam</strong>: beat-driven lo-fi loop music</li>
+</ul>
+<p>They look very different but share the same hardware (Pi, ESP32, USB DAC, LEDs) and one SC server. The architecture balances “each mode does what comes naturally” with “no duplicate shared resources.”</p>
+<p>Only <strong>hardware I/O and the SC server</strong> are truly shared; music logic differs. We do not force one abstract “music engine”—two apps on shared <code>core/</code> services, with <code>ambient/</code> and <code>jam/</code> evolving independently.</p>
+<p>The main program picks a mode from a manifest. One mode is active at a time; switching via the Web console without restart.</p>
+<h3 id="52-ambient-mode">5.2 Ambient mode<a class="anchor" aria-hidden="true" href="#52-ambient-mode">#</a></h3>
+<p>For public installation: users place stones on the circular mat; the system generates ambient music in real time. Main loop ~20 Hz.</p>
+<p><strong>Core pipeline</strong>:</p>
+<pre tabindex="0"><code>sensor → tracker → state → mapper → voices → engine → scsynth
+</code></pre><p>In one line: <strong>sensor reads stones on the mat → state computes frame deltas → mapper decides what should sound → voices diff frames and execute → engine drives scsynth via OSC</strong>.</p>
+<p><strong>Hybrid interaction model</strong>:</p>
+<ul>
+<li><strong>Sustained sounds</strong> (wind, stream, pad, etc.): <strong>state reconcile</strong>—mapper each frame outputs the desired set; the voices engine diffs and starts/stops voices to follow state.</li>
+<li><strong>Triggered sounds</strong> (bells, one-shots): <strong>event-driven</strong>—only on place/lift edges.</li>
+</ul>
+<p><strong>Strict separation</strong>:</p>
+<ul>
+<li><code>mapping.py</code>: pure “music brain”; declarations only, no OSC.</li>
+<li><code>voices.py</code>: reconcile engine syncing declarations to scsynth node state.</li>
+</ul>
+<p>Samples organized by ring (bass, mid, bamboo, weather, melody, events, etc.), assembled declaratively via manifest (e.g. <code>kyoto.toml</code>). SynthDefs compiled offline to <code>.scsyndef</code>; runtime loads binaries only. FX chain fixed: <code>sources → reverb → master</code>.</p>
+<p>Modules are <strong>flat files</strong> (not subpackages): <code>tracker.py</code>, <code>state.py</code>, <code>mapping.py</code>, <code>voices.py</code>, <code>buffers.py</code>, <code>led.py</code>.</p>
+<h3 id="53-jam-mode">5.3 Jam mode<a class="anchor" aria-hidden="true" href="#53-jam-mode">#</a></h3>
+<p>One sentence: <strong>separate “what” (music content) from “how” (execution)</strong>. Replaceable pieces are declarative config; code only schedules and interprets. New song = new data, code unchanged.</p>
+<p>Five layers:</p>
+<pre tabindex="0"><code>config → theory → scheduler → events → bridge → SC
+</code></pre><ul>
+<li><strong>Config</strong>: BPM, key, scale, progression, melody tables, drum patterns, ring config, lo-fi curves—YAML/TOML.</li>
+<li><strong>Theory</strong>: <code>DegreeParser</code> (&ldquo;1#^&rdquo;), <code>Tonality</code> (degrees → MIDI), <code>Tempo</code> (BPM → time constants).</li>
+<li><strong>Scheduler</strong>: <code>Transport</code>, <code>ScanLine</code>, <code>SongPositionTracker</code>.</li>
+<li><strong>Events</strong>: <code>HarmonyEngine</code>, <code>DrumEngine</code>, <code>EventEngine</code>; <code>SensorState</code> for wire→logic coords, occupied/placed/removed, R0/R1 lo-fi and control-stone active.</li>
+<li><strong>Bridge</strong>: <code>NoteEvent</code> → OSC; ring→instrument mapping; degrees → MIDI.</li>
+</ul>
+<p><strong>Tuning knobs</strong>:</p>
+<ul>
+<li><strong>BPM</strong>: all timing from BPM; SC only sees absolute seconds.</li>
+<li><strong>Key</strong>: config uses degrees (&ldquo;1#^&rdquo;, &ldquo;6_&rdquo;); <code>Tonality</code> maps at runtime. Change <code>key: &quot;G&quot;</code> to transpose.</li>
+<li><strong>Timbre</strong>: ring→SynthDef mapping is separate config.</li>
+<li><strong>Structure</strong>: progressions, melodies, drums are YAML—swap data to swap song.</li>
+</ul>
+<p><strong>Example path</strong> for one note: BPM=120, key=C, chord 2m9, scan line at slice 4, stone on R4 slice 4:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Layer</th>
+          <th>What it holds</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Config</td>
+          <td><code>&quot;2&quot;</code> (string in melody table)</td>
+      </tr>
+      <tr>
+          <td>Scheduler</td>
+          <td><code>slice=4</code> (no pitch knowledge)</td>
+      </tr>
+      <tr>
+          <td>Events</td>
+          <td><code>NoteEvent(ring=4, degree=&quot;2&quot;, ...)</code></td>
+      </tr>
+      <tr>
+          <td>Bridge</td>
+          <td><code>parsed=(2,0,0)</code> → <code>midi=62</code> → <code>freq=293.66</code></td>
+      </tr>
+      <tr>
+          <td>SC</td>
+          <td><code>freq=293.66 Hz</code> (no name for &ldquo;2&rdquo;, &ldquo;D&rdquo;, or key)</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Concrete pitch exists only at the bridge for an instant</strong>—hence changing <code>key: &quot;G&quot;</code> does not touch config or the event stream.</p>
+<hr>
+<h3 id="54-directory-structure">5.4 Directory structure<a class="anchor" aria-hidden="true" href="#54-directory-structure">#</a></h3>
+<pre tabindex="0"><code>soundmat/                                ─── repo root (src/soundmat/) ───
+├── README.md
+├── SETUP.md                             # deploy and calibration on device
+├── pyproject.toml
+├── uv.lock
+│
+├── manifest/
+│   ├── ambient/
+│   │   └── kyoto.toml
+│   └── jam/
+│       ├── lofi_1.toml                  # default startup manifest
+│       ├── lofi_1b.toml
+│       └── data/
+│           ├── progressions/
+│           ├── melodies/
+│           ├── drums/
+│           ├── rings/
+│           │   └── lofi.yaml
+│           └── lofi_mapping.yaml
+│
+├── soundmat/                            ─── Python package ───
+│   ├── __init__.py
+│   ├── __main__.py                      # CLI entry; start scsynth / serial / Web
+│   ├── config.py                        # globals (calibration defaults, buses, Jam behavior)
+│   ├── app.py                           # ModeManager + manifest load
+│   │
+│   ├── core/
+│   │   ├── sc_server.py                 # scsynth subprocess + .scsyndef load
+│   │   ├── osc.py                       # OSC client (node IDs from 100000)
+│   │   ├── esp32_serial.py              # serial auto-detect, open, boot wait
+│   │   ├── services.py                  # SharedServices
+│   │   ├── sensor/
+│   │   │   ├── reader.py                # SensorReader abstract + subscribe
+│   │   │   ├── serial_reader.py         # ESP32 S-frame read
+│   │   │   ├── mock_reader.py           # mock / .npz replay / Web mat inject
+│   │   │   ├── frame.py                 # S-frame parse + checksum
+│   │   │   ├── map.py                   # wire → logical (ring, sector) S→L
+│   │   │   └── normalize.py             # wire slice column mirror (deploy tunable)
+│   │   └── led/
+│   │       ├── writer.py                # L-frame encode + 60 Hz send
+│   │       └── offset.py                # physical LED rotation
+│   │
+│   ├── web/
+│   │   ├── server.py                    # FastAPI: HTTP + WebSocket
+│   │   └── static/
+│   │       ├── index.html               # Control: mode, volume, BPM
+│   │       ├── mat.html                 # Mat: heatmap, virtual mat, calibration
+│   │       ├── debug.html
+│   │       └── soundmat.css
+│   │
+│   ├── modes/
+│   │   └── base.py                      # ModeApp Protocol
+│   │
+│   ├── ambient/
+│   │   ├── app.py
+│   │   ├── tracker.py
+│   │   ├── state.py
+│   │   ├── mapping.py
+│   │   ├── voices.py
+│   │   ├── buffers.py
+│   │   └── led.py
+│   │
+│   └── jam/
+│       ├── app.py                       # ~200 Hz main loop
+│       ├── types.py
+│       ├── config_loader.py
+│       ├── ring_config.py
+│       ├── theory/                      # degree, tonality, tempo
+│       ├── scheduler/                   # transport, scanline, song_position, timing
+│       ├── event/                       # sensor_state, harmony/drum/event_engine
+│       ├── bridge/                      # synth_bridge, master_fx
+│       └── led/                         # renderer, layers (palette / geometry / envelopes)
+│
+├── sc/
+│   ├── synthdefs/
+│   │   ├── core/                        # master, reverb, players
+│   │   ├── ambient/                     # diapason, marimba
+│   │   └── jam/
+│   │       ├── 00_common.scd            # shared UGen helpers
+│   │       ├── master.scd               # jam_master (three buses + Lo-Fi)
+│   │       ├── sub_bass.scd, pluck_bass.scd, pad_pluck.scd, rhodes.scd, marimba.scd
+│   │       ├── chord_pad.scd
+│   │       └── drums/                   # kick, snare, hihat
+│   ├── assets/samples/
+│   ├── compiled/                        # *.scsyndef
+│   └── compile.scd
+│
+├── scripts/
+│   ├── compile_synths.py
+│   └── replay_test.py
+│
+└── tests/                               # pytest (sensor_map, led, integration, …)
+</code></pre><h3 id="55-key-files">5.5 Key files<a class="anchor" aria-hidden="true" href="#55-key-files">#</a></h3>
+<p><strong><code>jam/types.py</code></strong> — Contract types: <code>NoteEvent</code>, <code>ChordEvent</code>, <code>ParamEvent</code>, <code>SliceTick</code>, <code>SongPosition</code>, etc. <code>NoteEvent</code> includes <code>source_slice</code> (LED hit flash), <code>when</code> (reserved); harmony uses <code>ChordEvent</code>, not <code>NoteEvent</code>.</p>
+<p><strong><code>core/sensor/map.py</code> + <code>normalize.py</code></strong> — S frames use wire <code>(ring, slice)</code>; optional column mirror + <code>SECTOR_OFFSET</code> → logical <code>(ring, sector)</code> (always 32 sectors). Inner R0/R1 map 16 active wire slices at pre-offset layer. Jam <code>SensorState</code> and Ambient <code>Tracker</code> threshold on logical coordinates.</p>
+<p><strong><code>core/sensor/reader.py</code> vs <code>serial_reader.py</code> / <code>mock_reader.py</code></strong> — Abstract interface + real serial / mock. <code>_emit()</code> applies wire mirror uniformly. Mode apps only use <code>latest()</code> / <code>subscribe()</code>.</p>
+<p><strong><code>core/esp32_serial.py</code></strong> — <code>pick_serial_port(&quot;auto&quot;)</code>, open at 921600, wait for first S frame on boot (8s).</p>
+<p><strong><code>config.py</code></strong> — Deploy defaults: <code>SENSOR_THRESHOLD=500</code>, <code>CONTROL_SUM_MIN=250</code>, <code>CONTROL_MAX=1000</code> (lo-fi map ceiling), <code>SECTOR_OFFSET=4</code>, <code>LED_OFFSET=101</code>, <code>WIRE_SLICE_MIRROR=True</code>; Jam place-preview volumes <code>JAM_IDLE_PLACE_PREVIEW_VEL=0.5</code>, <code>JAM_LOOP_PLACE_PREVIEW_VEL=0.25</code> (0=off); serial lost <code>SERIAL_LOST_EXIT_SEC=3</code> then exit.</p>
+<p><strong><code>core/services.py</code></strong> — <code>SharedServices</code> bundles sc / sensor / leds / osc plus <code>serial_port</code>, <code>serial_ready</code>.</p>
+<p><strong><code>modes/base.py</code></strong> — <code>ModeApp</code> Protocol (<code>start</code> / <code>stop</code> / <code>status</code> / <code>set_param</code>).</p>
+<h3 id="56-manifest-references">5.6 Manifest references<a class="anchor" aria-hidden="true" href="#56-manifest-references">#</a></h3>
+<p>Jam manifest is an assembly list pointing at data files:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-toml" data-lang="toml"><span style="display:flex;"><span><span style="color:#75715e"># manifest/jam/lofi_1.toml</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mode</span> = <span style="color:#e6db74">&#34;jam&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">name</span> = <span style="color:#e6db74">&#34;Lo-Fi Loop · Progression 1&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">description</span> = <span style="color:#e6db74">&#34;Kyoto night rain; 2m9 → 513 → 1maj9 → 69&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[<span style="color:#a6e22e">music</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">bpm</span> = <span style="color:#ae81ff">120</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">key</span> = <span style="color:#e6db74">&#34;C&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">scale</span> = <span style="color:#e6db74">&#34;major&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[<span style="color:#a6e22e">refs</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">progression</span> = <span style="color:#e6db74">&#34;1&#34;</span>      <span style="color:#75715e"># → data/progressions/1.yaml</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">melody_pack</span> = <span style="color:#e6db74">&#34;1&#34;</span>      <span style="color:#75715e"># → data/melodies/1/</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">drums</span> = <span style="color:#e6db74">&#34;lofi_loop&#34;</span>    <span style="color:#75715e"># → data/drums/lofi_loop.yaml</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">rings</span> = <span style="color:#e6db74">&#34;lofi&#34;</span>         <span style="color:#75715e"># → data/rings/lofi.yaml</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">lofi_mapping</span> = <span style="color:#e6db74">&#34;default&#34;</span>
+</span></span></code></pre></div><p>Flexible: one melody pack can serve progression 1 and 1B, or stay separate. Ambient manifests likewise declare sample groups and ring mapping.</p>
+<hr>
+<h2 id="6-web-console">6. Web console<a class="anchor" aria-hidden="true" href="#6-web-console">#</a></h2>
+<h3 id="61-motivation">6.1 Motivation<a class="anchor" aria-hidden="true" href="#61-motivation">#</a></h3>
+<p>SoundMat has no physical buttons (aesthetic choice). Dev, debug, and demo still need control: mode switch, transport, parameters. A lightweight HTTP service on the Pi—phone QR access—changes nothing on the object.</p>
+<p>The console is also <strong>infrastructure for the whole project</strong>:</p>
+<ul>
+<li>Live sensor heatmap (debug essential)</li>
+<li>Scan line visualization</li>
+<li>BPM / manifest changes without restart</li>
+<li>Record sensor data for offline replay</li>
+<li>CPU and SC server monitoring</li>
+</ul>
+<h3 id="62-pages">6.2 Pages<a class="anchor" aria-hidden="true" href="#62-pages">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>Path</th>
+          <th>Page</th>
+          <th>Role</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>/</code></td>
+          <td>Control (<code>index.html</code>)</td>
+          <td>Mode switch, volume, Jam BPM, place-preview slider, Developer Restart/Stop</td>
+      </tr>
+      <tr>
+          <td><code>/mat</code></td>
+          <td>Mat (<code>mat.html</code>)</td>
+          <td>Live heatmap, calibration, mock virtual mat and LED mirror</td>
+      </tr>
+      <tr>
+          <td><code>/heatmap</code>, <code>/pad</code></td>
+          <td>Same as Mat</td>
+          <td>Aliases</td>
+      </tr>
+      <tr>
+          <td><code>/debug</code></td>
+          <td>Debug</td>
+          <td>Debug</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Jam transport</strong>: playback is driven by <strong>R0/R1 control stones</strong> (sum of pressures ≥ <code>CONTROL_SUM_MIN</code>), not Control-page Transport. Control <strong>Restart/Stop</strong> only restarts/stops the <strong>current mode thread</strong> (see Developer section).</p>
+<h3 id="63-http--websocket-api">6.3 HTTP / WebSocket API<a class="anchor" aria-hidden="true" href="#63-http--websocket-api">#</a></h3>
+<pre tabindex="0"><code>GET  /                          # Control home
+GET  /mat                       # Mat page (heatmap + calibration)
+GET  /debug
+
+GET  /api/status                # mode status + calibration + app sub-state
+GET  /api/manifests             # available manifests
+POST /api/mode                  # {&#34;manifest&#34;: &#34;…/lofi_1.toml&#34;}
+POST /api/transport             # {&#34;action&#34;: &#34;start&#34;|&#34;stop&#34;} mode lifecycle
+POST /api/params                # global or mode params (see below)
+
+POST /api/mock/cells            # mock mode: inject {(ring,sector),…}
+
+WS   /api/sensor_stream         # sensor matrix ~30 fps
+WS   /api/event_stream          # state snapshots ~10 Hz (debug)
+WS   /api/mock/view             # mock: LED buffer + status ~40 fps
+</code></pre><p><strong><code>POST /api/params</code> global keys</strong> (<code>ModeManager</code>, reset on restart): <code>sector_offset</code>, <code>led_offset</code>, <code>sensor_threshold</code>, <code>control_min</code>, <code>control_max</code>, <code>control_sum_min</code>, <code>wire_slice_mirror</code>, <code>jam_loop_place_preview_vel</code> (0–1, 0=off). Mode keys like <code>bpm</code>, <code>master_volume</code> forward to <code>ModeApp.set_param</code>.</p>
+<h3 id="64-implementation-notes">6.4 Implementation notes<a class="anchor" aria-hidden="true" href="#64-implementation-notes">#</a></h3>
+<ul>
+<li>FastAPI + uvicorn, <strong>single file</strong> <code>web/server.py</code> (routes + WebSocket together)</li>
+<li>Static HTML/JS + <code>soundmat.css</code>, no frontend framework</li>
+<li>Holds <code>ModeManager</code> directly</li>
+<li>Mat calibration for sector/LED/threshold/lo-fi/control sum (<strong>not persisted</strong>; restart restores <code>config.py</code> defaults)</li>
+</ul>
+<hr>
+<h2 id="7-startup-sequence">7. Startup sequence<a class="anchor" aria-hidden="true" href="#7-startup-sequence">#</a></h2>
+<pre tabindex="0"><code>$ uv run soundmat [manifest/jam/lofi_1.toml]   # default lofi_1, not kyoto
+   ↓
+__main__.py:
+  1. Parse CLI (--mock, --port, --no-serial, --no-web, --no-sc, --list-ports)
+  2. Start scsynth (-u 57110 -i 0 -o 2 -S 44100); up to 5 retries on failure
+  3. load_synthdefs(sc/compiled)
+  4. Open ESP32 serial (auto), wait for first S frame (8s); on failure → mock
+  5. SensorReader + LEDWriter share serial; LED sends L frames at 60 Hz
+  6. SharedServices → ModeManager → switch_to(initial_manifest)
+  7. Web server thread (optional)
+  8. Main thread waits; serial drops while running → exit after 3s and cleanup
+</code></pre><p>scsynth <strong>stays up</strong>; mode switch only frees/creates SC groups. SynthDefs load once at startup.</p>
+<hr>
+<h2 id="8-mode-switch-flow">8. Mode switch flow<a class="anchor" aria-hidden="true" href="#8-mode-switch-flow">#</a></h2>
+<pre tabindex="0"><code>Browser: POST /api/mode {&#34;manifest&#34;: &#34;jam/lofi_1.toml&#34;}
+   ↓
+ModeManager.switch_to():
+  1. Acquire lock
+  2. current_app.stop():
+       - Stop mode main-loop thread
+       - Unsubscribe SensorReader
+       - Clear LEDWriter data source
+       - sc.free_group(my_group)  ← free all this mode’s synth nodes at once
+  3. Load new manifest
+  4. Pick ModeApp class from manifest.mode (AmbientApp / JamApp)
+  5. new_app = ModeAppClass(manifest, services)
+  6. new_app.start():
+       - sc.new_group() → own group ID
+       - Start mode-specific initial synths (e.g. master FX)
+       - Subscribe SensorReader
+       - Register LEDWriter data source
+       - Start main-loop thread
+  7. current_app = new_app
+  8. Release lock
+</code></pre><p>Switch is on the order of 100–300 ms. Global crossfade between stop/start is optional; not required for prototype.</p>
+<p><strong>SC group isolation</strong> is key: each mode gets a new group; all its synths spawn under it. On stop, <code>n_free</code> the whole group—all sound stops cleanly without tracking every node ID.</p>
+<hr>
+<h2 id="9-mode-main-loops">9. Mode main loops<a class="anchor" aria-hidden="true" href="#9-mode-main-loops">#</a></h2>
+<p>The two loops differ enough that a single abstract interface would be forced.</p>
+<h3 id="ambient-main-loop-20-hz-reconcile-based">Ambient main loop (20 Hz, reconcile-based)<a class="anchor" aria-hidden="true" href="#ambient-main-loop-20-hz-reconcile-based">#</a></h3>
+<pre tabindex="0"><code>loop @ 20Hz:
+    frame = sensor.latest()
+    occ = tracker.occupied(frame.matrix)       # logical coords + threshold
+    state, events = state_model.update(occ)  # placed / removed edges
+    result = mapper.map(state, events)
+    voices.reconcile(result); voices.pump(t)
+    leds.set_buffer(render_led(t, occ))
+</code></pre><p>Mapper declares, voices reconcile, scsynth sounds—steady 20 Hz.</p>
+<h3 id="jam-main-loop-200-hz-continuous-time--scan-trigger">Jam main loop (~200 Hz, continuous time + scan trigger)<a class="anchor" aria-hidden="true" href="#jam-main-loop-200-hz-continuous-time--scan-trigger">#</a></h3>
+<p>Jam is <strong>not</strong> a unified <code>emit(tick)</code> on 16th-note grid. Actual logic:</p>
+<pre tabindex="0"><code>loop @ ~200Hz:
+    frame = sensor.latest()
+    delta = sensor_state.update(frame)     # occupied/placed/removed, Lo-Fi, control_active
+
+    master_fx.set_lofi(delta.control_value)   # R0/R1 pressure sum → 0..1000, continuous
+
+    if not control_active:               # R0/R1 sum &lt; CONTROL_SUM_MIN (incl. 100ms release hold)
+        reset transport/scanline/event (edge); idle place preview (JAM_IDLE_PLACE_PREVIEW_VEL)
+        render LED (all-ring breathe 0–20); return
+
+    transport.start() on first control      # control stones present → start transport
+    if not transport.playing:             # song end: wait until R0/R1 cleared
+        render LED; return
+
+    prev_t, curr_t = transport.advance(dt)
+    harmony.emit(prev_t, curr_t) → bridge   # ChordEvent, time intervals
+    drum.emit(prev_t, curr_t) → bridge      # 16th-note ticks
+
+    prev_a, curr_a, wrap = scanline.update(curr_t)
+    optional: placed preview if JAM_LOOP_PLACE_PREVIEW_VEL &gt; 0
+    notes = event_engine.emit_sweep(...)    # scan line crosses sector center → melody/bass
+    bridge.handle(notes); LED scan hit / preview
+
+    leds.set_buffer(jam_led.render(...))    # playing: scan trail + slot breathe; idle: dim breathe
+</code></pre><p><strong>Control stones</strong>: <code>control_active = (sum of all R0+R1 cell pressures) ≥ CONTROL_SUM_MIN</code>, independent of per-cell threshold. Per-cell threshold (default 500) still drives occupied/placed.</p>
+<p><strong>Audio buses</strong> (<code>jam_master</code>): melody+bass → bus 2 (gain 0.9), harmony → 4 (0.4), drums → 6 (0.62) → hardware out 0.</p>
+<hr>
+<h2 id="10-manifest-parameters">10. Manifest parameters<a class="anchor" aria-hidden="true" href="#10-manifest-parameters">#</a></h2>
+<h3 id="101-common-all-manifests">10.1 Common (all manifests)<a class="anchor" aria-hidden="true" href="#101-common-all-manifests">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>Param</th>
+          <th>Type</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>mode</code></td>
+          <td>string</td>
+          <td><code>&quot;ambient&quot;</code> or <code>&quot;jam&quot;</code></td>
+      </tr>
+      <tr>
+          <td><code>name</code></td>
+          <td>string</td>
+          <td>Display name in Web console</td>
+      </tr>
+      <tr>
+          <td><code>description</code></td>
+          <td>string</td>
+          <td>Short blurb, optional</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="102-ambient-mode-parameters">10.2 Ambient mode parameters<a class="anchor" aria-hidden="true" href="#102-ambient-mode-parameters">#</a></h3>
+<h3 id="103-jam-mode-parameters">10.3 Jam mode parameters<a class="anchor" aria-hidden="true" href="#103-jam-mode-parameters">#</a></h3>
+<p><strong><code>[music]</code> block</strong>:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Param</th>
+          <th>Type</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>bpm</code></td>
+          <td>int</td>
+          <td>Tempo; 120 default; adjustable live in Web console</td>
+      </tr>
+      <tr>
+          <td><code>key</code></td>
+          <td>string</td>
+          <td>Root, e.g. <code>&quot;C&quot;</code>, <code>&quot;G&quot;</code>, <code>&quot;F#&quot;</code>—global transpose</td>
+      </tr>
+      <tr>
+          <td><code>scale</code></td>
+          <td>string</td>
+          <td>e.g. <code>&quot;major&quot;</code>, <code>&quot;natural_minor&quot;</code>, <code>&quot;dorian&quot;</code></td>
+      </tr>
+      <tr>
+          <td><code>master_volume</code></td>
+          <td>float</td>
+          <td>Master out 0.0–1.0</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong><code>[refs]</code> block</strong> (paths under <code>data/</code>):</p>
+<table>
+  <thead>
+      <tr>
+          <th>Param</th>
+          <th>Type</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>progression</code></td>
+          <td>string</td>
+          <td><code>data/progressions/&lt;name&gt;.yaml</code></td>
+      </tr>
+      <tr>
+          <td><code>melody_pack</code></td>
+          <td>string</td>
+          <td><code>data/melodies/&lt;name&gt;/</code></td>
+      </tr>
+      <tr>
+          <td><code>drums</code></td>
+          <td>string</td>
+          <td><code>data/drums/&lt;name&gt;.yaml</code></td>
+      </tr>
+      <tr>
+          <td><code>rings</code></td>
+          <td>string</td>
+          <td>Ring roles + timbre: <code>data/rings/&lt;name&gt;.yaml</code></td>
+      </tr>
+      <tr>
+          <td><code>lofi_mapping</code></td>
+          <td>string</td>
+          <td>Lo-fi curve name</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="104-data-file-fields">10.4 Data file fields<a class="anchor" aria-hidden="true" href="#104-data-file-fields">#</a></h3>
+<p><strong><code>progressions/&lt;name&gt;.yaml</code></strong> — chord progression:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">chords</span>:
+</span></span><span style="display:flex;"><span>  - {<span style="color:#f92672">id</span>: <span style="color:#e6db74">&#34;2m9&#34;</span><span style="color:#f92672">,   bars</span>: <span style="color:#ae81ff">2</span>}
+</span></span><span style="display:flex;"><span>  - {<span style="color:#f92672">id</span>: <span style="color:#e6db74">&#34;513&#34;</span><span style="color:#f92672">,   bars</span>: <span style="color:#ae81ff">2</span>}
+</span></span><span style="display:flex;"><span>  - {<span style="color:#f92672">id</span>: <span style="color:#e6db74">&#34;1maj9&#34;</span><span style="color:#f92672">, bars</span>: <span style="color:#ae81ff">2</span>}
+</span></span><span style="display:flex;"><span>  - {<span style="color:#f92672">id</span>: <span style="color:#e6db74">&#34;69&#34;</span><span style="color:#f92672">,    bars</span>: <span style="color:#ae81ff">2</span>}
+</span></span></code></pre></div><p><strong><code>melodies/&lt;name&gt;/&lt;chord_id&gt;.yaml</code></strong> — melody triggers per chord:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># degree at each of 8 eighth-note positions per ring</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">R7</span>: [<span style="color:#e6db74">&#34;3^&#34;</span>, <span style="color:#e6db74">&#34;1^&#34;</span>, <span style="color:#e6db74">&#34;2^&#34;</span>, <span style="color:#e6db74">&#34;3^&#34;</span>, <span style="color:#e6db74">&#34;3^&#34;</span>, <span style="color:#e6db74">&#34;2^&#34;</span>, <span style="color:#e6db74">&#34;1^&#34;</span>, <span style="color:#e6db74">&#34;6&#34;</span>]
+</span></span><span style="display:flex;"><span><span style="color:#f92672">R6</span>: [<span style="color:#e6db74">&#34;1^&#34;</span>, <span style="color:#e6db74">&#34;5&#34;</span>, <span style="color:#e6db74">&#34;6&#34;</span>, <span style="color:#e6db74">&#34;1^&#34;</span>, <span style="color:#e6db74">&#34;1^&#34;</span>, <span style="color:#e6db74">&#34;5&#34;</span>, <span style="color:#e6db74">&#34;6&#34;</span>, <span style="color:#e6db74">&#34;3^&#34;</span>]
+</span></span><span style="display:flex;"><span><span style="color:#f92672">R5</span>: [<span style="color:#e6db74">&#34;6&#34;</span>, <span style="color:#e6db74">&#34;3&#34;</span>, <span style="color:#e6db74">&#34;4&#34;</span>, <span style="color:#e6db74">&#34;6&#34;</span>, <span style="color:#e6db74">&#34;6&#34;</span>, <span style="color:#e6db74">&#34;4&#34;</span>, <span style="color:#e6db74">&#34;3&#34;</span>, <span style="color:#e6db74">&#34;2&#34;</span>]
+</span></span><span style="display:flex;"><span><span style="color:#f92672">R4</span>: [<span style="color:#e6db74">&#34;4&#34;</span>, <span style="color:#e6db74">&#34;3&#34;</span>, <span style="color:#e6db74">&#34;2&#34;</span>, <span style="color:#e6db74">&#34;3&#34;</span>, <span style="color:#e6db74">&#34;4&#34;</span>, <span style="color:#e6db74">&#34;3&#34;</span>, <span style="color:#e6db74">&#34;2&#34;</span>, <span style="color:#e6db74">&#34;3&#34;</span>]
+</span></span><span style="display:flex;"><span><span style="color:#f92672">R3</span>: [<span style="color:#e6db74">&#34;4_&#34;</span>, <span style="color:#66d9ef">null</span>, <span style="color:#e6db74">&#34;6_&#34;</span>, <span style="color:#66d9ef">null</span>, <span style="color:#e6db74">&#34;4_&#34;</span>, <span style="color:#66d9ef">null</span>, <span style="color:#e6db74">&#34;6_&#34;</span>, <span style="color:#66d9ef">null</span>]
+</span></span><span style="display:flex;"><span><span style="color:#f92672">R2</span>: [<span style="color:#e6db74">&#34;2_&#34;</span>, <span style="color:#66d9ef">null</span>, <span style="color:#e6db74">&#34;2_&#34;</span>, <span style="color:#66d9ef">null</span>, <span style="color:#e6db74">&#34;2_&#34;</span>, <span style="color:#66d9ef">null</span>, <span style="color:#e6db74">&#34;2_&#34;</span>, <span style="color:#66d9ef">null</span>]
+</span></span></code></pre></div><p><code>null</code> = no trigger at that position.</p>
+<p>(Notation: X=X4, X^=X5, X_=X3, X__=X2 when 1=C)</p>
+<p><strong><code>drums/&lt;name&gt;.yaml</code></strong> — patterns and sequence:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">patterns</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">A</span>: {<span style="color:#f92672">kick: [...], snare: [...], hihat</span>: [<span style="color:#ae81ff">...]}   </span> <span style="color:#75715e"># 16 sixteenth-note slots</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">B</span>: {<span style="color:#f92672">kick: [...], snare: [...], hihat</span>: [<span style="color:#ae81ff">...]}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">C</span>: {<span style="color:#f92672">kick: [...], snare: [...], hihat</span>: [<span style="color:#ae81ff">...]}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">D</span>: {<span style="color:#f92672">kick: [...], snare: [...], hihat</span>: [<span style="color:#ae81ff">...]}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">sequence</span>: [<span style="color:#ae81ff">A, B, C, C, A, D, D, A]   </span> <span style="color:#75715e"># 8-pass song order</span>
+</span></span></code></pre></div><p><strong><code>rings/&lt;name&gt;.yaml</code></strong> — roles + SynthDef + gate/gain (lofi excerpt):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">R0</span>: {<span style="color:#f92672">role: control, param: lofi_amount, range</span>: [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1000</span>]}
+</span></span><span style="display:flex;"><span><span style="color:#f92672">R1</span>: {<span style="color:#f92672">role: control, param: lofi_amount, range</span>: [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1000</span>]}
+</span></span><span style="display:flex;"><span><span style="color:#f92672">R2</span>: {<span style="color:#f92672">role: bass,   instrument: jam_sub_bass,   note_sec: 0.25, tail_sec: 0.1,  gain</span>: <span style="color:#ae81ff">2.9</span>}
+</span></span><span style="display:flex;"><span><span style="color:#f92672">R3</span>: {<span style="color:#f92672">role: bass,   instrument: jam_pluck_bass, note_sec: 0.5,  tail_sec: 0.15, gain</span>: <span style="color:#ae81ff">3.1</span>}
+</span></span><span style="display:flex;"><span><span style="color:#f92672">R4</span>: {<span style="color:#f92672">role: melody, instrument: jam_pad_pluck,  note_sec: 1.28, gain</span>: <span style="color:#ae81ff">2.75</span>}
+</span></span><span style="display:flex;"><span><span style="color:#f92672">R5</span>: {<span style="color:#f92672">role: melody, instrument: jam_rhodes,     note_sec: 0.74, gain: 3.45, params</span>: {<span style="color:#f92672">far</span>: <span style="color:#ae81ff">1</span>}}
+</span></span><span style="display:flex;"><span><span style="color:#f92672">R6</span>: {<span style="color:#f92672">role: melody, instrument: jam_rhodes,     note_sec: 0.82, gain: 3.45, params</span>: {<span style="color:#f92672">far</span>: <span style="color:#ae81ff">0</span>}}
+</span></span><span style="display:flex;"><span><span style="color:#f92672">R7</span>: {<span style="color:#f92672">role: melody, instrument: jam_marimba,    note_sec: 2.012, gain</span>: <span style="color:#ae81ff">2.75</span>}
+</span></span></code></pre></div><p><strong><code>lofi_mapping.yaml</code></strong> — Lo-Fi 0–1000 → <code>jam_master</code> <strong>cutoff + drive</strong> (piecewise linear):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">master</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">cutoff</span>: {<span style="color:#f92672">0: 14000, 250: 9500, 500: 6447, 750: 4376, 1000</span>: <span style="color:#ae81ff">2425</span>}
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">drive</span>:  {<span style="color:#f92672">0: 0.0, 250: 0.00625, 500: 0.0125, 750: 0.01875, 1000</span>: <span style="color:#ae81ff">0.025</span>}
+</span></span></code></pre></div><p>Formulas: <code>cutoff = 14000·(420/14000)^(level/2000)</code>, <code>drive = level/40000</code>. Harmony/drum bus gains do <strong>not</strong> follow lo-fi.</p>
+<hr>
+<h2 id="11-development-environment">11. Development environment<a class="anchor" aria-hidden="true" href="#11-development-environment">#</a></h2>
+<h3 id="111-package-management-uv">11.1 Package management: uv<a class="anchor" aria-hidden="true" href="#111-package-management-uv">#</a></h3>
+<p><strong>uv</strong> (Astral) for Python env and deps—much faster than pip+venv with locked dependencies.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>uv sync                        <span style="color:#75715e"># install dependencies</span>
+</span></span><span style="display:flex;"><span>uv add &lt;package&gt;
+</span></span><span style="display:flex;"><span>uv run soundmat                  <span style="color:#75715e"># default manifest/jam/lofi_1.toml</span>
+</span></span></code></pre></div><p><code>uv.lock</code> is committed so dev machine and Pi match.</p>
+<h3 id="112-sc-compile">11.2 SC compile<a class="anchor" aria-hidden="true" href="#112-sc-compile">#</a></h3>
+<p>SynthDefs compiled with sclang:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sclang sc/compile.scd
+</span></span></code></pre></div><p>Output: <code>sc/compiled/</code>, loaded once by scsynth at runtime.</p>
+<h3 id="113-offline-no-hardware">11.3 Offline (no hardware)<a class="anchor" aria-hidden="true" href="#113-offline-no-hardware">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>uv run soundmat --mock              <span style="color:#75715e"># manual Web mat injection</span>
+</span></span><span style="display:flex;"><span>uv run soundmat --mock recording.npz
+</span></span><span style="display:flex;"><span>uv run soundmat --no-sc             <span style="color:#75715e"># no audio; logic/LED only</span>
+</span></span><span style="display:flex;"><span>uv run soundmat --list-ports
+</span></span></code></pre></div><p><code>mock_reader</code> + Mat <code>/api/mock/cells</code>; <code>--mock</code> sets <code>WIRE_SLICE_MIRROR=False</code> (virtual mat is already CW slices). Serial open failure also falls back to mock.</p>
+<p><code>scripts/replay_test.py</code> replays recorded matrices. Web “record sensor” not implemented yet.</p>
+<hr>
+<h2 id="12-key-interfaces-and-protocols">12. Key interfaces and protocols<a class="anchor" aria-hidden="true" href="#12-key-interfaces-and-protocols">#</a></h2>
+<h3 id="121-mode-protocol">12.1 Mode protocol<a class="anchor" aria-hidden="true" href="#121-mode-protocol">#</a></h3>
+<p>Any mode implementing these four methods works with <code>ModeManager</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ModeApp</span>(Protocol):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self, manifest: dict, services: SharedServices): <span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">start</span>(self) <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">None</span>: <span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">stop</span>(self) <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">None</span>: <span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">status</span>(self) <span style="color:#f92672">-&gt;</span> dict: <span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">set_param</span>(self, key: str, value: Any) <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">None</span>: <span style="color:#f92672">...</span>
+</span></span></code></pre></div><p>Duck typing, not a strict ABC.</p>
+<h3 id="122-sharedservices">12.2 SharedServices<a class="anchor" aria-hidden="true" href="#122-sharedservices">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a6e22e">@dataclass</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SharedServices</span>:
+</span></span><span style="display:flex;"><span>    sc: SCServerHandle
+</span></span><span style="display:flex;"><span>    sensor: SensorReader
+</span></span><span style="display:flex;"><span>    leds: LEDWriter
+</span></span><span style="display:flex;"><span>    osc: OSCClient
+</span></span><span style="display:flex;"><span>    serial_port: str <span style="color:#f92672">|</span> <span style="color:#66d9ef">None</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>    serial_ready: bool <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span></code></pre></div><h3 id="123-jam-core-event-types">12.3 Jam core event types<a class="anchor" aria-hidden="true" href="#123-jam-core-event-types">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a6e22e">@dataclass</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">NoteEvent</span>:
+</span></span><span style="display:flex;"><span>    ring: int
+</span></span><span style="display:flex;"><span>    degree: str <span style="color:#f92672">|</span> <span style="color:#66d9ef">None</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>    voice: str <span style="color:#f92672">|</span> <span style="color:#66d9ef">None</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>       <span style="color:#75715e"># drums: kick/snare/hihat</span>
+</span></span><span style="display:flex;"><span>    velocity: float <span style="color:#f92672">=</span> <span style="color:#ae81ff">1.0</span>
+</span></span><span style="display:flex;"><span>    sustain: float <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.5</span>           <span style="color:#75715e"># seconds</span>
+</span></span><span style="display:flex;"><span>    pan: float <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.0</span>
+</span></span><span style="display:flex;"><span>    when: float <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.0</span>
+</span></span><span style="display:flex;"><span>    source_slice: int <span style="color:#f92672">|</span> <span style="color:#66d9ef">None</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>  <span style="color:#75715e"># for LED</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@dataclass</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ChordEvent</span>:
+</span></span><span style="display:flex;"><span>    symbol: str
+</span></span><span style="display:flex;"><span>    degrees: tuple[str, <span style="color:#f92672">...</span>]
+</span></span><span style="display:flex;"><span>    hold: float
+</span></span><span style="display:flex;"><span>    release_first: bool <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@dataclass</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ParamEvent</span>:
+</span></span><span style="display:flex;"><span>    param: str
+</span></span><span style="display:flex;"><span>    value: float
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@dataclass</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SliceTick</span>:
+</span></span><span style="display:flex;"><span>    slice: int
+</span></span><span style="display:flex;"><span>    timestamp: float
+</span></span><span style="display:flex;"><span>    did_wrap: bool <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@dataclass</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SongPosition</span>:
+</span></span><span style="display:flex;"><span>    chord_idx: int
+</span></span><span style="display:flex;"><span>    bar: int
+</span></span><span style="display:flex;"><span>    sub_loop: int
+</span></span><span style="display:flex;"><span>    bar_global: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span></code></pre></div><hr>
+<h2 id="13-implementation-status-vs-this-docs-first-draft">13. Implementation status (vs. this doc’s first draft)<a class="anchor" aria-hidden="true" href="#13-implementation-status-vs-this-docs-first-draft">#</a></h2>
+<p>Mostly shipped: full <code>core/</code>, <code>ambient/</code>, <code>jam/</code>, Web Control+Mat, <code>ModeManager</code> switching, Jam LED scan/breath/preview, S→L calibration, control-stone sum + release hold, place preview, serial disconnect 3s exit, scsynth start retry.</p>
+<p>Still open or optional: sensor recording, Ambient on-device sample integrity checks, crossfade on mode switch, richer Debug event stream.</p>
+<p>On-device setup and calibration: repo <strong><code>SETUP.md</code></strong>.</p>
+
+
+        </article>
+    </main>
+
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2026 MUKIMASTA</p>
+    </div>
+</footer>
+
+</body>
+
+</html>

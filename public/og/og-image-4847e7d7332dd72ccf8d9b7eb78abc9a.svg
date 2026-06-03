@@ -1,0 +1,26 @@
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+        <style>
+            svg {
+              background-color: #f0efea;
+            }
+            @font-face {
+              font-family: 'Newsreader';
+              src: url('../fonts/Newsreader.woff2') format('woff2');
+            }
+            .title, .description {
+              font-family: 'Newsreader', serif;
+              fill: #141413;
+              text-anchor: start;
+              line-height: 1.1;
+            }
+        </style>
+        <rect width="1200" height="630" fill="#f0efea" />
+        <foreignObject x="80" y="200" width="840" height="300">
+            <div xmlns="http://www.w3.org/1999/xhtml">
+                <div style="font-family: Newsreader, serif; font-size: 78px; font-weight: 600; margin-bottom: 20px; word-wrap: break-word;">SoundMat (10) 传感器制造</div>
+                <div style="font-family: Newsreader, serif; font-size: 70px; font-weight: 400; word-wrap: break-word;">在 SoundMat (5) 传感器原理及设计 里，我们已经详细讨论了传感器的原理和设计。本文讲述我们的制造过程。 传感器从下到上是这样的层叠结构： 木板 同心圆电极 Rings Velostat （压敏电阻材料） 扇形电极 Slices 这也是我们的制造顺序。 1 激光切割（Laser …</div>
+            </div>
+        </foreignObject>
+    </svg>
+    

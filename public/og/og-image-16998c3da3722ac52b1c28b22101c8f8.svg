@@ -1,0 +1,26 @@
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+        <style>
+            svg {
+              background-color: #f0efea;
+            }
+            @font-face {
+              font-family: 'Newsreader';
+              src: url('../fonts/Newsreader.woff2') format('woff2');
+            }
+            .title, .description {
+              font-family: 'Newsreader', serif;
+              fill: #141413;
+              text-anchor: start;
+              line-height: 1.1;
+            }
+        </style>
+        <rect width="1200" height="630" fill="#f0efea" />
+        <foreignObject x="80" y="200" width="840" height="300">
+            <div xmlns="http://www.w3.org/1999/xhtml">
+                <div style="font-family: Newsreader, serif; font-size: 78px; font-weight: 600; margin-bottom: 20px; word-wrap: break-word;">SoundMat (15) 网络解决方案</div>
+                <div style="font-family: Newsreader, serif; font-size: 70px; font-weight: 400; word-wrap: break-word;">现在进入到软件设计的最后一个阶段了，就是为树莓派设计网络解决方案。 原因和要求如下： 需要将开发好的代码部署到树莓派上，需要和树莓派通信；要求能通过 ssh 连接到树莓派 需要在使用时通过 Web 控制模式、参数等；要求在同一局域网下实时和树莓派通信 Ambient 模式的一个非必要功能需要实时连接 …</div>
+            </div>
+        </foreignObject>
+    </svg>
+    

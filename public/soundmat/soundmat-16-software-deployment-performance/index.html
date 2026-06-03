@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en-us" dir="ltr" class="kind-page">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="背景# Pi 4 上 Jam mock 模式：50 颗石头 &#43; 播放时 scsynth 99.9% / jam-loop ~90%， JACK XRun 持续，音频卡到无法听。Mac 同场景无问题（CPU 余量 5–10×）。 目标：在 Pi 上 10–50 颗石头都能稳定演奏。 优化清单（按层 …">
+    <title>SoundMat (16) 软件部署性能优化</title>
+    <link rel="canonical" href="https://mukii.space/soundmat/soundmat-16-software-deployment-performance/">
+
+
+
+<meta property="og:title" content="SoundMat (16) 软件部署性能优化">
+<meta property="og:description" content="背景# Pi 4 上 Jam mock 模式：50 颗石头 &#43; 播放时 scsynth 99.9% / jam-loop ~90%， JACK XRun 持续，音频卡到无法听。Mac 同场景无问题（CPU 余量 5–10×）。 目标：在 Pi 上 10–50 颗石头都能稳定演奏。 优化清单（按层 …">
+<meta property="og:image" content="https://mukii.space/og/og-image-64d057cab619e787aac7a3dd1273cd8d.svg">
+<meta property="og:image:type" content="image/svg+xml">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mukii.space/soundmat/soundmat-16-software-deployment-performance/">
+<meta property="og:locale" content="en-us">
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SoundMat (16) 软件部署性能优化">
+<meta name="twitter:description" content="背景# Pi 4 上 Jam mock 模式：50 颗石头 &#43; 播放时 scsynth 99.9% / jam-loop ~90%， JACK XRun 持续，音频卡到无法听。Mac 同场景无问题（CPU 余量 5–10×）。 目标：在 Pi 上 10–50 颗石头都能稳定演奏。 优化清单（按层 …">
+<meta name="twitter:image" content="https://mukii.space/og/og-image-64d057cab619e787aac7a3dd1273cd8d.svg">
+
+    <link rel="preload" href="/fonts/Newsreader.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/default.min.fb89c3008d933d5ac0e46af0bee4acd14efae3a00fca1ebbeb11e373ecaf3a64.css" integrity="sha256-&#43;4nDAI2TPVrA5GrwvuSs0U7646APyh676xHjc&#43;yvOmQ=">
+    <link rel="stylesheet" href="/css/custom.min.4ad75db0d4010183f7312823592f18e887d33b8d0901d261b50fad0d64c2ba94.css" integrity="sha256-StddsNQBAYP3MSgjWS8Y6IfTO40JAdJhtQ&#43;tDWTCupQ=">
+    <script src="/js/darkmode.min.9211af6d380489c7cf64d4b18a1e49e75be2bebf92031d2165eb6c20bc59c6a2.js" integrity="sha256-khGvbTgEicfPZNSxih5J51vivr&#43;SAx0hZetsILxZxqI=" defer></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <style>
+    :root { --font-size-base: 18px; --content-max-inline-size: 680px; }
+    h1 { font-size: 2em; }
+    .katex { font-size: 0.95em; }
+    pre code {
+    background: var(--code-bg) !important;
+    color: var(--text-color);
+    padding: 1em;
+    border-radius: var(--radius);
+    }
+    </style><script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+
+
+<body>
+<header>
+    <div>
+        <div class="header-left">
+            <h1>
+                <a href="https://mukii.space/">MUKIMASTA</a>
+            </h1>
+            <nav class="site-nav" aria-label="Primary">
+                <a href="/professional-overview/" class="site-nav__link">Professional</a>
+                <a href="/journey/" class="site-nav__link">Journey</a>
+            </nav>
+        </div>
+        <div class="header-controls">
+            <div class="toggle-switch">
+                <input type="checkbox" id="darkModeToggle" class="toggle-input" aria-label="Toggle dark mode">
+                <label for="darkModeToggle" class="toggle-label">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <main class="content-wrapper">
+        <article class="content-container">
+
+<nav class="back-to-parent" aria-label="上一级导航">
+  <a class="back-to-parent__link" href="/soundmat/" title="SoundMat" aria-label="返回 SoundMat">‹</a>
+</nav>
+
+
+<nav class="soundmat-lang-switch" aria-label="Document language"><a class="soundmat-lang-switch__link is-active" href="/soundmat/soundmat-16-software-deployment-performance/" hreflang="zh" lang="zh">中文</a>
+  <span class="soundmat-lang-switch__sep" aria-hidden="true">·</span>
+  <a class="soundmat-lang-switch__link" href="/soundmat/en/soundmat-16-software-deployment-performance/" hreflang="en" lang="en">English</a>
+</nav>
+    <h1>SoundMat (16) 软件部署性能优化</h1>
+    <h4></h4>
+
+<h2 id="背景">背景<a class="anchor" aria-hidden="true" href="#%e8%83%8c%e6%99%af">#</a></h2>
+<p>Pi 4 上 Jam mock 模式：50 颗石头 + 播放时 scsynth 99.9% / jam-loop ~90%，<br>
+JACK XRun 持续，音频卡到无法听。Mac 同场景无问题（CPU 余量 5–10×）。<br>
+目标：在 Pi 上 10–50 颗石头都能稳定演奏。</p>
+<hr>
+<h2 id="优化清单按层次">优化清单（按层次）<a class="anchor" aria-hidden="true" href="#%e4%bc%98%e5%8c%96%e6%b8%85%e5%8d%95%e6%8c%89%e5%b1%82%e6%ac%a1">#</a></h2>
+<h3 id="a-前端mathtml">A. 前端（mat.html）<a class="anchor" aria-hidden="true" href="#a-%e5%89%8d%e7%ab%afmathtml">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>改动</th>
+          <th>文件</th>
+          <th>收益</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Pi mode 切换</strong></td>
+          <td><code>web/static/mat.html</code></td>
+          <td>热力图 30fps → 10fps（保留数字）；LED 40fps → 20fps、关 SVG <code>feGaussianBlur</code> glow；按钮 + <code>localStorage</code> 持久化</td>
+      </tr>
+  </tbody>
+</table>
+<blockquote>
+<p>在 Pi 本机用 Chromium 看 <code>/mat</code> 时启用，省 Chromium 上 ~50% GPU/CPU。<br>
+远程访问 / 不开 mat 页，影响 0。</p></blockquote>
+<hr>
+<h3 id="b-jam-主循环python">B. Jam 主循环（Python）<a class="anchor" aria-hidden="true" href="#b-jam-%e4%b8%bb%e5%be%aa%e7%8e%afpython">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>改动</th>
+          <th>文件</th>
+          <th>收益</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>LOOP_HZ 200 → 60</strong></td>
+          <td><code>jam/app.py</code>、<code>jam/bridge/master_fx.py</code>（α 重算）</td>
+          <td>jam-loop CPU 直接降 ~60%；Lo-Fi 平滑系数同步调整以保持跟手感</td>
+      </tr>
+      <tr>
+          <td><strong><code>emit_sweep</code> 倒排</strong></td>
+          <td><code>jam/event/event_engine.py</code></td>
+          <td>维护 <code>merged_sector → set[(ring, slc)]</code> 增量索引，每帧只对<strong>有石头的</strong>合并扇区中心做扫描弧跨越判断；O(N) → O(穿过的扇区数)</td>
+      </tr>
+      <tr>
+          <td><strong>LED markers 倒排</strong></td>
+          <td><code>jam/led/renderer.py</code></td>
+          <td>一帧先把 markers 倒排成 <code>led_idx → [ring]</code>，每石头只影响 ±1 共 3 颗灯；O(108×N) → O(N)</td>
+      </tr>
+  </tbody>
+</table>
+<blockquote>
+<p>已用 micro-bench 验证：30 颗石单帧 1.0ms → 0.21ms（×4.6），50 颗 1.6ms → 0.27ms（×6.0）。<br>
+emit_sweep 命中集合 + LED buffer 对旧实现<strong>逐字节等价</strong>（300 帧 × 5 个规模全过）。</p></blockquote>
+<hr>
+<h3 id="c-supercollider-端音色等价">C. SuperCollider 端（音色等价）<a class="anchor" aria-hidden="true" href="#c-supercollider-%e7%ab%af%e9%9f%b3%e8%89%b2%e7%ad%89%e4%bb%b7">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>改动</th>
+          <th>文件</th>
+          <th>收益</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>reverb send / 共享 reverb</strong></td>
+          <td><code>sc/synthdefs/jam/reverb_bus.scd</code>（新增）+ <code>marimba.scd</code> 改 send</td>
+          <td>原本每路 marimba 自带 reverb（4 CombC + 3 Allpass + 2 LPF ≈ 17 UGen），50 路 = 50 份；改为 1 份共享 reverb 总线。<strong>单 voice CPU −45%</strong>。听感等价（业界 send/return 标准做法）</td>
+      </tr>
+      <tr>
+          <td><strong>chord_pad 多频点合并</strong></td>
+          <td><code>sc/synthdefs/jam/chord_pad.scd</code> 改成 <code>freq0..freq4</code> 5 通道；<code>SynthBridge.handle_chord</code> 一次发 1 个 synth</td>
+          <td>原本一个和弦 5 个 SynthDef 实例（各自跑 envelope/LPF/vibrato），现在 1 个实例内部 <code>Mix.fill(5, ...)</code>；每和弦 SynthDef 实例 ×0.2</td>
+      </tr>
+      <tr>
+          <td><strong>scsynth <code>-z</code> 参数化</strong></td>
+          <td><code>core/sc_server.py</code> 加 <code>-z $SC_BLOCK_SIZE</code>；<code>config.SC_BLOCK_SIZE</code>（环境变量 <code>SOUNDMAT_BLOCK_SIZE</code>）</td>
+          <td>留出 block size 调整入口（<strong>默认仍 64</strong>，原&quot;对齐 JACK period 设 4096&quot;的方案见 E 节已撤回）</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h3 id="d-复音管理">D. 复音管理<a class="anchor" aria-hidden="true" href="#d-%e5%a4%8d%e9%9f%b3%e7%ae%a1%e7%90%86">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>改动</th>
+          <th>文件</th>
+          <th>收益</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>复音上限 + voice stealing</strong></td>
+          <td><code>jam/bridge/synth_bridge.py</code> + <code>config.JAM_MAX_MELODIC_VOICES = 12</code></td>
+          <td>同时 alive 的 melody/bass voice 超 cap 时 free 最老 → scsynth 上限封顶。Pi 4 上 cap=12 把 50 颗时的 scsynth 从 99.9% → 87%</td>
+      </tr>
+      <tr>
+          <td><strong>per-instrument done_at 估算</strong></td>
+          <td>同上</td>
+          <td>按各 SynthDef 真实 envelope 总长（marimba 固定 2.012s；rhodes/pad_pluck 等 = <code>sustain + release</code>）算 done_at，cap 触发时已自然 free 的 voice 不发 <code>/n_free</code>，消掉绝大部分 server warning</td>
+      </tr>
+      <tr>
+          <td><strong>Web 端可调</strong></td>
+          <td><code>app.py.set_param(&quot;jam_max_melodic_voices&quot;)</code> + <code>mat.html</code> Calibration <code>Max voices</code> 输入</td>
+          <td>现场实时调；0 = 不限制</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h3 id="e-profile-驱动的二次优化ad-上线后基于-cprofile-的针对性收尾">E. Profile 驱动的二次优化（A–D 上线后基于 cProfile 的针对性收尾）<a class="anchor" aria-hidden="true" href="#e-profile-%e9%a9%b1%e5%8a%a8%e7%9a%84%e4%ba%8c%e6%ac%a1%e4%bc%98%e5%8c%96ad-%e4%b8%8a%e7%ba%bf%e5%90%8e%e5%9f%ba%e4%ba%8e-cprofile-%e7%9a%84%e9%92%88%e5%af%b9%e6%80%a7%e6%94%b6%e5%b0%be">#</a></h3>
+<p>A–D 落定后用 cProfile 跑 jam-loop，发现：</p>
+<pre tabindex="0"><code>ncalls    cumtime   percall   function
+2444      4.679s    1.92ms    JamApp._tick
+2444      3.082s    1.26ms    JamApp._render_led
+2444      2.972s    1.22ms    JamLedRenderer.render
+</code></pre><p><strong><code>_render_led</code> 占整个 <code>_tick</code> 65.9%</strong>；其中 96.4% 在 <code>JamLedRenderer.render</code> 的 108 次循环本体。<code>emit_sweep</code> / <code>SensorState.update</code> 完全没进 top 40（B 节倒排索引把这两条已经压扁）。结论：jam-loop 的剩余瓶颈不是事件层，是 LED 合成。</p>
+<table>
+  <thead>
+      <tr>
+          <th>改动</th>
+          <th>文件</th>
+          <th>收益</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>LED 渲染 60Hz → 30Hz 节流</strong></td>
+          <td><code>jam/app.py</code>（<code>LED_HZ = 30.0</code> + <code>_render_led</code> 入口 gate）</td>
+          <td>物理灯带 30Hz 已远超人眼分辨；<code>on_scan_hit</code> / <code>on_preview</code> 仍每帧注入到列表，只跳过 108-LED 合成 + 串口写。<strong>jam-loop 50 颗时 80% → 60%（实测）</strong>。</td>
+      </tr>
+      <tr>
+          <td><strong>撤回 <code>-z 4096</code></strong></td>
+          <td><code>config.py</code> 默认仍 64；<code>SETUP.md</code> 删除 Pi 设 4096 的推荐</td>
+          <td><code>-z</code> 同时是 <code>EnvGen.kr / Lag.kr / LFO</code> 的步长。<code>-z 4096</code> ≈ 93 ms kr 步长，鼓 attack（10–30 ms）会被打成 1–2 个采样点 → 阶梯化 / 含糊。CPU 节省其实就是 64 次内层 tick 的循环开销，DSP 总量不变；用音质换的&quot;省&quot;不划算。<code>-p</code> 与 <code>-z</code> <strong>解耦</strong>，<code>-p</code> 控延迟、<code>-z</code> 控 kr 精度。</td>
+      </tr>
+  </tbody>
+</table>
+<blockquote>
+<p>结论：<code>SOUNDMAT_BLOCK_SIZE</code> 保持默认 64 不要改。CPU 紧张优先靠 D 节的 voice cap，<br>
+再考虑加大 <code>-p</code>。</p></blockquote>
+<hr>
+<h2 id="性能对账pi-4--jack--p2048">性能对账（Pi 4 + JACK <code>-p2048</code>）<a class="anchor" aria-hidden="true" href="#%e6%80%a7%e8%83%bd%e5%af%b9%e8%b4%a6pi-4--jack--p2048">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th>场景</th>
+          <th>改前（初始）</th>
+          <th>A–D 后</th>
+          <th>A–E 后（当前）</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>空垫</strong></td>
+          <td>scsynth ~3% / jam-loop <strong>86%</strong></td>
+          <td>scsynth ~3% / jam ~30%</td>
+          <td>—</td>
+      </tr>
+      <tr>
+          <td><strong>10 颗正常</strong></td>
+          <td>scsynth ~50% / jam ~60%（推测）</td>
+          <td>scsynth 52% / jam 54%</td>
+          <td>—</td>
+      </tr>
+      <tr>
+          <td><strong>50 颗极限</strong></td>
+          <td>scsynth <strong>99.9%</strong> / jam 82%，XRun 持续</td>
+          <td>scsynth 87% / jam 80%，偶发 XRun</td>
+          <td><strong>scsynth 79% / jam-loop 60%</strong>，XRun 进一步减少</td>
+      </tr>
+  </tbody>
+</table>
+<blockquote>
+<p>50 颗实测（<code>top</code> 截屏）：<code>scsynth 79.1%</code> / 主线程 <code>soundmat 59.8%</code> + 副线程 <code>20.9%</code>（uvicorn / led-writer）。<br>
+从初始 99.9% / 90% 到 79% / 60%，scsynth 余 21% headroom、jam-loop 余 40%。<br>
+XRun 状态：初始&quot;一直刷&quot;→ A–D 后&quot;偶发&quot;→ E 后&quot;少见&quot;。瞬时 spike 仍可能触发，<br>
+用户接受为&quot;也算一种 lo-fi&quot;。<code>/n_free Node not found</code> 极少量 warning，无功能影响。</p></blockquote>
+<hr>
+<h2 id="可调参数">可调参数<a class="anchor" aria-hidden="true" href="#%e5%8f%af%e8%b0%83%e5%8f%82%e6%95%b0">#</a></h2>
+<h3 id="环境变量">环境变量<a class="anchor" aria-hidden="true" href="#%e7%8e%af%e5%a2%83%e5%8f%98%e9%87%8f">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>变量</th>
+          <th>默认</th>
+          <th>Pi 推荐</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>SOUNDMAT_SAMPLE_RATE</code></td>
+          <td><code>44100</code></td>
+          <td>44100</td>
+          <td>scsynth <code>-S</code></td>
+      </tr>
+      <tr>
+          <td><code>SOUNDMAT_BLOCK_SIZE</code></td>
+          <td><code>64</code></td>
+          <td><strong><code>64</code></strong>（保持默认）</td>
+          <td>scsynth <code>-z</code>，控制 kr UGen 步长。<strong>不要</strong>为&quot;对齐 JACK period&quot;调大，会让鼓 attack 阶梯化（见 E 节）。</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="web-控制台mat-页-calibration">Web 控制台（Mat 页 Calibration）<a class="anchor" aria-hidden="true" href="#web-%e6%8e%a7%e5%88%b6%e5%8f%b0mat-%e9%a1%b5-calibration">#</a></h3>
+<ul>
+<li><code>Max voices</code> — 复音上限（0 = 不限制；Pi 推荐 <strong>12</strong>，极密用 8–10）</li>
+<li><code>Sector / LED offset</code>、<code>Threshold</code>、<code>Lo-Fi sum min/max</code>、<code>Control sum min</code> — 标定项</li>
+<li>顶栏 <code>Pi mode</code> — 浏览器降帧（仅 Pi 本机用浏览器时开）</li>
+</ul>
+<h3 id="jackpi-部署">JACK（Pi 部署）<a class="anchor" aria-hidden="true" href="#jackpi-%e9%83%a8%e7%bd%b2">#</a></h3>
+<p><code>-p</code> 控延迟 + XRun 容忍度，<code>-z</code>（<code>SOUNDMAT_BLOCK_SIZE</code>）控 kr 精度，<strong>两者解耦</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>jackd -P75 -t2000 -dalsa -dhw:Audio -r44100 -p2048 -n2
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># SOUNDMAT_BLOCK_SIZE 保持默认 64，无需 export</span>
+</span></span></code></pre></div><p><code>-p</code> 调参经验（@44.1 kHz）：</p>
+<ul>
+<li><code>-p 1024</code>（23 ms 延迟）：装置感最好；50 颗石可能 XRun</li>
+<li><strong><code>-p 2048</code>（46 ms）：当前推荐起步</strong>，调度余量大、装置距离 1–2 m 听不出延迟</li>
+<li><code>-p 4096</code>（93 ms）：仅在 2048 持续 XRun 时再加，敲石头到出声会有明显迟滞</li>
+</ul>
+<p>CPU 紧张时的优先级（按收益顺序）：</p>
+<ol>
+<li>降 <code>Max voices</code>（Web Calibration，Pi 推荐 12，极密 8–10）</li>
+<li>关 Pi 本机 Chromium / <code>/mat</code> 页（远程访问不影响）</li>
+<li>加大 <code>-p</code> 到 4096（最后手段，会损失即时感）</li>
+</ol>
+
+
+        </article>
+    </main>
+
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2026 MUKIMASTA</p>
+    </div>
+</footer>
+
+</body>
+
+</html>

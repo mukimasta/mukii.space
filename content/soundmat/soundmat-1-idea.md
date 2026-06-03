@@ -1,8 +1,15 @@
 ---
 title: "SoundMat (1) Idea"
+docLang: zh
+translationKey: soundmat-1-idea
+alternates:
+  zh: /soundmat/soundmat-1-idea/
+  en: /soundmat/en/soundmat-1-idea/
 aliases:
   - /soundmat/soundmat-1-idea/
 ---
+
+
 
 
 我定了四个标准，来评估我真正想做的产品是什么：

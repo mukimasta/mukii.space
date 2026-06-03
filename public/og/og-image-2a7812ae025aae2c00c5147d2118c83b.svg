@@ -1,0 +1,26 @@
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+        <style>
+            svg {
+              background-color: #f0efea;
+            }
+            @font-face {
+              font-family: 'Newsreader';
+              src: url('../fonts/Newsreader.woff2') format('woff2');
+            }
+            .title, .description {
+              font-family: 'Newsreader', serif;
+              fill: #141413;
+              text-anchor: start;
+              line-height: 1.1;
+            }
+        </style>
+        <rect width="1200" height="630" fill="#f0efea" />
+        <foreignObject x="80" y="200" width="840" height="300">
+            <div xmlns="http://www.w3.org/1999/xhtml">
+                <div style="font-family: Newsreader, serif; font-size: 78px; font-weight: 600; margin-bottom: 20px; word-wrap: break-word;">SoundMat (6) 电子系统设计</div>
+                <div style="font-family: Newsreader, serif; font-size: 70px; font-weight: 400; word-wrap: break-word;">本文设计 SoundMat 的电子系统。电子系统是整个产品设计中的重点。如果说软件系统作为大脑，那电子系统就是身体，为软件系统提供平台，执行实现各种功能。 作为公共艺术装置，电子系统设计受以下约束： 美观考虑，所有电子元件需要藏在空腔内，引出的线缆越少越好 供电考虑，最好能在户外无插座的情况下也能使 …</div>
+            </div>
+        </foreignObject>
+    </svg>
+    

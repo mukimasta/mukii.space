@@ -1,0 +1,26 @@
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+        <style>
+            svg {
+              background-color: #f0efea;
+            }
+            @font-face {
+              font-family: 'Newsreader';
+              src: url('../fonts/Newsreader.woff2') format('woff2');
+            }
+            .title, .description {
+              font-family: 'Newsreader', serif;
+              fill: #141413;
+              text-anchor: start;
+              line-height: 1.1;
+            }
+        </style>
+        <rect width="1200" height="630" fill="#f0efea" />
+        <foreignObject x="80" y="200" width="840" height="300">
+            <div xmlns="http://www.w3.org/1999/xhtml">
+                <div style="font-family: Newsreader, serif; font-size: 78px; font-weight: 600; margin-bottom: 20px; word-wrap: break-word;">SoundMat (8) 交互与声音化设计 Interaction and Sonification</div>
+                <div style="font-family: Newsreader, serif; font-size: 70px; font-weight: 400; word-wrap: break-word;">声音化设计是 SoundMat 的灵魂。我们已经想好了产品哲学，设计好了结构、外观、传感器、硬件等等，但那些只是基础，是不完美产生的地方。声音化设计，也就是如何将石头、将观众的触摸按压转换为音乐，符合我们想象中的音乐艺术装置，是最棘手，最容易平庸的。 除此之外就是 LED 交互设计，这部分相对来说是 …</div>
+            </div>
+        </foreignObject>
+    </svg>
+    

@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="en-us" dir="ltr" class="kind-page">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="This chapter designs the SoundMat electronics system. The electronics are a central part of the overall product. If the software is the brain, the …">
+    <title>SoundMat (6) Electronics System Design</title>
+    <link rel="canonical" href="https://mukii.space/soundmat/en/soundmat-6-electronics-system-design/">
+
+
+
+<meta property="og:title" content="SoundMat (6) Electronics System Design">
+<meta property="og:description" content="This chapter designs the SoundMat electronics system. The electronics are a central part of the overall product. If the software is the brain, the …">
+<meta property="og:image" content="https://mukii.space/og/og-image-4f8ac877fe36a408a48e0a953ea038a4.svg">
+<meta property="og:image:type" content="image/svg+xml">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mukii.space/soundmat/en/soundmat-6-electronics-system-design/">
+<meta property="og:locale" content="en-us">
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SoundMat (6) Electronics System Design">
+<meta name="twitter:description" content="This chapter designs the SoundMat electronics system. The electronics are a central part of the overall product. If the software is the brain, the …">
+<meta name="twitter:image" content="https://mukii.space/og/og-image-4f8ac877fe36a408a48e0a953ea038a4.svg">
+
+    <link rel="preload" href="/fonts/Newsreader.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/default.min.fb89c3008d933d5ac0e46af0bee4acd14efae3a00fca1ebbeb11e373ecaf3a64.css" integrity="sha256-&#43;4nDAI2TPVrA5GrwvuSs0U7646APyh676xHjc&#43;yvOmQ=">
+    <link rel="stylesheet" href="/css/custom.min.4ad75db0d4010183f7312823592f18e887d33b8d0901d261b50fad0d64c2ba94.css" integrity="sha256-StddsNQBAYP3MSgjWS8Y6IfTO40JAdJhtQ&#43;tDWTCupQ=">
+    <script src="/js/darkmode.min.9211af6d380489c7cf64d4b18a1e49e75be2bebf92031d2165eb6c20bc59c6a2.js" integrity="sha256-khGvbTgEicfPZNSxih5J51vivr&#43;SAx0hZetsILxZxqI=" defer></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <style>
+    :root { --font-size-base: 18px; --content-max-inline-size: 680px; }
+    h1 { font-size: 2em; }
+    .katex { font-size: 0.95em; }
+    pre code {
+    background: var(--code-bg) !important;
+    color: var(--text-color);
+    padding: 1em;
+    border-radius: var(--radius);
+    }
+    </style><script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+
+
+<body>
+<header>
+    <div>
+        <div class="header-left">
+            <h1>
+                <a href="https://mukii.space/">MUKIMASTA</a>
+            </h1>
+            <nav class="site-nav" aria-label="Primary">
+                <a href="/professional-overview/" class="site-nav__link">Professional</a>
+                <a href="/journey/" class="site-nav__link">Journey</a>
+            </nav>
+        </div>
+        <div class="header-controls">
+            <div class="toggle-switch">
+                <input type="checkbox" id="darkModeToggle" class="toggle-input" aria-label="Toggle dark mode">
+                <label for="darkModeToggle" class="toggle-label">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <main class="content-wrapper">
+        <article class="content-container">
+
+<nav class="back-to-parent" aria-label="上一级导航">
+  <a class="back-to-parent__link" href="/soundmat/en/" title="SoundMat" aria-label="返回 SoundMat">‹</a>
+</nav>
+
+
+<nav class="soundmat-lang-switch" aria-label="Document language"><a class="soundmat-lang-switch__link" href="/soundmat/soundmat-6-electronics-system-design/" hreflang="zh" lang="zh">中文</a>
+  <span class="soundmat-lang-switch__sep" aria-hidden="true">·</span>
+  <a class="soundmat-lang-switch__link is-active" href="/soundmat/en/soundmat-6-electronics-system-design/" hreflang="en" lang="en">English</a>
+</nav>
+    <h1>SoundMat (6) Electronics System Design</h1>
+    <h4></h4>
+
+<p>This chapter designs the SoundMat electronics system. The electronics are a central part of the overall product. If the software is the brain, the electronics are the body: they provide the platform for software and implement the hardware functions.</p>
+<p>As a public art installation, the electronics design is constrained as follows:</p>
+<ol>
+<li><strong>Aesthetics:</strong> All components must fit inside the cavity; minimize external cables.</li>
+<li><strong>Power:</strong> Prefer operation outdoors without a wall outlet.</li>
+<li><strong>Reliability:</strong> Long, stable runtime; mechanically sound structure.</li>
+<li><strong>Audio quality:</strong> Sound is core to the piece; output must sound good.</li>
+</ol>
+<p>For (1), hidden parts imply size and thermal limits; ideally only one power cable and one audio cable leave the enclosure.</p>
+<p>For (2), outdoor use (e.g. a plaza) should not depend on sockets. USB-C Power Delivery (PD) supports both chargers and high-capacity power banks.</p>
+<p>For (3), early prototypes used breadboards, which are unreliable; use perfboard or PCB instead.</p>
+<p>For (4), we later adopted USB to an external DAC for audio output.</p>
+<h2 id="system-architecture">System architecture<a class="anchor" aria-hidden="true" href="#system-architecture">#</a></h2>
+<p>Overall, the SoundMat electronics split into five blocks:</p>
+<ol>
+<li>Power module — POWER</li>
+<li>Sensor acquisition — SENSOR</li>
+<li>LED module — LED</li>
+<li>Compute module — COMPUTE</li>
+<li>Audio output — AUDIO</li>
+</ol>
+<p><img src="/soundmat/electronics-architecture.png" alt=""><br>
+Fig. Electronics system architecture</p>
+<p><img src="/soundmat/electronics-architecture-design.png" alt=""><br>
+Fig. Electronics system architecture (design view)</p>
+<p>The following walks through how this architecture was chosen.</p>
+<p>Start with <strong>COMPUTE</strong>. Rich audio synthesis needs more than a bare MCU, so we use a Linux SBC (Raspberry Pi) for software ecosystem and USB audio. The Pi has no analog ADC for SENSOR pressure, so we add an external ADC path. We use the course ESP32 as ADC and to drive the LED strip. The Pi needs 5 V; the ESP32 can be powered from a Pi USB port.</p>
+<p>For <strong>LED</strong>, we use WS2812B strip at 5 V with high current—it cannot be fed from Pi GPIO. Control lines are 5 V logic; COMPUTE outputs 3.3 V and needs a logic level shifter.</p>
+<p><strong>SENSOR</strong> receives MCU scan signals and returns sensor data.</p>
+<p><strong>POWER</strong> is critical. Power budget:</p>
+<ol>
+<li><strong>LED:</strong> WS2812B, 60 LEDs/m, length π × 22.7&quot; ≈ 71.3&quot; ≈ 181.1 cm → ~108 LEDs. ~60 mA per LED at full white → ~6.5 A max, ~32.5 W. At ~30% brightness: ~2 A, ~10 W.</li>
+<li><strong>COMPUTE:</strong> Raspberry Pi 3B, ~2.5 A typical (~12.5 W), including MCU draw.</li>
+</ol>
+<p>Peak total ~45 W; at ~30% LED brightness ~22.5 W. 5 V alone is insufficient (~10 A). We use PD at 20 V (~2.5 A max input), buck down, then split feeds for LED and COMPUTE.</p>
+<p>Next: detailed design per module.</p>
+<h2 id="power-module">Power module<a class="anchor" aria-hidden="true" href="#power-module">#</a></h2>
+<p>Option comparison:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Option</th>
+          <th>LED adapter + Pi Micro-USB adapter</th>
+          <th>Single 5 V 10 A adapter</th>
+          <th>USB-C PD 20 V + buck</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Power bank compatible</td>
+          <td>❌</td>
+          <td>❌</td>
+          <td>✅</td>
+      </tr>
+      <tr>
+          <td>Cable count</td>
+          <td>2</td>
+          <td>1</td>
+          <td>1</td>
+      </tr>
+      <tr>
+          <td>Complexity</td>
+          <td>Simple, plug-and-play</td>
+          <td>Simple, manual split</td>
+          <td>PD trigger + buck</td>
+      </tr>
+      <tr>
+          <td>Line loss</td>
+          <td>High at 5 V over long runs</td>
+          <td>Same, noticeable drop</td>
+          <td>Low current at 20 V, buck at load</td>
+      </tr>
+      <tr>
+          <td>Adapter size</td>
+          <td>Two bricks</td>
+          <td>One large brick</td>
+          <td>Compact USB-C charger</td>
+      </tr>
+      <tr>
+          <td>Outdoor deploy</td>
+          <td>Two outlets</td>
+          <td>One outlet</td>
+          <td>Power bank, no outlet</td>
+      </tr>
+      <tr>
+          <td>Chosen</td>
+          <td>❌</td>
+          <td>❌</td>
+          <td>✅</td>
+      </tr>
+  </tbody>
+</table>
+<p><img src="/soundmat/electronics-power-module.png" alt=""></p>
+<p><strong>Chosen scheme:</strong> peak ~45 W. USB-C enters a PD trigger board requesting 20 V, a DC buck converts to 5 V, then two branches: LED strip and Pi via Micro USB.</p>
+<p>LED switching causes current spikes; all grounds use a <strong>star ground</strong> to limit bus bounce. A <strong>1000 µF</strong> electrolytic at the LED branch input absorbs WS2812B spikes so the Pi does not brown out. The Pi board already has input filtering; no extra cap there.</p>
+<p>Long strips may droop; <strong>dual-end power</strong> (feed head and tail) is an option.</p>
+<h2 id="compute-module">Compute module<a class="anchor" aria-hidden="true" href="#compute-module">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th>Option</th>
+          <th>Single MCU (ESP32)</th>
+          <th>SBC (Pi) + external ADC IC</th>
+          <th>Pi + ESP32</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Audio synthesis</td>
+          <td>Very weak</td>
+          <td>Strong</td>
+          <td>Strong</td>
+      </tr>
+      <tr>
+          <td>Software effort</td>
+          <td>Hard</td>
+          <td>Easier</td>
+          <td>Easier</td>
+      </tr>
+      <tr>
+          <td>ADC</td>
+          <td>On-chip</td>
+          <td>External chip</td>
+          <td>ESP32 built-in</td>
+      </tr>
+      <tr>
+          <td>Complexity</td>
+          <td>Low</td>
+          <td>Medium</td>
+          <td>Low</td>
+      </tr>
+      <tr>
+          <td>Expandability</td>
+          <td>Low</td>
+          <td>Medium</td>
+          <td>High</td>
+      </tr>
+      <tr>
+          <td>Chosen</td>
+          <td>❌</td>
+          <td>❌</td>
+          <td>✅</td>
+      </tr>
+  </tbody>
+</table>
+<p>Options 2 and 3 are similar in capability; option 2 can offer better ADC precision and lower cost. We had ESP32 boards on hand, so we chose <strong>option 3</strong>.</p>
+<p><img src="/soundmat/electronics-compute-module.png" alt=""></p>
+<p>Pi 3B takes 5 V via Micro USB. One USB-A port connects to the ESP32 (power + serial): sensor data in, LED control out. Another USB-A uses an A-to-C adapter to a USB DAC; 3.5 mm analog audio runs on a long aux extension to external speakers.</p>
+<p>LED control could live on Pi or ESP32; we use <strong>ESP32 for all GPIO</strong>, including LEDs.</p>
+<h2 id="sensor-module">Sensor module<a class="anchor" aria-hidden="true" href="#sensor-module">#</a></h2>
+<p>Array principles and layout are in <a href="/soundmat/en/soundmat-5-sensor-principles-and-design/">SoundMat (5) Sensor Principles and Design</a>. Here we focus on the sensor <strong>electronics</strong>.</p>
+<p><img src="/soundmat/electronics-sensor-module.png" alt=""></p>
+<p>The ESP32 connects to concentric <strong>rings</strong> via eight GPIOs. <strong>Slice</strong> signals (32 lines) pass through two cascaded MUXes as below. Two GPIOs drive MUX enables; <strong>only one enable may be active at a time</strong>. The mux output <strong>SIGNAL</strong> merges into one ESP32 ADC input.</p>
+<p>Per <a href="https://docs.espressif.com/projects/esp-idf/en/v4.4/esp32/api-reference/peripherals/adc.html#minimizing-noise">ESP32 Docs – ADC – Minimizing Noise</a>, a bypass capacitor on the ADC pin reduces noise.</p>
+<p><img src="/soundmat/esp32-dual-cd4067-mux-with-rings-v3.svg" alt=""></p>
+<p><strong>16:1 analog MUX selection:</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>Part</th>
+          <th>Ron (on)</th>
+          <th>Switch time</th>
+          <th>Supply range</th>
+          <th>Package</th>
+          <th>Price</th>
+          <th>Notes</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>CD74HC4067</td>
+          <td>~70 Ω</td>
+          <td>~30 ns</td>
+          <td>2–6 V</td>
+          <td>DIP-24 / SOIC</td>
+          <td>~$1</td>
+          <td>Maker staple, cheap breakouts</td>
+      </tr>
+      <tr>
+          <td>CD4067B</td>
+          <td>~125 Ω</td>
+          <td>~200 ns</td>
+          <td>3–18 V</td>
+          <td>DIP-24</td>
+          <td>~$0.5</td>
+          <td>Older CMOS; higher Ron, slower; wide voltage</td>
+      </tr>
+      <tr>
+          <td>ADG1606</td>
+          <td>~4.5 Ω</td>
+          <td>~120 ns</td>
+          <td>±5 V / 12 V single</td>
+          <td>TSSOP-28</td>
+          <td>~$5</td>
+          <td>Low Ron; SMD, poor for hand solder</td>
+      </tr>
+      <tr>
+          <td>ADG706</td>
+          <td>~2.5 Ω</td>
+          <td>~30 ns</td>
+          <td>±2.5 V / 5 V single</td>
+          <td>TSSOP-28</td>
+          <td>~$7</td>
+          <td>Very low Ron; expensive</td>
+      </tr>
+      <tr>
+          <td>MAX306</td>
+          <td>~100 Ω</td>
+          <td>~250 ns</td>
+          <td>±15 V</td>
+          <td>DIP-28</td>
+          <td>~$8</td>
+          <td>High-voltage industrial</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>CD74HC4067</strong> is the best fit; the course supplied <strong>CD4067B</strong>, which we used directly.</p>
+<p><strong><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mrow><mi>r</mi><mi>e</mi><mi>f</mi></mrow></msub></mrow><annotation encoding="application/x-tex">R_{ref}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0077em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">re</span><span class="mord mathnormal mtight" style="margin-right:0.10764em;">f</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span> selection:</strong> TBD</p>
+<h2 id="led-module">LED module<a class="anchor" aria-hidden="true" href="#led-module">#</a></h2>
+<p><img src="/soundmat/electronics-led-module.png" alt=""></p>
+<p>WS2812B has three pins: +5 V, GND, and 5 V <strong>DIN</strong>. Dual-end power and decoupling were covered under power; not repeated here.</p>
+<p>COMPUTE GPIO is 3.3 V; a <strong>logic level shifter</strong> raises DIN to 5 V.</p>
+<table>
+  <thead>
+      <tr>
+          <th>Part</th>
+          <th>Vih threshold (VCC = 5 V)</th>
+          <th>Accepts 3.3 V in</th>
+          <th>Delay</th>
+          <th>Notes</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>SN74AHCT125N</td>
+          <td>2.0 V (TTL)</td>
+          <td>✅</td>
+          <td>~10–15 ns</td>
+          <td>Best choice</td>
+      </tr>
+      <tr>
+          <td>74HC125</td>
+          <td>3.5 V (70% VCC)</td>
+          <td>❌</td>
+          <td></td>
+          <td>Designed for 5 V inputs</td>
+      </tr>
+      <tr>
+          <td>74HCT125</td>
+          <td>2.0 V (TTL)</td>
+          <td>✅</td>
+          <td>~3–5 ns</td>
+          <td>Acceptable</td>
+      </tr>
+      <tr>
+          <td>Direct (no shifter)</td>
+          <td>3.5 V</td>
+          <td>Sometimes works, risky</td>
+          <td></td>
+          <td>Not recommended</td>
+      </tr>
+  </tbody>
+</table>
+<p>HC-family thresholds follow CMOS (~70% VCC); at 5 V, “high” needs ~3.5 V, so 3.3 V is unreliable. We chose <strong>SN74AHCT125N</strong>.</p>
+<p><strong>330 Ω series resistor on DIN:</strong></p>
+<blockquote>
+<p>The WS2812B data protocol is a single-wire high-speed pulse stream; each bit period is only 1.25 µs. That means rise and fall edges are very steep—edge times on the order of tens of nanoseconds.</p>
+<p>When a sharp voltage edge propagates from the driver along the wire to the receiver (the DIN pin of the first LED), impedance mismatch between the driver output and the line’s characteristic impedance causes reflection at the receiver. The reflected wave travels back to the driver, reflects again, and rings—oscillating between high and low several times before settling. The LED’s digital input may read one pulse as two, or a 1 as a 0. This is most visible on the <strong>first</strong> LED; later pixels see data re-shaped by the previous LED’s output stage.</p>
+<p>A <strong>330 Ω</strong> series resistor provides damping. Together with line characteristic impedance and parasitic capacitance at the LED input, it acts as a low-pass filter that attenuates high-frequency ringing and dissipates reflected energy in the resistor. The tradeoff is a slightly slower rise edge; with ~330 Ω and tens of pF parasitic capacitance, the RC time constant is on the order of tens of nanoseconds—still well inside the WS2812B timing budget of hundreds of nanoseconds.</p>
+<p><strong>Why 330 Ω?</strong> Too small (e.g. 33 Ω) leaves ringing; too large (e.g. 3.3 kΩ) makes RC so slow that pulse width distorts and communication fails. 330 Ω is a community-validated practical value.</p>
+<p><strong>Placement:</strong> near the <strong>LED</strong> end, not the driver. Damping must happen where reflection occurs. At the driver, the wave may have already bounced once before hitting the resistor, greatly reducing effectiveness.</p>
+<p>by Claude Opus 4.7</p></blockquote>
+<h2 id="audio-output-module">Audio output module<a class="anchor" aria-hidden="true" href="#audio-output-module">#</a></h2>
+<p>Audio is the final presentation layer; quality caps the experience of SoundMat as an installation.</p>
+<table>
+  <thead>
+      <tr>
+          <th>Option</th>
+          <th>Pi onboard 3.5 mm</th>
+          <th>I2S DAC module</th>
+          <th>USB external DAC</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Quality</td>
+          <td>Poor (PWM analog, audible noise)</td>
+          <td>Good (hardware DAC, low noise)</td>
+          <td>Good (hardware DAC, low noise)</td>
+      </tr>
+      <tr>
+          <td>Wiring</td>
+          <td>No extra hardware</td>
+          <td>GPIO wiring, pin use</td>
+          <td>USB plug-and-play</td>
+      </tr>
+      <tr>
+          <td>Conflicts</td>
+          <td>None</td>
+          <td>May clash with ESP32 / other GPIO</td>
+          <td>Independent USB path</td>
+      </tr>
+      <tr>
+          <td>Software</td>
+          <td>Default</td>
+          <td>I2S + device tree</td>
+          <td>Auto-detected sound card</td>
+      </tr>
+      <tr>
+          <td>Swap hardware</td>
+          <td>—</td>
+          <td>Re-wire and reconfigure</td>
+          <td>Replace USB DAC anytime</td>
+      </tr>
+      <tr>
+          <td>Chosen</td>
+          <td>❌</td>
+          <td>❌</td>
+          <td>✅</td>
+      </tr>
+  </tbody>
+</table>
+<p>Pi 3B “analog” audio is PWM-based, not a true DAC—poor SNR, unacceptable for quiet public spaces. I2S DAC is good but more wiring. <strong>USB DAC</strong> is the simplest reliable path.</p>
+<p><strong>Signal chain (current):</strong> Pi USB-A → A-to-C adapter → USB-C extension → USB DAC → 3.5 mm aux → aux cable → external speaker.</p>
+<h2 id="bom">BOM<a class="anchor" aria-hidden="true" href="#bom">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th>ID</th>
+          <th>Module</th>
+          <th>Component</th>
+          <th>Qty</th>
+          <th>Spec / Model / Notes</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>P1</td>
+          <td>POWER</td>
+          <td>USB-C PD Trigger Board</td>
+          <td>1</td>
+          <td>configured for PD-20V</td>
+      </tr>
+      <tr>
+          <td>P2</td>
+          <td>POWER</td>
+          <td>DC Buck Converter Module</td>
+          <td>1</td>
+          <td>20V→5V, ≥5A</td>
+      </tr>
+      <tr>
+          <td>P3</td>
+          <td>POWER</td>
+          <td>Micro USB Breakout Board</td>
+          <td>1</td>
+          <td>Cut a Micro-USB cable Instead</td>
+      </tr>
+      <tr>
+          <td>C1</td>
+          <td>COMPUTE</td>
+          <td>Raspberry Pi 3B</td>
+          <td>1</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>C2</td>
+          <td>COMPUTE</td>
+          <td>ESP32 Dev Board</td>
+          <td>1</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>C2-2</td>
+          <td>COMPUTE</td>
+          <td>Female Pin Headers</td>
+          <td>2</td>
+          <td>2.54mm</td>
+      </tr>
+      <tr>
+          <td>C3</td>
+          <td>COMPUTE</td>
+          <td>USB DAC</td>
+          <td>1</td>
+          <td>USB-C in, 3.5mm out</td>
+      </tr>
+      <tr>
+          <td>C4</td>
+          <td>COMPUTE</td>
+          <td>Micro USB Data Cable</td>
+          <td>1</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>A1</td>
+          <td>AUDIO</td>
+          <td>USB-A to USB-C Adapter</td>
+          <td>1</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>A2</td>
+          <td>AUDIO</td>
+          <td>3.5mm Aux Cable</td>
+          <td>1</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>S1</td>
+          <td>SENSOR</td>
+          <td>MUX</td>
+          <td>2</td>
+          <td>16:1, DIP-24</td>
+      </tr>
+      <tr>
+          <td>S1-2</td>
+          <td>SENSOR</td>
+          <td>DIP IC sockets</td>
+          <td>2</td>
+          <td>DIP-24 IC Socket</td>
+      </tr>
+      <tr>
+          <td>S2</td>
+          <td>SENSOR</td>
+          <td>Resistor (Rref)</td>
+          <td>1</td>
+          <td>1kΩ</td>
+      </tr>
+      <tr>
+          <td>S3</td>
+          <td>SENSOR</td>
+          <td>Insulation Displacement Connector</td>
+          <td>2</td>
+          <td>16P, 40cm, 2.54mm</td>
+      </tr>
+      <tr>
+          <td>S4</td>
+          <td>SENSOR</td>
+          <td>Ceramic capacitor</td>
+          <td>1</td>
+          <td>0.1uF, ADC Input bypass</td>
+      </tr>
+      <tr>
+          <td>L1</td>
+          <td>LED</td>
+          <td>WS2812B LED Strip</td>
+          <td>1</td>
+          <td>60 LED/m, ≥2m</td>
+      </tr>
+      <tr>
+          <td>L2</td>
+          <td>LED</td>
+          <td>SN74AHCT125N</td>
+          <td>1</td>
+          <td>DIP-14</td>
+      </tr>
+      <tr>
+          <td>L2-2</td>
+          <td>LED</td>
+          <td>DIP-14 IC Socket</td>
+          <td>1</td>
+          <td>DIP-14 IC Socket</td>
+      </tr>
+      <tr>
+          <td>L3</td>
+          <td>LED</td>
+          <td>Electrolytic Capacitor</td>
+          <td>1</td>
+          <td>1000μF / ≥10V, LED DIN decoupling</td>
+      </tr>
+      <tr>
+          <td>L4</td>
+          <td>LED</td>
+          <td>Resistor (LED DIN)</td>
+          <td>1</td>
+          <td>330Ω</td>
+      </tr>
+      <tr>
+          <td>X1</td>
+          <td>General</td>
+          <td>PerfBoard</td>
+          <td>Suit</td>
+          <td>2.54mm</td>
+      </tr>
+      <tr>
+          <td>X2</td>
+          <td>General</td>
+          <td>Wires</td>
+          <td>Misc</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>X3</td>
+          <td>General</td>
+          <td>Screw terminal block</td>
+          <td>Many</td>
+          <td>2.54mm, for sensor signal</td>
+      </tr>
+      <tr>
+          <td>X4</td>
+          <td>General</td>
+          <td>USB-C Extension Cable</td>
+          <td>2</td>
+          <td>for Power and Audio Output</td>
+      </tr>
+  </tbody>
+</table>
+<p><img src="/soundmat/electronics-bom.png" alt=""></p>
+<p>(Written May 11, 2026)</p>
+<p>Next: <a href="/soundmat/en/soundmat-7-firmware-design/">SoundMat (7) Firmware Design</a></p>
+
+
+        </article>
+    </main>
+
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2026 MUKIMASTA</p>
+    </div>
+</footer>
+
+</body>
+
+</html>

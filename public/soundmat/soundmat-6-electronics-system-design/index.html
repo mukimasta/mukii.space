@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="en-us" dir="ltr" class="kind-page">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="本文设计 SoundMat 的电子系统。电子系统是整个产品设计中的重点。如果说软件系统作为大脑，那电子系统就是身体，为软件系统提供平台，执行实现各种功能。 作为公共艺术装置，电子系统设计受以下约束： 美观考虑，所有电子元件需要藏在空腔内，引出的线缆越少越好 供电考虑，最好能在户外无插座的情况下也能使 …">
+    <title>SoundMat (6) 电子系统设计</title>
+    <link rel="canonical" href="https://mukii.space/soundmat/soundmat-6-electronics-system-design/">
+
+
+
+<meta property="og:title" content="SoundMat (6) 电子系统设计">
+<meta property="og:description" content="本文设计 SoundMat 的电子系统。电子系统是整个产品设计中的重点。如果说软件系统作为大脑，那电子系统就是身体，为软件系统提供平台，执行实现各种功能。 作为公共艺术装置，电子系统设计受以下约束： 美观考虑，所有电子元件需要藏在空腔内，引出的线缆越少越好 供电考虑，最好能在户外无插座的情况下也能使 …">
+<meta property="og:image" content="https://mukii.space/og/og-image-2a7812ae025aae2c00c5147d2118c83b.svg">
+<meta property="og:image:type" content="image/svg+xml">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mukii.space/soundmat/soundmat-6-electronics-system-design/">
+<meta property="og:locale" content="en-us">
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SoundMat (6) 电子系统设计">
+<meta name="twitter:description" content="本文设计 SoundMat 的电子系统。电子系统是整个产品设计中的重点。如果说软件系统作为大脑，那电子系统就是身体，为软件系统提供平台，执行实现各种功能。 作为公共艺术装置，电子系统设计受以下约束： 美观考虑，所有电子元件需要藏在空腔内，引出的线缆越少越好 供电考虑，最好能在户外无插座的情况下也能使 …">
+<meta name="twitter:image" content="https://mukii.space/og/og-image-2a7812ae025aae2c00c5147d2118c83b.svg">
+
+    <link rel="preload" href="/fonts/Newsreader.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/default.min.fb89c3008d933d5ac0e46af0bee4acd14efae3a00fca1ebbeb11e373ecaf3a64.css" integrity="sha256-&#43;4nDAI2TPVrA5GrwvuSs0U7646APyh676xHjc&#43;yvOmQ=">
+    <link rel="stylesheet" href="/css/custom.min.4ad75db0d4010183f7312823592f18e887d33b8d0901d261b50fad0d64c2ba94.css" integrity="sha256-StddsNQBAYP3MSgjWS8Y6IfTO40JAdJhtQ&#43;tDWTCupQ=">
+    <script src="/js/darkmode.min.9211af6d380489c7cf64d4b18a1e49e75be2bebf92031d2165eb6c20bc59c6a2.js" integrity="sha256-khGvbTgEicfPZNSxih5J51vivr&#43;SAx0hZetsILxZxqI=" defer></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <style>
+    :root { --font-size-base: 18px; --content-max-inline-size: 680px; }
+    h1 { font-size: 2em; }
+    .katex { font-size: 0.95em; }
+    pre code {
+    background: var(--code-bg) !important;
+    color: var(--text-color);
+    padding: 1em;
+    border-radius: var(--radius);
+    }
+    </style><script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+
+
+<body>
+<header>
+    <div>
+        <div class="header-left">
+            <h1>
+                <a href="https://mukii.space/">MUKIMASTA</a>
+            </h1>
+            <nav class="site-nav" aria-label="Primary">
+                <a href="/professional-overview/" class="site-nav__link">Professional</a>
+                <a href="/journey/" class="site-nav__link">Journey</a>
+            </nav>
+        </div>
+        <div class="header-controls">
+            <div class="toggle-switch">
+                <input type="checkbox" id="darkModeToggle" class="toggle-input" aria-label="Toggle dark mode">
+                <label for="darkModeToggle" class="toggle-label">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <main class="content-wrapper">
+        <article class="content-container">
+
+<nav class="back-to-parent" aria-label="上一级导航">
+  <a class="back-to-parent__link" href="/soundmat/" title="SoundMat" aria-label="返回 SoundMat">‹</a>
+</nav>
+
+
+<nav class="soundmat-lang-switch" aria-label="Document language"><a class="soundmat-lang-switch__link is-active" href="/soundmat/soundmat-6-electronics-system-design/" hreflang="zh" lang="zh">中文</a>
+  <span class="soundmat-lang-switch__sep" aria-hidden="true">·</span>
+  <a class="soundmat-lang-switch__link" href="/soundmat/en/soundmat-6-electronics-system-design/" hreflang="en" lang="en">English</a>
+</nav>
+    <h1>SoundMat (6) 电子系统设计</h1>
+    <h4></h4>
+
+<p>本文设计 SoundMat 的电子系统。电子系统是整个产品设计中的重点。如果说软件系统作为大脑，那电子系统就是身体，为软件系统提供平台，执行实现各种功能。</p>
+<p>作为公共艺术装置，电子系统设计受以下约束：</p>
+<ol>
+<li>美观考虑，所有电子元件需要藏在空腔内，引出的线缆越少越好</li>
+<li>供电考虑，最好能在户外无插座的情况下也能使用</li>
+<li>稳定性考虑，需要能长时间稳定运行，电子系统的结构要可靠</li>
+<li>音质考虑，音频是整个装置的核心，需要有好的音质</li>
+</ol>
+<p>第一条，电子元件需要藏在空腔内，所以需要注意的有尺寸和散热问题；对于引出的线缆，理想情况下只需要一根供电线和一根音频线。</p>
+<p>第二条，作为艺术装置，在户外比如广场上使用时，最好能够直接解决供电问题而不用插座。PD 协议的 USB-C 供电可以解决这一点，既可以用充电器，也可以用快充充电宝供电。</p>
+<p>第三条，在 Prototype 最初阶段使用的是面包板，非常不可靠，应使用洞洞板（Perfboard）或者 PCB。</p>
+<p>第四条，后续采用 USB 转接外置 DAC 输出音频的方案。</p>
+<h2 id="系统架构">系统架构<a class="anchor" aria-hidden="true" href="#%e7%b3%bb%e7%bb%9f%e6%9e%b6%e6%9e%84">#</a></h2>
+<p>整体来看，SoundMat 的电子系统包含五个部分：</p>
+<ol>
+<li>电源模块 POWER</li>
+<li>传感器信号采集模块 SENSOR</li>
+<li>LED 模块 LED</li>
+<li>计算模块 COMPUTE</li>
+<li>音频输出模块 AUDIO</li>
+</ol>
+<p><img src="/soundmat/electronics-architecture.png" alt=""><br>
+图  电子系统架构</p>
+<p><img src="/soundmat/electronics-architecture-design.png" alt=""><br>
+图  电子系统架构设计</p>
+<p>接下来阐述电子系统架构设计过程。</p>
+<p>从 COMPUTE 模块说起。我们需要复杂音频合成，所以单片机是远远不够的，需要 Linux 计算机，例如树莓派，提供软件生态和 USB 接口用于音频输出。但是树莓派没有模拟输入 ADC，不能直接接受 SENSOR 的压力信号，于是需要一个外置 ADC。我们直接使用课程提供的 ESP32 作为 ADC 功能，同时 ESP32 为灯带提供控制信号。树莓派需要 5V 供电，ESP32 直接通过树莓派 USB 供电即可。</p>
+<p>接下来是 LED 的设计，我们使用 WS2812B LED 灯带，需要 5V 供电，并且功率较高，不能直接用树莓派引脚供电。LED 灯带的控制引脚是 5V 的，COMPUTE 模块输出的控制信号要用 Logic Level Shifter 升压后接入。</p>
+<p>SENSOR 模块接收 MCU 的扫描信号，返回传感器数据。</p>
+<p>POWER 模块是重点。首先计算各模块的功率：</p>
+<ol>
+<li>LED：使用 WS2812B LED, 60LEDs/M 灯带，长度为 π * 22.7&quot; = 71.3&quot; = 181.1 cm，约 108 颗灯珠。WS2812B 每颗满亮度白光约 60mA，最大总电流约 6.5 A，功率为 32.5W。亮度为 30% 时，电流约 2A，功率约 10W。</li>
+<li>COMPUTE：使用树莓派 3B，典型电流约 2.5A，功率约 12.5W，包含 MCU 的功耗。</li>
+</ol>
+<p>总最大功率约 45W，亮度为 30% 时，功率约 22.5W。5V 供电不够（电流 10A）。采用 PD 协议的 20V 电压，最大电流约 2.5A。输入经降压模块降压之后，分两路输入给 LED 和 COMPUTE。</p>
+<p>接下来是各模块的详细设计</p>
+<h2 id="电源模块">电源模块<a class="anchor" aria-hidden="true" href="#%e7%94%b5%e6%ba%90%e6%a8%a1%e5%9d%97">#</a></h2>
+<p>方案对比：</p>
+<table>
+  <thead>
+      <tr>
+          <th>方案</th>
+          <th>LED 电源适配器 + 树莓派 Micro-USB 电源适配器</th>
+          <th>单 5V 10A DC 电源适配器</th>
+          <th>USB-C PD 20V + Buck 降压</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>兼容充电宝</td>
+          <td>❌</td>
+          <td>❌</td>
+          <td>✅</td>
+      </tr>
+      <tr>
+          <td>电源线缆数量</td>
+          <td>2</td>
+          <td>1</td>
+          <td>1</td>
+      </tr>
+      <tr>
+          <td>复杂度</td>
+          <td>简单，即插即用</td>
+          <td>简单，但需要自己分线</td>
+          <td>较复杂，需要 PD Trigger + Buck</td>
+      </tr>
+      <tr>
+          <td>线损</td>
+          <td>5V 长线传输损耗大</td>
+          <td>5V 长线传输损耗大，压降明显</td>
+          <td>20V 传输电流小，线损低，到终端再降压</td>
+      </tr>
+      <tr>
+          <td>适配器体积</td>
+          <td>两个适配器，占空间</td>
+          <td>一个但体积大（砖头）</td>
+          <td>USB-C 充电器小巧</td>
+      </tr>
+      <tr>
+          <td>户外部署</td>
+          <td>需要两个插座</td>
+          <td>需要一个插座</td>
+          <td>充电宝即可，无需插座</td>
+      </tr>
+      <tr>
+          <td>采用</td>
+          <td>❌</td>
+          <td>❌</td>
+          <td>✅</td>
+      </tr>
+  </tbody>
+</table>
+<p><img src="/soundmat/electronics-power-module.png" alt=""></p>
+<p>最终采用当前方案：总最大功率约 45W。USB-C 接口通过 PD Trigger Board 请求 20V 输入，经 DC Buck Converter 降压至 5V，然后分成两路：一路给 LED 灯带供电，一路通过 Micro USB 给树莓派供电。</p>
+<p>LED 切换时会产生瞬态电流尖峰，所有 GND 信号必须星型接地，避免电压波动。LED 支路入口处并联 1000μF 电解电容，吸收 WS2812B 的瞬态电流尖峰，防止拉低总线电压导致树莓派欠压。树莓派自身开发板上有输入滤波电容，不需要额外添加。</p>
+<p>长 LED 上可能出现压降，可进行双端供电，在头尾处都接入电源。</p>
+<h2 id="计算模块">计算模块<a class="anchor" aria-hidden="true" href="#%e8%ae%a1%e7%ae%97%e6%a8%a1%e5%9d%97">#</a></h2>
+<p>方案对比：</p>
+<table>
+  <thead>
+      <tr>
+          <th>方案</th>
+          <th>单 MCU (ESP32)</th>
+          <th>SBC（树莓派）+ 外置 ADC 芯片</th>
+          <th>树莓派 + ESP32</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>音频合成能力</td>
+          <td>极弱</td>
+          <td>强</td>
+          <td>强</td>
+      </tr>
+      <tr>
+          <td>软件开发难度</td>
+          <td>难</td>
+          <td>简单</td>
+          <td>简单</td>
+      </tr>
+      <tr>
+          <td>ADC</td>
+          <td>内置</td>
+          <td>外挂芯片</td>
+          <td>ESP32 内置</td>
+      </tr>
+      <tr>
+          <td>复杂度</td>
+          <td>简单</td>
+          <td>中等</td>
+          <td>简单</td>
+      </tr>
+      <tr>
+          <td>拓展性</td>
+          <td>低</td>
+          <td>中等</td>
+          <td>强</td>
+      </tr>
+      <tr>
+          <td>采用</td>
+          <td>❌</td>
+          <td>❌</td>
+          <td>✅</td>
+      </tr>
+  </tbody>
+</table>
+<p>方案 2 和 3 复杂度类似并且都能满足我们的要求，并且方案二成本更低可以有更好的 ADC 精度，由于我们有现成的 ESP32 开发板，于是采用方案 3。</p>
+<p><img src="/soundmat/electronics-compute-module.png" alt=""></p>
+<p>树莓派 3B 通过 Micro USB 接收 5V 供电。Pi 的一个 USB-A 口通过数据线连接 ESP32，为其供电的同时建立串口通信：接收传感器数据，发送 LED 控制信号。</p>
+<p>Pi 的另一个 USB-A 口通过 AtoC 转接头连接 USB DAC 声卡，DAC 输出 3.5mm 模拟音频，经长 Aux 延长线连接外部音响。</p>
+<p>LED 控制信号实际上通过 Pi 或 ESP32 控制都行，最终采用 ESP32 控制，所有 GPIO 都由 ESP32 管理。</p>
+<h2 id="传感器模块">传感器模块<a class="anchor" aria-hidden="true" href="#%e4%bc%a0%e6%84%9f%e5%99%a8%e6%a8%a1%e5%9d%97">#</a></h2>
+<p>传感器阵列的原理及设计详见 <a href="/soundmat/soundmat-5-sensor-principles-and-design/">SoundMat (5)  传感器原理及设计</a>，此处讨论传感器的电子模块设计。</p>
+<p><img src="/soundmat/electronics-sensor-module.png" alt=""></p>
+<p>ESP32 通过 8 个 GPIO 和同心圆环 Rings 连接。扇区 Slices 的 32 条信号线经过两个 MUX 级连，MUX 级联方式如下图所示。ESP32 通过两个 GPIO 控制两个 MUX 的使能引脚，此处需保证两个使能引脚不同时触发。输出的信号 SIGNAL 直接合并接入 ESP32 的 ADC 输入引脚。</p>
+<p>根据 <a href="https://docs.espressif.com/projects/esp-idf/en/v4.4/esp32/api-reference/peripherals/adc.html#minimizing-noise">ESP32 Docs – ADC – Minimizing Noise</a>，可以在 ADC 输入引脚上连接一个旁路电容以减少噪声。</p>
+<p><img src="/soundmat/esp32-dual-cd4067-mux-with-rings-v3.svg" alt=""></p>
+<p>16:1 Analog MUX 的选择：</p>
+<table>
+  <thead>
+      <tr>
+          <th>型号</th>
+          <th>导通电阻 Ron</th>
+          <th>开关时间</th>
+          <th>工作电压</th>
+          <th>封装</th>
+          <th>价格</th>
+          <th>备注</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>CD74HC4067</td>
+          <td>~70Ω</td>
+          <td>~30ns</td>
+          <td>2-6V</td>
+          <td>DIP-24 / SOIC</td>
+          <td>~$1</td>
+          <td>maker 社区最常用，便宜，breakout 板到处有</td>
+      </tr>
+      <tr>
+          <td>CD4067B</td>
+          <td>~125Ω</td>
+          <td>~200ns</td>
+          <td>3-18V</td>
+          <td>DIP-24</td>
+          <td>~$0.5</td>
+          <td>老一代 CMOS，Ron 大、慢，但宽电压范围</td>
+      </tr>
+      <tr>
+          <td>ADG1606</td>
+          <td>~4.5Ω</td>
+          <td>~120ns</td>
+          <td>±5V / 单 12V</td>
+          <td>TSSOP-28</td>
+          <td>~$5</td>
+          <td>低 Ron，精度好，贴片封装不适合手焊</td>
+      </tr>
+      <tr>
+          <td>ADG706</td>
+          <td>~2.5Ω</td>
+          <td>~30ns</td>
+          <td>±2.5V / 单 5V</td>
+          <td>TSSOP-28</td>
+          <td>~$7</td>
+          <td>极低 Ron，最适合精密测量，贵</td>
+      </tr>
+      <tr>
+          <td>MAX306</td>
+          <td>~100Ω</td>
+          <td>~250ns</td>
+          <td>±15V</td>
+          <td>DIP-28</td>
+          <td>~$8</td>
+          <td>高压宽幅，工业场景</td>
+      </tr>
+  </tbody>
+</table>
+<p>CD74HC4067 最优选择，不过课程提供了 CD4067B，可以直接使用。</p>
+<p>关于 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mrow><mi>r</mi><mi>e</mi><mi>f</mi></mrow></msub></mrow><annotation encoding="application/x-tex">R_{ref}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0077em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">re</span><span class="mord mathnormal mtight" style="margin-right:0.10764em;">f</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span> 的选择：</p>
+<p>TBD</p>
+<h2 id="led-模块">LED 模块<a class="anchor" aria-hidden="true" href="#led-%e6%a8%a1%e5%9d%97">#</a></h2>
+<p><img src="/soundmat/electronics-led-module.png" alt=""></p>
+<p>WS2812B LED 有 3 个引脚，+5V 输入，GND 以及 5V DIN 控制信号输入。上文提到过双端供电以及去耦电容，这里不再讲解。</p>
+<p>COMPUTE 模块的 GPIO 控制信号是 3.3V 的，需要经过逻辑电平转换器 (Logic Level Shifter) 转化为 5V。</p>
+<p>选型：</p>
+<table>
+  <thead>
+      <tr>
+          <th>型号</th>
+          <th>输入高电平阈值 (VCC=5V)</th>
+          <th>兼容 3.3V 输入</th>
+          <th>传输延迟</th>
+          <th>备注</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>SN74AHCT125N</td>
+          <td>2.0V (TTL)</td>
+          <td>✅</td>
+          <td>约 10-15ns</td>
+          <td>最佳选择</td>
+      </tr>
+      <tr>
+          <td>74HC125</td>
+          <td>3.5V (70% VCC)</td>
+          <td>❌</td>
+          <td></td>
+          <td>为 5V 输入设计</td>
+      </tr>
+      <tr>
+          <td>74HCT125</td>
+          <td>2.0V (TTL)</td>
+          <td>✅</td>
+          <td>约 3-5ns</td>
+          <td>可以用</td>
+      </tr>
+      <tr>
+          <td>直连不转换</td>
+          <td>3.5 V</td>
+          <td>有时行有时不行，有风险</td>
+          <td></td>
+          <td>不推荐</td>
+      </tr>
+  </tbody>
+</table>
+<p>HC 系列的输入阈值是 CMOS 标准，约 70% VCC，5V 供电时需要 3.5V 才能可靠识别为高电平，3.3V 输入落在不确定区间，不能使用。最终选择 SN74AHCT125N。</p>
+<p>接下来阐述 330Ω 的串联电阻设计：</p>
+<blockquote>
+<p>WS2812B 的数据协议是单线高速脉冲，位周期只有 1.25μs。这意味着信号的上升沿和下降沿非常陡，边沿时间在几十纳秒级别。</p>
+<p>当一个陡峭的电压边沿从驱动端沿导线传播到接收端（第一颗 LED 的 DIN 引脚）时，如果驱动端的输出阻抗和传输线的特性阻抗不匹配，信号会在接收端发生反射，反射波沿导线返回驱动端，再反射回来，形成振铃——也就是信号在高低电平之间来回震荡几次才稳定下来。LED 的数字输入电路可能把一个脉冲误读成两个，或者把 1 码误读成 0 码。这在第一颗灯珠上最明显，因为后续灯珠的数据是经过前一颗灯珠内部整形后再输出的，波形已经被清理过了。</p>
+<p>330Ω 串联电阻的作用就是进行阻尼，它和传输线的特性阻抗、LED 输入端的寄生电容一起构成一个低通滤波器，滤掉高频振铃，让反射波的能量被电阻耗散掉。代价是上升沿变慢了一点，但 330Ω 配合几十 pF 的寄生电容，RC 时间常数大约十几纳秒，相比 WS2812B 几百纳秒的时序窗口完全不影响通信。</p>
+<p>为什么是 330Ω 而不是别的值：太小（比如 33Ω）阻尼不够，振铃还在；太大（比如 3.3kΩ）和寄生电容构成的 RC 时间常数太长，上升沿被拉得太慢，脉冲宽度失真，通信直接挂掉。330Ω 是社区里经过大量实践验证的经验值。</p>
+<p>放置位置必须靠近 LED 端而不是驱动端，因为要在反射发生的位置就地耗散能量。如果放在驱动端，反射波已经跑了一个来回才遇到电阻，阻尼效果大打折扣。</p>
+<p>by Claude Opus 4.7</p></blockquote>
+<h2 id="音频输出模块">音频输出模块<a class="anchor" aria-hidden="true" href="#%e9%9f%b3%e9%a2%91%e8%be%93%e5%87%ba%e6%a8%a1%e5%9d%97">#</a></h2>
+<p>音频输出是整个装置的最终呈现，音频质量直接决定了 SoundMat 作为艺术装置的体验上限。</p>
+<p>方案对比：</p>
+<table>
+  <thead>
+      <tr>
+          <th>方案</th>
+          <th>树莓派板载 3.5mm</th>
+          <th>I2S DAC 模块</th>
+          <th>USB 外置 DAC</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>音质</td>
+          <td>差，PWM 模拟输出，底噪明显</td>
+          <td>好，硬件 DAC，低底噪</td>
+          <td>好，硬件 DAC，低底噪</td>
+      </tr>
+      <tr>
+          <td>接线复杂度</td>
+          <td>无需额外硬件</td>
+          <td>需要接 GPIO，占用引脚</td>
+          <td>USB 即插即用</td>
+      </tr>
+      <tr>
+          <td>与其他模块冲突</td>
+          <td>无</td>
+          <td>GPIO 可能与 ESP32 通信或其他功能冲突</td>
+          <td>无，独立 USB 通道</td>
+      </tr>
+      <tr>
+          <td>软件配置</td>
+          <td>默认输出</td>
+          <td>需要配置 I2S 驱动和设备树</td>
+          <td>系统自动识别为声卡，几乎零配置</td>
+      </tr>
+      <tr>
+          <td>可替换性</td>
+          <td>—</td>
+          <td>更换需要重新接线和配置</td>
+          <td>随时换一个 USB DAC 即可</td>
+      </tr>
+      <tr>
+          <td>采用</td>
+          <td>❌</td>
+          <td>❌</td>
+          <td>✅</td>
+      </tr>
+  </tbody>
+</table>
+<p>树莓派 3B 的板载音频是通过 PWM 模拟生成的，不是真正的 DAC，信噪比很低，音质差。作为在安静的公共空间里的音乐艺术装置，这是不可接受的。I2S DAC 音质好，不过略微麻烦。USB DAC 是最简单可靠的方案。</p>
+<p>信号链路（新）：树莓派 USB-A → USB-A to C 转接头 → USB-C 延长线 → USB DAC → 3.5mm Aux 输出 → Aux 线 → 外部音响。</p>
+<h2 id="bom">BOM<a class="anchor" aria-hidden="true" href="#bom">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th>ID</th>
+          <th>Module</th>
+          <th>Component</th>
+          <th>Qty</th>
+          <th>Spec / Model / Notes</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>P1</td>
+          <td>POWER</td>
+          <td>USB-C PD Trigger Board</td>
+          <td>1</td>
+          <td>configured for PD-20V</td>
+      </tr>
+      <tr>
+          <td>P2</td>
+          <td>POWER</td>
+          <td>DC Buck Converter Module</td>
+          <td>1</td>
+          <td>20V→5V, ≥5A</td>
+      </tr>
+      <tr>
+          <td>P3</td>
+          <td>POWER</td>
+          <td>Micro USB Breakout Board</td>
+          <td>1</td>
+          <td>Cut a Micro-USB cable Instead</td>
+      </tr>
+      <tr>
+          <td>C1</td>
+          <td>COMPUTE</td>
+          <td>Raspberry Pi 3B</td>
+          <td>1</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>C2</td>
+          <td>COMPUTE</td>
+          <td>ESP32 Dev Board</td>
+          <td>1</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>C2-2</td>
+          <td>COMPUTE</td>
+          <td>Female Pin Headers</td>
+          <td>2</td>
+          <td>2.54mm</td>
+      </tr>
+      <tr>
+          <td>C3</td>
+          <td>COMPUTE</td>
+          <td>USB DAC</td>
+          <td>1</td>
+          <td>USB-C in, 3.5mm out</td>
+      </tr>
+      <tr>
+          <td>C4</td>
+          <td>COMPUTE</td>
+          <td>Micro USB Data Cable</td>
+          <td>1</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>A1</td>
+          <td>AUDIO</td>
+          <td>USB-A to USB-C Adapter</td>
+          <td>1</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>A2</td>
+          <td>AUDIO</td>
+          <td>3.5mm Aux Cable</td>
+          <td>1</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>S1</td>
+          <td>SENSOR</td>
+          <td>MUX</td>
+          <td>2</td>
+          <td>16:1, DIP-24</td>
+      </tr>
+      <tr>
+          <td>S1-2</td>
+          <td>SENSOR</td>
+          <td>DIP IC sockets</td>
+          <td>2</td>
+          <td>DIP-24 IC Socket</td>
+      </tr>
+      <tr>
+          <td>S2</td>
+          <td>SENSOR</td>
+          <td>Resistor (Rref)</td>
+          <td>1</td>
+          <td>1kΩ</td>
+      </tr>
+      <tr>
+          <td>S3</td>
+          <td>SENSOR</td>
+          <td>Insulation Displacement Connector</td>
+          <td>2</td>
+          <td>16P, 40cm, 2.54mm</td>
+      </tr>
+      <tr>
+          <td>S4</td>
+          <td>SENSOR</td>
+          <td>Ceramic capacitor</td>
+          <td>1</td>
+          <td>0.1uF, ADC Input bypass</td>
+      </tr>
+      <tr>
+          <td>L1</td>
+          <td>LED</td>
+          <td>WS2812B LED Strip</td>
+          <td>1</td>
+          <td>60 LED/m, ≥2m</td>
+      </tr>
+      <tr>
+          <td>L2</td>
+          <td>LED</td>
+          <td>SN74AHCT125N</td>
+          <td>1</td>
+          <td>DIP-14</td>
+      </tr>
+      <tr>
+          <td>L2-2</td>
+          <td>LED</td>
+          <td>DIP-14 IC Socket</td>
+          <td>1</td>
+          <td>DIP-14 IC Socket</td>
+      </tr>
+      <tr>
+          <td>L3</td>
+          <td>LED</td>
+          <td>Electrolytic Capacitor</td>
+          <td>1</td>
+          <td>1000μF / ≥10V, LED DIN decoupling</td>
+      </tr>
+      <tr>
+          <td>L4</td>
+          <td>LED</td>
+          <td>Resistor (LED DIN)</td>
+          <td>1</td>
+          <td>330Ω</td>
+      </tr>
+      <tr>
+          <td>X1</td>
+          <td>General</td>
+          <td>PerfBoard</td>
+          <td>Suit</td>
+          <td>2.54mm</td>
+      </tr>
+      <tr>
+          <td>X2</td>
+          <td>General</td>
+          <td>Wires</td>
+          <td>Misc</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>X3</td>
+          <td>General</td>
+          <td>Screw terminal block</td>
+          <td>Many</td>
+          <td>2.54mm, for sensor signal</td>
+      </tr>
+      <tr>
+          <td>X4</td>
+          <td>General</td>
+          <td>USB-C Extension Cable</td>
+          <td>2</td>
+          <td>for Power and Audio Output</td>
+      </tr>
+  </tbody>
+</table>
+<p><img src="/soundmat/electronics-bom.png" alt=""></p>
+<p>（写于 2026 年 5 月 11 日）</p>
+<p>下一篇：</p>
+
+
+        </article>
+    </main>
+
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2026 MUKIMASTA</p>
+    </div>
+</footer>
+
+</body>
+
+</html>

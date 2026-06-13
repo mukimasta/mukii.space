@@ -11,7 +11,7 @@ subtitle: ""
 
 [青叶树](/qingyeshu/)
 
-[其他作品](/other-works/)
+[在西雅图的写作](/articles/seattle-writing/)
 
 ---
 

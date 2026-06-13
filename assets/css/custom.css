@@ -156,3 +156,53 @@ header {
 .content-container .soundmat-lang-switch + section > h2:first-child {
   margin-block-start: 0.45em;
 }
+
+/* SoundMat index: links left, render right */
+.soundmat-hero {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem 2.25rem;
+  margin-block: 1.25rem 1.75rem;
+}
+
+.soundmat-hero__links {
+  flex: 0 0 auto;
+}
+
+.soundmat-hero__links p {
+  margin-block: 0.85em;
+}
+
+.soundmat-hero__links p:first-child {
+  margin-block-start: 0;
+}
+
+.soundmat-hero__links p:last-child {
+  margin-block-end: 0;
+}
+
+.soundmat-hero__media {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.soundmat-hero__media img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 640px) {
+  .soundmat-hero {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .soundmat-hero__links {
+    order: 2;
+  }
+
+  .soundmat-hero__media {
+    order: 1;
+  }
+}

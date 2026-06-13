@@ -5,8 +5,22 @@ translationKey: soundmat-index
 alternates:
   zh: /soundmat/
   en: /soundmat/en/
-description: "Interactive installation · tactile sensing and music · design notes"
+description: "Place stones. Make music."
 ---
+
+# SoundMat
+
+> Place stones. Make music.
+
+{{< soundmat-hero alt="Render" >}}
+**[Live Demo](https://mukimasta.github.io/soundmat_web/)**
+
+**[Presentation Slides](https://mukimasta.github.io/soundmat_presentation/)**
+
+**[GitHub](https://github.com/mukimasta/soundmat)**
+{{< /soundmat-hero >}}
+
+## Documentation
 
 - [SoundMat (1) Idea](/soundmat/en/soundmat-1-idea/)
 - [SoundMat (2) Product Design Philosophy](/soundmat/en/soundmat-2-philosophy/)
@@ -31,3 +45,10 @@ Appendix
 Related Documents
 
 - [SoundMat Presentation](/soundmat/en/soundmat-presentation/)
+
+---
+
+## Repositories
+
+- Core code (sonification) — [https://github.com/mukimasta/soundmat](https://github.com/mukimasta/soundmat)
+- Firmware — [https://github.com/mukimasta/soundmat_firmware](https://github.com/mukimasta/soundmat_firmware)

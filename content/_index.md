@@ -16,9 +16,7 @@ subtitle: ""
 ---
 
 ### SoundMat
-Tactile sensing × music · interactive installation design notes
 
-- [中文](/soundmat/)
-- [English](/soundmat/en/)
+[SoundMat 中文主页](/soundmat/) | [SoundMat homepage (English)](/soundmat/en/)
 
 ---

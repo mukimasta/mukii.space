@@ -1,0 +1,8 @@
+<div class="soundmat-hero">
+  <div class="soundmat-hero__links">
+    {{ .Inner | markdownify }}
+  </div>
+  <div class="soundmat-hero__media">
+    <img src="{{ .Get "image" | default "/soundmat/render.png" }}" alt="{{ .Get "alt" | default "SoundMat render" }}">
+  </div>
+</div>

@@ -548,6 +548,30 @@
                 href="https://mukii.space/soundmat/soundmat-presentation/"
                 />
   </url><url>
+    <loc>https://mukii.space/soundmat/en/soundmat-usage-guide/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en-us"
+                href="https://mukii.space/soundmat/soundmat-usage-guide/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en-us"
+                href="https://mukii.space/soundmat/en/soundmat-usage-guide/"
+                />
+  </url><url>
+    <loc>https://mukii.space/soundmat/soundmat-usage-guide/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en-us"
+                href="https://mukii.space/soundmat/en/soundmat-usage-guide/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en-us"
+                href="https://mukii.space/soundmat/soundmat-usage-guide/"
+                />
+  </url><url>
     <loc>https://mukii.space/tags/</loc>
   </url><url>
     <loc>https://mukii.space/blogs/professional/distributed/</loc>

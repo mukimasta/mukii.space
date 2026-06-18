@@ -41,6 +41,7 @@ Appendix
 - [SoundMat (14) Timeline](/soundmat/en/soundmat-14-timeline/)
 - [SoundMat (15) Network Solution](/soundmat/en/soundmat-15-network-solution/)
 - [SoundMat (16) Software Deployment Performance Optimization](/soundmat/en/soundmat-16-software-deployment-performance/)
+- [SoundMat Usage Guide](/soundmat/en/soundmat-usage-guide/)
 
 Related Documents
 

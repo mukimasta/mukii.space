@@ -41,6 +41,7 @@ description: "放下石头,音乐生长"
 - [SoundMat (14) 时间线](/soundmat/soundmat-14-timeline/)
 - [SoundMat (15) 网络解决方案](/soundmat/soundmat-15-network-solution/)
 - [SoundMat (16) 软件部署性能优化](/soundmat/soundmat-16-software-deployment-performance/)
+- [SoundMat 使用说明](/soundmat/soundmat-usage-guide/)
 
 其他相关文档
 

@@ -126,5 +126,12 @@
       <guid>https://mukii.space/soundmat/en/soundmat-presentation/</guid>
       <description>&lt;h2 id=&#34;i-design-philosophy&#34;&gt;I. Design philosophy&lt;a class=&#34;anchor&#34; aria-hidden=&#34;true&#34; href=&#34;#i-design-philosophy&#34;&gt;#&lt;/a&gt;&lt;/h2&gt;&#xA;&lt;p&gt;The deck is not one visual style all the way through—it mixes three slide types for rhythm:&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Hero Slide&lt;/strong&gt; — Pure typography, one full-screen line, e.g. “Place stones. Make music.” Use for section openers, key claims, emotional turns.&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Bento Slide&lt;/strong&gt; — Multi-card grid, 4–6 features on one screen. Use to show several facets of one module (e.g. sensor: “design principle / product photo / spec numbers / comparison decision” as a quartet).&lt;/p&gt;</description>
     </item>
+    <item>
+      <title>SoundMat Usage Guide</title>
+      <link>https://mukii.space/soundmat/en/soundmat-usage-guide/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mukii.space/soundmat/en/soundmat-usage-guide/</guid>
+      <description>&lt;h2 id=&#34;checklist&#34;&gt;Checklist&lt;a class=&#34;anchor&#34; aria-hidden=&#34;true&#34; href=&#34;#checklist&#34;&gt;#&lt;/a&gt;&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; Speaker is on; battery ≥ 40% (≥ 60% recommended)&lt;/li&gt;&#xA;&lt;li&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; Audio cable to speaker; POWER cable to PD 20V power&lt;/li&gt;&#xA;&lt;li&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; Wait 1–2 minutes; four red positioning LEDs breathing&lt;/li&gt;&#xA;&lt;li&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; Connect to &lt;code&gt;SoundMat&lt;/code&gt; hotspot; browser can open the console (optional)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;1--wiring&#34;&gt;1  Wiring&lt;a class=&#34;anchor&#34; aria-hidden=&#34;true&#34; href=&#34;#1--wiring&#34;&gt;#&lt;/a&gt;&lt;/h2&gt;&#xA;&lt;p&gt;Two cables: one to the speaker, one to power. The power cable is labeled &lt;strong&gt;POWER&lt;/strong&gt;. The speaker connects via a USB-C to 3.5 mm adapter to the speaker’s audio input.&lt;/p&gt;</description>
+    </item>
   </channel>
 </rss>

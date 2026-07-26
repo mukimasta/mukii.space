@@ -318,8 +318,8 @@
     }
 
     .report-export {
-      position: fixed; left: 0; top: 0; z-index: -9999; opacity: 0; pointer-events: none;
-      width: 1080px; background: var(--white); overflow: hidden;
+      position: fixed; left: -9999px; top: 0; z-index: -1; pointer-events: none;
+      width: 1080px; background: var(--white); overflow: visible;
     }
     .report-export-bg { position: absolute; inset: 0; overflow: hidden; }
     .report-export-teal {
@@ -1213,7 +1213,7 @@ Autonomy + Relatedness
 const CY='#c9ef00', CT='#00c2a8', MIN_D=80, MAX_D=450, FF=1.2;
 const PAYLOAD_VERSION='1.0';
 const LLM_API_BASE='https://api.openai-next.com/v1';
-const LLM_MODEL='claude-sonnet-4-5';
+const LLM_MODEL='claude-opus-4-5-20251101';
 
 let lastReportMarkdown='';
 let reportSubjectName='';
@@ -1763,13 +1763,17 @@ async function saveReportImage(){
   try{
     renderReportPage();
     const exportEl=document.getElementById('reportExport');
+    if(document.fonts && document.fonts.ready) await document.fonts.ready;
+    const exportHeight=exportEl.scrollHeight;
     const canvas=await html2canvas(exportEl, {
       scale:2,
       backgroundColor:'#ffffff',
       logging:false,
       useCORS:true,
       width:1080,
+      height:exportHeight,
       windowWidth:1080,
+      windowHeight:exportHeight,
       scrollX:0,
       scrollY:0,
     });

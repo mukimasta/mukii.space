@@ -336,7 +336,7 @@
     }
     .report-body {
       font-size: clamp(1.05rem, 2.2vw, 1.2rem); font-weight: 500; line-height: 1.75;
-      color: rgba(26,28,27,.82);
+      color: rgba(26,28,27,.82); text-align: left;
     }
     .report-body h1, .report-body h2, .report-body h3 {
       font-weight: 900; line-height: 1.2; color: var(--on); letter-spacing: -.02em;
@@ -347,15 +347,15 @@
     }
     .report-body h2 {
       font-size: clamp(1.125rem, 2.6vw, 1.375rem); font-weight: 800;
-      text-transform: uppercase; letter-spacing: .06em;
-      margin: 2.75rem 0 1rem; color: rgba(26,28,27,.75);
+      text-transform: none; letter-spacing: -.01em;
+      margin: 2.75rem 0 1rem; color: rgba(26,28,27,.75); text-align: left;
     }
     .report-body h2:first-child {
       font-size: clamp(1.375rem, 3.5vw, 1.75rem); font-weight: 900;
       text-transform: none; letter-spacing: -.02em; color: var(--on); margin-top: 0;
     }
     .report-body h3 { font-size: 1.05rem; font-weight: 800; margin: 2rem 0 .75rem; }
-    .report-body p { margin: 0 0 1.125rem; }
+    .report-body p { margin: 0 0 1.125rem; text-align: left; letter-spacing: normal; }
     .report-body ul, .report-body ol { margin: 0 0 1.125rem 0; padding-left: 0; list-style: none; }
     .report-body li { padding-left: 0; margin-bottom: .5rem; font-weight: 500; }
     .report-body li + li { margin-top: 8px; }
@@ -403,8 +403,9 @@
     }
 
     .report-export {
-      position: fixed; left: -9999px; top: 0; z-index: -1; pointer-events: none;
+      position: fixed; left: 0; top: 0; z-index: -1; pointer-events: none;
       width: 1080px; background: var(--white); overflow: visible;
+      opacity: 0; visibility: hidden;
     }
     .report-export-bg { position: absolute; inset: 0; overflow: hidden; }
     .report-export-teal {
@@ -421,6 +422,7 @@
     }
     .report-export-inner {
       position: relative; z-index: 2; padding: 80px 88px 88px; background: transparent;
+      text-align: left;
     }
     .report-export-brand {
       font-size: 14px; font-weight: 700; letter-spacing: .3em; text-transform: uppercase;
@@ -429,18 +431,20 @@
     .report-export-meta {
       font-size: 44px; font-weight: 700; line-height: 1.25; letter-spacing: -.02em;
       margin-bottom: 48px; color: var(--on); max-width: 880px; white-space: pre-line;
+      text-align: left;
     }
     .report-export-body {
       font-size: 22px; font-weight: 500; line-height: 1.75; color: rgba(26,28,27,.85);
+      text-align: left; letter-spacing: normal;
     }
     .report-export-body h1 { font-size: 36px; font-weight: 900; margin: 0 0 28px; line-height: 1.25; letter-spacing: -.02em; }
     .report-export-body h2 {
-      font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em;
-      margin: 48px 0 20px; color: rgba(26,28,27,.7);
+      font-size: 20px; font-weight: 800; text-transform: none; letter-spacing: -.01em;
+      margin: 48px 0 20px; color: rgba(26,28,27,.7); text-align: left;
     }
     .report-export-body h2:first-child { font-size: 34px; font-weight: 900; text-transform: none; letter-spacing: -.02em; color: var(--on); margin-top: 0; }
     .report-export-body h3 { font-size: 24px; font-weight: 800; margin: 36px 0 16px; }
-    .report-export-body p { margin: 0 0 20px; }
+    .report-export-body p { margin: 0 0 20px; text-align: left; letter-spacing: normal; }
     .report-export-body ul, .report-export-body ol { margin: 0 0 20px 0; padding-left: 0; list-style: none; }
     .report-export-body li { margin-bottom: 10px; }
     .report-export-foot {
@@ -466,7 +470,8 @@
     }
     .save-image-scroll {
       flex: 1; overflow: auto; -webkit-overflow-scrolling: touch;
-      padding: 0 16px 24px; text-align: center;
+      padding: 0 16px 24px;
+      display: flex; flex-direction: column; align-items: center;
     }
     .save-image-scroll img {
       max-width: 100%; height: auto; border-radius: 8px;
@@ -1796,7 +1801,11 @@ function formatReportMeta(name, rel){
 
 function renderReportHtml(md){
   if(typeof marked==='undefined') throw new Error('Markdown 解析库未加载');
-  return marked.parse(md);
+  let html=marked.parse(md);
+  html=html
+    .replace(/\sstyle="[^"]*text-align\s*:\s*(center|justify|right)[^"]*"/gi, '')
+    .replace(/\salign="(center|justify|right)"/gi, '');
+  return html;
 }
 
 function renderReportPage(){
@@ -1919,6 +1928,7 @@ async function saveReportImage(){
     renderReportPage();
     const exportEl=document.getElementById('reportExport');
     if(document.fonts && document.fonts.ready) await document.fonts.ready;
+    exportEl.style.visibility='visible';
     const exportHeight=exportEl.scrollHeight;
     const isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     const canvas=await html2canvas(exportEl, {
@@ -1932,7 +1942,21 @@ async function saveReportImage(){
       windowHeight:exportHeight,
       scrollX:0,
       scrollY:0,
+      onclone:(doc)=>{
+        const cloned=doc.getElementById('reportExport');
+        if(!cloned) return;
+        cloned.style.opacity='1';
+        cloned.style.visibility='visible';
+        cloned.style.left='0';
+        cloned.style.top='0';
+        cloned.querySelectorAll('.report-export-body, .report-export-body *').forEach((node)=>{
+          if(node.nodeType!==1) return;
+          node.style.textAlign='left';
+          if(node.tagName==='P' || node.tagName==='LI') node.style.letterSpacing='normal';
+        });
+      },
     });
+    exportEl.style.visibility='hidden';
     const dataUrl=canvas.toDataURL('image/png');
     if(preferLongPressSave() || isMobile){
       showSaveImageModal(dataUrl);

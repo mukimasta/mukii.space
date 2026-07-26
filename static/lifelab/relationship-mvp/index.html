@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>关系健康测试 - 完整预览</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; }
+    :root {
+      --teal: #00c2a8;
+      --teal-dark: #006b5c;
+      --yellow: #c9ef00;
+      --yellow-alt: #ccff00;
+      --on: #1a1c1b;
+      --white: #fff;
+    }
+    body { font-family: Inter, system-ui, sans-serif; background: var(--white); color: var(--on); overflow: hidden; }
+    .step { display: none; position: fixed; inset: 0; overflow: hidden; background: var(--white); flex-direction: column; }
+    .step.active { display: flex; }
+    .nav {
+      position: fixed; bottom: 0; left: 0; z-index: 100; width: 100%; height: 80px;
+      padding: 0 40px; display: flex; align-items: center; justify-content: space-between; background: transparent;
+    }
+    .nav-btn { border: none; background: transparent; font: inherit; cursor: pointer; text-transform: lowercase; font-size: 14px; font-weight: 600; }
+    .nav-btn:hover { opacity: .6; }
+    .nav-btn.ghost { border-bottom: 2px solid var(--on); padding-bottom: 4px; font-size: 20px; }
+    .nav-btn.solid { background: var(--on); color: var(--white); border-radius: 9999px; padding: 16px 40px; font-size: 20px; font-weight: 600; }
+    .nav-btn:disabled { opacity: .4; cursor: not-allowed; }
+    .nav-center { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .nav-dots { display: flex; gap: 6px; align-items: center; }
+    .nav-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(26,28,27,.18); }
+    .nav-dot.active { background: rgba(26,28,27,.45); }
+    .progress { font-size: 14px; font-weight: 800; }
+    .material { font-family: "Material Symbols Outlined"; }
+    .banner {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      background: var(--on); color: var(--white); font-size: 11px; padding: 5px 10px;
+    }
+    .banner-reset {
+      position: absolute; right: 10px;
+      border: 1px solid rgba(255,255,255,.35); border-radius: 999px;
+      background: transparent; color: var(--white); font: inherit; font-size: 10px;
+      padding: 2px 10px; cursor: pointer; text-transform: lowercase;
+    }
+    .banner-reset:hover { background: rgba(255,255,255,.12); }
+
+    .payload-overlay {
+      position: fixed; inset: 0; z-index: 500;
+      display: none; align-items: center; justify-content: center;
+      padding: 24px; background: rgba(26,28,27,.55);
+    }
+    .payload-overlay.open { display: flex; }
+    .payload-panel {
+      display: flex; flex-direction: column; width: min(920px, 96vw); max-height: 88vh;
+      background: var(--white); border-radius: 16px; box-shadow: 0 24px 80px rgba(0,0,0,.25);
+      overflow: hidden;
+    }
+    .payload-head {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 16px 20px; border-bottom: 1px solid rgba(26,28,27,.08);
+    }
+    .payload-head h2 { font-size: 15px; font-weight: 700; }
+    .payload-head p { margin-top: 4px; font-size: 12px; color: rgba(26,28,27,.55); }
+    .payload-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .payload-btn {
+      border: 1px solid rgba(26,28,27,.15); border-radius: 999px;
+      background: var(--white); color: var(--on); font: inherit; font-size: 12px; font-weight: 600;
+      padding: 6px 14px; cursor: pointer; text-transform: lowercase;
+    }
+    .payload-btn:hover { background: rgba(26,28,27,.06); }
+    .payload-btn.primary { background: var(--on); color: var(--white); border-color: var(--on); }
+    .payload-btn.primary:hover { opacity: .85; }
+    .payload-body {
+      margin: 0; padding: 16px 20px 20px; overflow: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px; line-height: 1.55; white-space: pre-wrap; word-break: break-word;
+      background: #f7f8f7; color: var(--on);
+    }
+    .payload-toast {
+      position: fixed; bottom: 96px; left: 50%; z-index: 600;
+      transform: translateX(-50%) translateY(12px); opacity: 0; pointer-events: none;
+      background: var(--on); color: var(--white); font-size: 12px; font-weight: 600;
+      padding: 8px 16px; border-radius: 999px; transition: opacity .2s, transform .2s;
+    }
+    .payload-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* Step 1 */
+    .s1-teal, .s1-lime { position: absolute; left: 50%; border-radius: 50%; }
+    .s1-teal { top: -20vh; width: 80vh; height: 80vh; background: var(--teal); z-index: 1; }
+    .s1-lime { top: 35vh; width: 85vh; height: 85vh; background: var(--yellow); z-index: 2; }
+    .s1-year { position: absolute; bottom: 15%; right: 10%; z-index: 5; font-size: clamp(4rem, 12rem, 12rem); font-weight: 900; transform: rotate(-65deg); pointer-events: none; }
+    .s1-lifelab { position: absolute; top: 2%; left: 50%; z-index: 5; font-size: 8rem; font-weight: 900; opacity: .2; transform: translateX(-50%) rotate(180deg); pointer-events: none; }
+    .s1-content { position: relative; z-index: 10; flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .s1-form { width: 100%; max-width: 640px; display: flex; flex-direction: column; align-items: center; gap: 64px; }
+    .s1-block { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+    .s1-title { font-size: clamp(1.875rem, 5vw, 3rem); font-weight: 900; text-transform: uppercase; text-align: center; }
+    .s1-sub { font-size: clamp(1.25rem, 3vw, 1.5rem); font-weight: 700; text-transform: uppercase; text-align: center; }
+    .field-wrap { width: 100%; max-width: 400px; }
+    .field-wrap.wide { max-width: 100%; }
+    .field-input {
+      width: 100%; border: none; border-bottom: 2px solid var(--teal-dark);
+      background: var(--white); text-align: center; font: inherit; font-weight: 700; color: var(--on);
+      padding: 12px 0; outline: none;
+    }
+    .field-input::placeholder { color: rgba(26,28,27,.35); font-weight: 500; }
+    .field-input.lg { font-size: clamp(1.5rem, 4vw, 2.25rem); }
+    .field-input.md { font-size: clamp(1.25rem, 3vw, 1.5rem); }
+    .field-input.area { min-height: 6rem; text-align: left; font-size: clamp(1.125rem,2.5vw,1.375rem); font-weight: 500; resize: none; padding: 16px 0 12px; line-height: 1.5; }
+
+    /* Step 2 */
+    .s2-wrap { position: relative; flex: 1; overflow: hidden; }
+    .s2-bg-teal { position: absolute; top: -10%; left: -10%; width: 80vw; height: 80vw; border-radius: 50%; background: var(--teal); opacity: .9; }
+    .s2-bg-lime { position: absolute; right: -5%; bottom: -20%; width: 90vw; height: 90vw; border-radius: 50%; background: var(--yellow); }
+    .s2-main { position: relative; z-index: 10; height: 100%; display: flex; align-items: center; }
+    .s2-grid { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .s2-label { font-size: 14px; font-weight: 700; letter-spacing: .3em; text-transform: uppercase; }
+    .s2-heading { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 900; line-height: 1.05; max-width: 28rem; margin-top: 16px; }
+    .s2-desc { font-size: 1.25rem; color: rgba(26,28,27,.7); max-width: 24rem; margin-top: 16px; }
+    .s2-rings { position: relative; width: min(480px, 40vw); height: min(480px, 40vw); margin-top: 48px; }
+    .ring { position: absolute; border-radius: 50%; transition: all .3s; top: 50%; left: 50%; transform: translate(-50%, -50%); border: none; padding: 0; cursor: pointer; background: transparent; }
+    .ring.connection { width: 100%; height: 100%; border: 3px dashed rgba(26,28,27,.1); }
+    .ring.important { width: 66%; height: 66%; border: 1.5px solid rgba(26,28,27,.4); }
+    .ring.core { width: 33%; height: 33%; background: var(--on); display: flex; align-items: center; justify-content: center; color: var(--white); font-weight: 900; font-size: 1.5rem; }
+    .ring.active.connection { border-color: var(--on); border-style: solid; transform: translate(-50%, -50%) scale(1.05); }
+    .ring.active.important { border-color: var(--on); border-width: 4px; transform: translate(-50%, -50%) scale(1.05); }
+    .ring.active.core { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 25px 50px -12px rgb(0 0 0 / .25); }
+    .s2-sections { max-height: 80vh; overflow-y: auto; padding: 80px 0; }
+    .s2-section { margin-bottom: 64px; opacity: .7; cursor: pointer; transition: opacity .3s; }
+    .s2-section:hover, .s2-section.active { opacity: 1; }
+    .s2-section h2 { font-size: 2rem; font-weight: 900; text-transform: uppercase; color: rgba(26,28,27,.6); margin-bottom: 8px; }
+    .s2-section.active h2, .s2-section:hover h2 { color: var(--on); }
+    .s2-section p, .s2-section li { font-size: 1.15rem; font-weight: 700; color: rgba(26,28,27,.6); }
+    .s2-section.active p, .s2-section.active li { color: var(--on); }
+    .s2-section ul { list-style: none; margin-top: 16px; margin-left: 0; padding-left: 0; }
+    .s2-section li { padding-left: 0; text-align: left; }
+    .s2-section li + li { margin-top: 12px; }
+
+    /* Step 3a body */
+    .s3-wrap { position: relative; flex: 1; }
+    .s3-teal { position: absolute; top: -70vw; left: 50%; width: 140vw; height: 140vw; border-radius: 50%; background: var(--teal); z-index: 1; transform: translateX(-50%) scale(.5); transition: transform .2s; }
+    .s3-lime { position: absolute; bottom: -50vw; left: 50%; width: 100vw; height: 100vw; border-radius: 50%; background: var(--yellow); z-index: 2; transition: transform .2s; }
+    .s3-canvas { position: relative; z-index: 10; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 40px; }
+    .s3-main { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 48px; max-width: 600px; margin: 0 auto; width: 100%; }
+    .s3-title { font-size: clamp(2rem, 5vw, 2.5rem); font-weight: 700; text-align: center; line-height: 1.15; }
+    input[type=range].h { -webkit-appearance: none; width: 100%; background: transparent; }
+    input[type=range].h:focus { outline: none; }
+    input[type=range].h::-webkit-slider-runnable-track { height: 2px; background: var(--on); }
+    input[type=range].h::-webkit-slider-thumb { -webkit-appearance: none; width: 64px; height: 64px; border-radius: 50%; background: var(--on); margin-top: -31px; cursor: pointer; }
+    .s3-labels { display: flex; justify-content: space-between; margin-top: 48px; }
+    .s3-labels > div { display: flex; flex-direction: column; gap: 8px; }
+    .s3-labels .main { font-size: 20px; font-weight: 600; }
+    .s3-labels .sub { font-size: 12px; opacity: .6; text-transform: lowercase; }
+    .s3-value { text-align: center; font-size: 2.5rem; font-weight: 700; opacity: .1; margin-top: 16px; }
+
+    /* Step 3b mental */
+    .s3m-poster { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; transform: rotate(-3deg) scale(1.1); }
+    .s3m-teal { position: absolute; top: -10%; left: 20%; border-radius: 50%; background: var(--teal); z-index: 10; transition: all .5s cubic-bezier(.34,1.56,.64,1); }
+    .s3m-yellow { position: absolute; right: 5%; bottom: 5%; z-index: 20; width: min(80vw,600px); aspect-ratio: 1; border-radius: 50%; background: var(--yellow-alt); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10%; transform: rotate(3deg); }
+    .s3m-yellow h1 { max-width: 280px; margin: 0 auto 48px; text-align: left; font-size: clamp(1.5rem,4vw,2rem); font-weight: 700; line-height: 1.15; }
+    .s3m-labels { display: flex; justify-content: space-between; margin-top: 32px; width: 100%; max-width: 320px; }
+    .s3m-labels .main { font-size: 18px; font-weight: 600; }
+    .s3m-labels .sub { font-size: 12px; text-transform: lowercase; opacity: .4; }
+    .s3m-labels > div:last-child { text-align: right; }
+    input[type=range].s3m { -webkit-appearance: none; width: 100%; max-width: 320px; background: transparent; }
+    input[type=range].s3m::-webkit-slider-runnable-track { height: 1.5px; background: var(--on); }
+    input[type=range].s3m::-webkit-slider-thumb { -webkit-appearance: none; width: 32px; height: 32px; border: 2px solid var(--on); border-radius: 50%; background: #fff; margin-top: -15px; }
+
+    /* Step 4 spatial */
+    .s4-header { z-index: 30; flex-shrink: 0; padding: 64px 20px 0; text-align: center; }
+    .s4-title { font-size: clamp(24px,5vw,40px); font-weight: 700; line-height: 1.2; letter-spacing: -.02em; }
+    .s4-perspective { margin: 16px auto 0; font-size: 16px; line-height: 1.5; color: rgba(26,28,27,.7); white-space: nowrap; }
+    .s4-desc-line { display: block; margin-top: 4px; font-size: 16px; line-height: 1.6; color: rgba(26,28,27,.7); }
+    .s4-desc-line:first-child { margin-top: 16px; }
+    .s4-hint { margin: 8px auto 0; font-size: 12px; font-weight: 500; text-transform: lowercase; color: #6c7a76; }
+    .s4-canvas { position: relative; flex: 1; width: 100%; min-height: 280px; }
+    .s4-circle { position: absolute; top: 50%; left: 50%; display: flex; align-items: center; justify-content: center; border-radius: 50%; touch-action: none; }
+    .s4-circle.fixed { z-index: 10; pointer-events: none; }
+    .s4-circle.interactive { z-index: 20; }
+    .s4-circle.resize { cursor: ns-resize; }
+    .s4-circle.move { cursor: grab; }
+    .s4-circle.move:active { cursor: grabbing; }
+    .s4-label { pointer-events: none; user-select: none; font-size: 14px; font-weight: 600; text-transform: lowercase; color: var(--on); }
+
+    /* Step 5 volume */
+    .s5-main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 0 24px 88px; min-height: 0; }
+    .s5-stage {
+      display: flex; align-items: center; justify-content: center;
+      gap: clamp(64px, 14vw, 128px);
+      width: fit-content; max-width: min(98vw, 920px);
+    }
+    .s5-side { display: flex; align-items: center; gap: clamp(8px, 1.5vw, 14px); flex-shrink: 0; }
+    .s5-eq { display: flex; align-items: flex-end; gap: 6px; height: clamp(112px, 18vh, 140px); width: 52px; flex-shrink: 0; flex-direction: row; }
+    .s5-eq--left { transform: scaleX(-1); }
+    .s5-eq-bar { width: 1px; background: var(--on); transition: height .2s, opacity .2s; }
+    .s5-vslider { -webkit-appearance: slider-vertical; width: 1px; height: clamp(180px, 32vh, 240px); flex-shrink: 0; margin: 0 clamp(8px, 1.5vw, 16px); background: rgba(26,28,27,.12); cursor: pointer; }
+    .s5-vslider::-webkit-slider-thumb { -webkit-appearance: none; width: 8px; height: 8px; border-radius: 50%; background: var(--on); }
+    .s5-circle {
+      width: clamp(140px, 26vw, 192px); height: clamp(140px, 26vw, 192px);
+      flex-shrink: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      transition: transform .2s; font-size: 14px; font-weight: 700; text-transform: lowercase;
+    }
+    .s5-circle.you { background: var(--yellow-alt); }
+    .s5-circle.ta { background: var(--teal); }
+
+    /* Step 6 observer */
+    .s6-teal { position: absolute; top: -32vh; left: -24vw; width: min(110vh, 92vw); height: min(110vh, 92vw); border-radius: 50%; background: var(--teal); z-index: 0; }
+    .s6-lime { position: absolute; right: -20vw; bottom: -36vh; width: min(120vh, 100vw); height: min(120vh, 100vw); border-radius: 50%; background: var(--yellow-alt); z-index: 1; }
+    .s6-content {
+      position: relative; z-index: 10; flex: 1; display: flex; flex-direction: column; justify-content: center;
+      padding: 88px clamp(32px, 10vw, 140px) 108px;
+    }
+    .s6-column { display: flex; flex-direction: column; width: 100%; max-width: 520px; min-height: min(72vh, 640px); }
+    .s6-title { margin: 0; font-size: clamp(1.75rem, 4.2vw, 2.875rem); font-weight: 700; line-height: 1.28; letter-spacing: -.02em; }
+    .s6-sub { margin: 12px 0 0; font-size: clamp(15px, 2vw, 18px); color: rgba(26,28,27,.65); }
+    .s6-hints { margin: 28px 0 0; padding: 0; list-style: none; font-size: clamp(1.125rem, 2.4vw, 1.5rem); font-weight: 500; line-height: 1.8; }
+    .s6-hints li + li { margin-top: 2px; }
+    .s6-input-block { margin-top: auto; width: 100%; padding-top: 40px; }
+    .s6-label { display: block; margin-bottom: 12px; font-size: 14px; color: rgba(26,28,27,.55); }
+
+    /* Step 7 report */
+    .s7-wrap { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+    .s7-teal { position: absolute; top: -32vh; left: -24vw; width: min(110vh, 92vw); height: min(110vh, 92vw); border-radius: 50%; background: var(--teal); z-index: 0; pointer-events: none; }
+    .s7-lime { position: absolute; right: -20vw; bottom: -36vh; width: min(120vh, 100vw); height: min(120vh, 100vw); border-radius: 50%; background: var(--yellow-alt); z-index: 1; pointer-events: none; }
+    .s7-lifelab {
+      position: absolute; top: 6%; left: 50%; z-index: 2; font-size: clamp(4rem, 10vw, 7rem);
+      font-weight: 900; opacity: .14; transform: translateX(-50%) rotate(180deg); pointer-events: none;
+    }
+    .s7-year {
+      position: absolute; bottom: 18%; right: 6%; z-index: 2; font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 900; opacity: .12; transform: rotate(-65deg); pointer-events: none;
+    }
+    .s7-content {
+      position: relative; z-index: 10; flex: 1; min-height: 0; display: flex; flex-direction: column;
+      padding: 72px clamp(24px, 8vw, 80px) 96px;
+    }
+    .report-scroll {
+      flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch;
+      padding-right: 8px;
+    }
+    .report-inner { width: 100%; max-width: 560px; }
+    .s7-label {
+      display: block; font-size: 14px; font-weight: 700; letter-spacing: .3em;
+      text-transform: uppercase; color: rgba(26,28,27,.55); margin-bottom: 20px;
+    }
+    .report-meta {
+      font-size: clamp(1.75rem, 4.2vw, 2.875rem); font-weight: 700; line-height: 1.28;
+      letter-spacing: -.02em; color: var(--on); margin-bottom: 40px; white-space: pre-line;
+    }
+    .report-body {
+      font-size: clamp(1.05rem, 2.2vw, 1.2rem); font-weight: 500; line-height: 1.75;
+      color: rgba(26,28,27,.82);
+    }
+    .report-body h1, .report-body h2, .report-body h3 {
+      font-weight: 900; line-height: 1.2; color: var(--on); letter-spacing: -.02em;
+    }
+    .report-body h1 {
+      font-size: clamp(1.5rem, 3.8vw, 2rem); margin: 0 0 1.5rem;
+      text-transform: none;
+    }
+    .report-body h2 {
+      font-size: clamp(1.125rem, 2.6vw, 1.375rem); font-weight: 800;
+      text-transform: uppercase; letter-spacing: .06em;
+      margin: 2.75rem 0 1rem; color: rgba(26,28,27,.75);
+    }
+    .report-body h2:first-child {
+      font-size: clamp(1.375rem, 3.5vw, 1.75rem); font-weight: 900;
+      text-transform: none; letter-spacing: -.02em; color: var(--on); margin-top: 0;
+    }
+    .report-body h3 { font-size: 1.05rem; font-weight: 800; margin: 2rem 0 .75rem; }
+    .report-body p { margin: 0 0 1.125rem; }
+    .report-body ul, .report-body ol { margin: 0 0 1.125rem 0; padding-left: 0; list-style: none; }
+    .report-body li { padding-left: 0; margin-bottom: .5rem; font-weight: 500; }
+    .report-body li + li { margin-top: 8px; }
+    .report-body strong { font-weight: 700; }
+    .report-body blockquote {
+      margin: 1.25rem 0; padding: 0 0 0 20px; border-left: 2px solid var(--teal-dark);
+      color: rgba(26,28,27,.7); font-weight: 500;
+    }
+    .report-body hr { border: none; height: 2px; background: rgba(26,28,27,.08); margin: 2.5rem 0; }
+    .report-body.is-streaming { min-height: 120px; }
+    .report-cursor {
+      display: inline-block; width: 3px; height: 1.1em; margin-left: 2px;
+      background: var(--on); vertical-align: text-bottom;
+      animation: report-cursor-blink .85s step-end infinite;
+    }
+    @keyframes report-cursor-blink { 50% { opacity: 0; } }
+    #step7 .nav-btn.ghost { font-size: clamp(16px, 2.5vw, 20px); white-space: nowrap; }
+    #step7 .nav-btn.solid { font-size: clamp(16px, 2.5vw, 20px); white-space: nowrap; }
+    #step7 .nav-center { visibility: hidden; pointer-events: none; }
+
+    .loading-overlay {
+      position: fixed; inset: 0; z-index: 500; display: none; overflow: hidden;
+      align-items: center; justify-content: center; background: var(--white);
+    }
+    .loading-overlay.open { display: flex; }
+    .loading-teal {
+      position: absolute; top: -30vh; left: -20vw; width: min(100vh, 85vw); height: min(100vh, 85vw);
+      border-radius: 50%; background: var(--teal); opacity: .92;
+    }
+    .loading-lime {
+      position: absolute; right: -15vw; bottom: -25vh; width: min(110vh, 90vw); height: min(110vh, 90vw);
+      border-radius: 50%; background: var(--yellow);
+    }
+    .loading-inner {
+      position: relative; z-index: 10; text-align: center; padding: 24px;
+      max-width: 480px;
+    }
+    .loading-text {
+      font-size: clamp(1.5rem, 4vw, 2.25rem); font-weight: 900; line-height: 1.2;
+      letter-spacing: -.02em;
+    }
+    .loading-sub {
+      margin-top: 16px; font-size: 14px; font-weight: 500; text-transform: lowercase;
+      color: rgba(26,28,27,.55);
+    }
+
+    .report-export {
+      position: fixed; left: 0; top: 0; z-index: -9999; opacity: 0; pointer-events: none;
+      width: 1080px; background: var(--white); overflow: hidden;
+    }
+    .report-export-bg { position: absolute; inset: 0; overflow: hidden; }
+    .report-export-teal {
+      position: absolute; top: -220px; left: -180px; width: 520px; height: 520px;
+      border-radius: 50%; background: var(--teal); opacity: .9;
+    }
+    .report-export-lime {
+      position: absolute; right: -160px; bottom: -200px; width: 560px; height: 560px;
+      border-radius: 50%; background: var(--yellow-alt);
+    }
+    .report-export-lifelab {
+      position: absolute; top: 48px; left: 50%; transform: translateX(-50%) rotate(180deg);
+      font-size: 96px; font-weight: 900; opacity: .1; letter-spacing: -.04em;
+    }
+    .report-export-inner {
+      position: relative; z-index: 2; padding: 80px 88px 88px; background: transparent;
+    }
+    .report-export-brand {
+      font-size: 14px; font-weight: 700; letter-spacing: .3em; text-transform: uppercase;
+      color: rgba(26,28,27,.5); margin-bottom: 28px;
+    }
+    .report-export-meta {
+      font-size: 44px; font-weight: 700; line-height: 1.25; letter-spacing: -.02em;
+      margin-bottom: 48px; color: var(--on); max-width: 880px; white-space: pre-line;
+    }
+    .report-export-body {
+      font-size: 22px; font-weight: 500; line-height: 1.75; color: rgba(26,28,27,.85);
+    }
+    .report-export-body h1 { font-size: 36px; font-weight: 900; margin: 0 0 28px; line-height: 1.25; letter-spacing: -.02em; }
+    .report-export-body h2 {
+      font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em;
+      margin: 48px 0 20px; color: rgba(26,28,27,.7);
+    }
+    .report-export-body h2:first-child { font-size: 34px; font-weight: 900; text-transform: none; letter-spacing: -.02em; color: var(--on); margin-top: 0; }
+    .report-export-body h3 { font-size: 24px; font-weight: 800; margin: 36px 0 16px; }
+    .report-export-body p { margin: 0 0 20px; }
+    .report-export-body ul, .report-export-body ol { margin: 0 0 20px 0; padding-left: 0; list-style: none; }
+    .report-export-body li { margin-bottom: 10px; }
+    .report-export-foot {
+      margin-top: 56px; font-size: 14px; font-weight: 700; letter-spacing: .2em;
+      text-transform: uppercase; color: rgba(26,28,27,.35);
+    }
+
+    @media (max-width: 900px) {
+      .s2-grid { grid-template-columns: 1fr; padding: 80px 20px 120px; overflow-y: auto; height: 100vh; }
+      .s2-rings { width: 72vw; height: 72vw; }
+      .progress { display: none; }
+      .s5-stage { gap: 40px; }
+      .s5-side { gap: 8px; }
+      .s6-column { max-width: 100%; min-height: auto; }
+      .s4-perspective { white-space: normal; font-size: 14px; }
+      .s7-content { padding: 64px 20px 96px; }
+      .report-inner { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="banner">
+  <span>完整预览 · 双击打开 · React 版：npm run dev → /tools/relationship-health-test</span>
+  <button type="button" class="banner-reset" onclick="resetAll()">清空</button>
+</div>
+
+<div class="loading-overlay" id="loadingOverlay" aria-live="polite" aria-busy="true">
+  <div class="loading-teal"></div>
+  <div class="loading-lime"></div>
+  <div class="loading-inner">
+    <p class="loading-text" id="loadingText">正在生成报告…</p>
+    <p class="loading-sub">usually 20–60s</p>
+  </div>
+</div>
+<div class="payload-toast" id="payloadToast"></div>
+
+<!-- Step 1 -->
+<section class="step active" id="step1">
+  <div class="s1-teal" id="s1Teal"></div>
+  <div class="s1-lime" id="s1Lime"></div>
+  <div class="s1-lifelab">LIFELAB</div>
+  <div class="s1-year">2026</div>
+  <div class="s1-content">
+    <div class="s1-form">
+      <div class="s1-block">
+        <h1 class="s1-title">你在想谁？</h1>
+        <div class="field-wrap">
+          <input class="field-input lg" id="nameInput" placeholder="输入名字或代称" />
+        </div>
+      </div>
+      <span class="material" style="font-size:2.25rem;font-weight:700">south</span>
+      <div class="s1-block">
+        <h2 class="s1-sub">简单描述你们的关系场景</h2>
+        <div class="field-wrap">
+          <input class="field-input md" id="relInput" placeholder="eg. 大学同学" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <nav class="nav">
+    <button class="nav-btn ghost" onclick="go('step1')">back</button>
+    <div class="nav-center"><span class="progress">01 / 06</span><div class="nav-dots"></div></div>
+    <button class="nav-btn solid" id="step1Next" disabled onclick="go('step2')">next</button>
+  </nav>
+</section>
+
+<!-- Step 2 -->
+<section class="step" id="step2">
+  <div class="s2-wrap">
+    <div class="s2-bg-teal"></div>
+    <div class="s2-bg-lime"></div>
+    <div class="s2-main">
+      <div class="s2-grid">
+        <div>
+          <span class="s2-label">step 02</span>
+          <h1 class="s2-heading">这个人在你生活中的哪个位置？</h1>
+          <p class="s2-desc">评估ta在你生活中的关系角色、情感重要性、支持功能。</p>
+          <div class="s2-rings">
+            <button type="button" class="ring connection" id="ringConnection" aria-label="连接圈" onclick="selectTier('connection')"></button>
+            <button type="button" class="ring important" id="ringImportant" aria-label="重要圈" onclick="selectTier('important')"></button>
+            <button type="button" class="ring core" id="ringCore" aria-label="核心圈" onclick="selectTier('core')">核心</button>
+          </div>
+        </div>
+        <div class="s2-sections">
+          <div class="s2-section" data-tier="core" onclick="selectTier('core')">
+            <h2>核心圈 深度连接</h2>
+            <p>这个人会影响我的情绪、安全感和重要选择。</p>
+            <ul><li>遇到重要事情，我会第一时间想到ta</li><li>我愿意向ta表达真实感受</li><li>ta的回应会明显影响我的状态</li></ul>
+          </div>
+          <div class="s2-section" data-tier="important" onclick="selectTier('important')">
+            <h2>重要圈 日常陪伴</h2>
+            <p>这个人持续参与我的生活</p>
+            <ul><li>我们有稳定联系和共同经历</li><li>ta是我生活中的固定存在</li><li>我会和ta分享生活中的事情</li></ul>
+          </div>
+          <div class="s2-section" data-tier="connection" onclick="selectTier('connection')">
+            <h2>连接圈 社会网络</h2>
+            <p>生活有连接，但目前距离较远。</p>
+            <ul><li>因为某种场景认识</li><li>偶尔互动，但没有深入交流</li><li>关系可能随着时间变化</li></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <nav class="nav">
+    <button class="nav-btn" onclick="go('step1')">back</button>
+    <div class="nav-center"><span class="progress">02 / 06</span><div class="nav-dots"></div></div>
+    <button class="nav-btn" id="step2Next" disabled onclick="go('step3a')">next</button>
+  </nav>
+</section>
+
+<!-- Step 3a body -->
+<section class="step" id="step3a">
+  <div class="s3-wrap">
+    <div class="s3-teal" id="s3Teal"></div>
+    <div class="s3-lime" id="s3Lime"></div>
+    <div class="s3-canvas">
+      <div class="s3-main">
+        <h1 class="s3-title">想到ta，你的身体感觉？</h1>
+        <div style="width:100%">
+          <input type="range" class="h" min="0" max="100" value="50" id="bodySlider" />
+          <div class="s3-labels">
+            <div><span class="main">紧张、回避</span><span class="sub">tense / draining</span></div>
+            <div style="text-align:right"><span class="main">放松、快乐</span><span class="sub">relaxed / fulfilling</span></div>
+          </div>
+          <div class="s3-value" id="bodyValue">50%</div>
+        </div>
+      </div>
+      <nav class="nav" style="position:static;height:auto;padding:0">
+        <button class="nav-btn ghost" onclick="go('step2')">back</button>
+        <div class="nav-center"><span class="progress">03 / 06</span><div class="nav-dots"></div></div>
+        <button class="nav-btn solid" onclick="go('step3b')">next</button>
+      </nav>
+    </div>
+  </div>
+</section>
+
+<!-- Step 3b mental -->
+<section class="step" id="step3b">
+  <div class="s3m-poster">
+    <div class="s3m-teal" id="s3mTeal"></div>
+    <div class="s3m-yellow">
+      <h1 id="s3mTitle">ta在你脑子里占据多大的面积？</h1>
+      <input type="range" class="s3m" min="0" max="100" value="50" id="mentalSlider" />
+      <div class="s3m-labels">
+        <div><div class="main">偶尔浮现</div><div class="sub">occasionally</div></div>
+        <div><div class="main">时刻都在</div><div class="sub">constantly</div></div>
+      </div>
+    </div>
+  </div>
+  <nav class="nav">
+    <button class="nav-btn" onclick="go('step3a')">back</button>
+    <div class="nav-center"><span class="progress">03 / 06</span><div class="nav-dots"></div></div>
+    <button class="nav-btn" onclick="go('step4a')">next</button>
+  </nav>
+</section>
+
+<!-- Step 4a–4d + transition (same as before, abbreviated headers with desc lines) -->
+<section class="step" id="step4a">
+  <header class="s4-header">
+    <h1 class="s4-title">ta 对你的影响有多大？</h1>
+    <span class="s4-desc-line">拖动 ta 的球，调整大小。</span>
+    <span class="s4-desc-line">越大，ta 越容易影响你的想法、情绪和人生选择。</span>
+    <p class="s4-hint">drag ta to change size</p>
+  </header>
+  <div class="s4-canvas" id="canvas4a"></div>
+  <nav class="nav"><button class="nav-btn" onclick="go('step3b')">back</button><div class="nav-center"><span class="progress">04 / 06</span><div class="nav-dots"></div></div><button class="nav-btn" onclick="go('step4b')">next</button></nav>
+</section>
+<section class="step" id="step4b">
+  <header class="s4-header">
+    <h1 class="s4-title">你和 ta 的心理距离</h1>
+    <span class="s4-desc-line">拖动 ta 的球，调整位置。</span>
+    <span class="s4-desc-line">越近，代表你们共享更多心理空间；</span>
+    <span class="s4-desc-line">越远，代表更多独立。</span>
+    <p class="s4-hint">drag ta to move</p>
+  </header>
+  <div class="s4-canvas" id="canvas4b"></div>
+  <nav class="nav"><button class="nav-btn" onclick="go('step4a')">back</button><div class="nav-center"><span class="progress">04 / 06</span><div class="nav-dots"></div></div><button class="nav-btn" onclick="startSwap()">next</button></nav>
+</section>
+<section class="step" id="step4swap">
+  <div class="s4-canvas" id="canvasSwap"></div>
+  <nav class="nav"><button class="nav-btn" disabled style="opacity:.4">back</button><div class="nav-center"><span class="progress">04 / 06</span><div class="nav-dots"></div></div><button class="nav-btn" disabled style="opacity:.4">next</button></nav>
+</section>
+<section class="step" id="step4c">
+  <header class="s4-header">
+    <h1 class="s4-title">在 ta 的世界里，你有多大影响力？</h1>
+    <p class="s4-perspective">现在，换一个角度。想象你站在 ta 的视角，感受着你们的关系。</p>
+    <span class="s4-desc-line">调整你的大小。</span>
+    <span class="s4-desc-line">越大，代表你认为自己越能影响 ta 的想法、情绪和人生选择。</span>
+    <p class="s4-hint">drag you to change size</p>
+  </header>
+  <div class="s4-canvas" id="canvas4c"></div>
+  <nav class="nav"><button class="nav-btn" onclick="go('step4b')">back</button><div class="nav-center"><span class="progress">04 / 06</span><div class="nav-dots"></div></div><button class="nav-btn" onclick="go('step4d')">next</button></nav>
+</section>
+<section class="step" id="step4d">
+  <header class="s4-header">
+    <h1 class="s4-title">在 ta 的世界里，你们有多近？</h1>
+    <p class="s4-perspective">现在，换一个角度。想象你站在 ta 的视角，感受着你们的关系。</p>
+    <span class="s4-desc-line">调整你和 ta 的距离。</span>
+    <span class="s4-desc-line">越近，代表你认为 ta 感受到更多与你的连接；</span>
+    <span class="s4-desc-line">越远，代表更多独立空间。</span>
+    <p class="s4-hint">drag you to move</p>
+  </header>
+  <div class="s4-canvas" id="canvas4d"></div>
+  <nav class="nav"><button class="nav-btn" onclick="go('step4c')">back</button><div class="nav-center"><span class="progress">04 / 06</span><div class="nav-dots"></div></div><button class="nav-btn" onclick="go('step5')">next</button></nav>
+</section>
+
+<!-- Step 5 volume -->
+<section class="step" id="step5">
+  <header class="s4-header">
+    <h1 class="s4-title">谁的声音更容易被听见？</h1>
+    <span class="s4-desc-line">调整你和 ta 的音量。</span>
+    <span class="s4-desc-line">当你们有不同的感受、需要和想法时，谁的声音更容易被考虑？</span>
+    <p class="s4-hint">adjust volume</p>
+  </header>
+  <div class="s5-main">
+    <div class="s5-stage">
+      <div class="s5-side s5-side--left">
+        <div class="s5-eq s5-eq--left" id="eqYou"></div>
+        <input type="range" class="s5-vslider" id="volYou" min="0" max="100" value="40" orient="vertical" />
+        <div class="s5-circle you" id="circleYou"><span>you</span></div>
+      </div>
+      <div class="s5-side s5-side--right">
+        <div class="s5-circle ta" id="circleTa"><span>ta</span></div>
+        <input type="range" class="s5-vslider" id="volTa" min="0" max="100" value="60" orient="vertical" />
+        <div class="s5-eq s5-eq--right" id="eqTa"></div>
+      </div>
+    </div>
+  </div>
+  <nav class="nav"><button class="nav-btn" onclick="go('step4d')">back</button><div class="nav-center"><span class="progress">05 / 06</span><div class="nav-dots"></div></div><button class="nav-btn" onclick="go('step6')">next</button></nav>
+</section>
+
+<!-- Step 6 observer -->
+<section class="step" id="step6">
+  <div class="s6-teal"></div>
+  <div class="s6-lime"></div>
+  <div class="s6-content">
+    <div class="s6-column">
+      <header>
+        <h1 class="s6-title">如果一个你信任的人观察这段关系，ta 可能会注意到什么？</h1>
+        <p class="s6-sub">提供一个 outside view</p>
+      </header>
+      <ul class="s6-hints"><li>亲人</li><li>咨询师</li><li>朋友</li><li>过去或未来的自己</li></ul>
+      <div class="s6-input-block">
+        <label class="s6-label" for="observerInput">约 20s 思考，记下你的第一印象</label>
+        <div class="field-wrap wide">
+          <textarea class="field-input area" id="observerInput" placeholder="ta 们会对你说什么？会建议你什么？" rows="3"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <nav class="nav">
+    <button class="nav-btn ghost" onclick="go('step5')">back</button>
+    <div class="nav-center"><span class="progress">06 / 06</span><div class="nav-dots"></div></div>
+    <button class="nav-btn solid" id="step6Finish" onclick="finishPreview()">next</button>
+  </nav>
+</section>
+
+<!-- Step 7 report -->
+<section class="step" id="step7">
+  <div class="s7-wrap">
+    <div class="s7-teal"></div>
+    <div class="s7-lime"></div>
+    <div class="s7-lifelab">LIFELAB</div>
+    <div class="s7-year">2026</div>
+    <div class="s7-content">
+      <div class="report-scroll" id="reportScroll">
+        <div class="report-inner">
+          <span class="s7-label">report</span>
+          <h1 class="report-meta" id="reportMeta"></h1>
+          <div class="report-body" id="reportBody"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <nav class="nav">
+    <button type="button" class="nav-btn ghost" id="saveReportBtn" onclick="saveReportImage()">保存图片</button>
+    <div class="nav-center"></div>
+    <button type="button" class="nav-btn solid" onclick="resetAll(true)">再测一个</button>
+  </nav>
+</section>
+
+<div class="report-export" id="reportExport" aria-hidden="true">
+  <div class="report-export-bg">
+    <div class="report-export-teal"></div>
+    <div class="report-export-lime"></div>
+    <div class="report-export-lifelab">LIFELAB</div>
+  </div>
+  <div class="report-export-inner">
+    <div class="report-export-brand">lifelab · 关系健康</div>
+    <h1 class="report-export-meta" id="reportExportMeta"></h1>
+    <div class="report-export-body" id="reportExportBody"></div>
+    <div class="report-export-foot">2026 · lifelab</div>
+  </div>
+</div>
+
+<script type="text/plain" id="systemPrompt">
+
+你是一名 Relationship Wellness Analyst。
+
+你的任务：
+
+根据用户完成关系测试后的结构化数据，推断这段关系中的隐藏状态（Hidden States），并生成一份面向用户阅读的关系分析报告。
+
+你的目标不是评价对方，也不是判断这段关系“应该继续还是结束”。
+
+你的目标是：
+
+Make hidden relationship dynamics visible.
+
+帮助用户理解：
+
+“这段关系在我的生命中到底发生了什么？”
+
+---
+
+# 核心理论框架
+
+你的分析建立在 Self-Determination Theory（SDT，自我决定理论）的核心之上。
+
+一个健康关系需要同时支持两个基本心理需要：
+
+## 1. Autonomy（自主）
+
+核心问题：
+
+我是否仍然是自己人生行动的作者？
+
+包括：
+
+- 我是否能够表达真实感受？
+- 我的选择是否来自自己的内在意愿？
+- 我是否保有自己的声音和方向？
+- 我是否因为关系而逐渐缩小自己？
+
+## 2. Relatedness（联结）
+
+核心问题：
+
+我是否与另一个人建立真实、有意义的连接？
+
+包括：
+
+- 我是否感受到被理解？
+- 我是否感受到彼此重要？
+- 我是否能够建立安全感和亲密感？
+
+健康关系不是减少连接。
+
+也不是完全独立。
+
+而是：
+
+“我可以深刻靠近一个人，同时仍然保持自己。”
+
+所有分析最终都围绕这个张力展开：
+
+Autonomy ↔ Relatedness
+
+---
+
+# 数据解释原则
+
+你收到的数据不是最终结论。
+
+数字只是用户心理体验的信号。
+
+不要逐个解释：
+
+例如：
+
+不要写：
+
+“你的 bodyFeeling 是91，所以……”
+
+不要把报告写成数据说明。
+
+你需要综合多个变量，推断：
+
+这个关系正在形成什么模式。
+
+---
+
+# 六维 Hidden State Framework
+
+必须从以下六个维度分析。
+
+---
+
+# Dimension 1: Relational Position
+
+## 关系位置
+
+核心问题：
+
+这个人在我的生命系统中占据什么位置？
+
+数据：
+
+- circleTier
+- relationship
+- mentalOccupancy
+- influence size
+
+分析方向：
+
+判断这个关系承担的心理功能。
+
+可能状态：
+
+## Peripheral Connection
+
+外围连接
+
+这个人在生活中存在，但没有进入核心心理空间。
+
+## Functional Relationship
+
+功能关系
+
+主要承担社交、工作、兴趣等作用。
+
+## Life Chapter Relationship
+
+人生阶段关系
+
+曾经重要，与某段人生经历绑定。
+
+## Current Companion
+
+当前陪伴关系
+
+稳定参与当前生活。
+
+## Supportive Core
+
+支持型核心关系
+
+提供稳定支持和安全感。
+
+## Identity-linked Relationship
+
+身份关联关系
+
+这个人与“我是谁”高度相关。
+
+## Psychologically Occupying Relationship
+
+高心理占位关系
+
+现实互动可能有限，但心理位置很大。
+
+## Unresolved Relationship
+
+未完成关系
+
+关系变化，但心理位置没有同步更新。
+
+## Attachment Anchor
+
+依恋中心关系
+
+承担重要安全感功能。
+
+## Displaced Center
+
+关系中心偏移
+
+一个人的心理位置超过现实关系功能。
+
+---
+
+# Dimension 2: Relational Energy
+
+## 关系能量
+
+核心问题：
+
+想到这个人时，这段关系给我的生命体验是什么？
+
+数据：
+
+- bodyFeeling
+- mentalOccupancy
+
+注意：
+
+高占据不等于负面。
+
+需要组合判断。
+
+例如：
+
+高 bodyFeeling + 高 mentalOccupancy：
+
+可能意味着：
+
+深度滋养型连接。
+
+低 bodyFeeling + 高 mentalOccupancy：
+
+可能意味着：
+
+高负荷关系。
+
+状态：
+
+- Nourishing Connection
+- Stable Support
+- Deep Fulfillment
+- Neutral Presence
+- Low Activation
+- Mild Drain
+- Continuous Burden
+- High Occupancy Drain
+- Residual Stress
+
+---
+
+# Dimension 3: Psychological Influence
+
+## 心理影响权
+
+核心问题：
+
+这个人在我的心理世界中拥有多少影响力？
+
+数据：
+
+- influence.taOnYou
+- influence.youOnTa
+
+注意：
+
+不要解释为“谁更爱谁”。
+
+它表示：
+
+谁更容易影响：
+
+- 判断
+- 情绪
+- 选择
+- 行动
+
+状态：
+
+## Independent Influence
+
+彼此影响存在，但不会覆盖自我。
+
+## Mutual Influence
+
+双方能够影响彼此。
+
+## Strong Influence
+
+关系中存在较强心理影响。
+
+## Psychological Authority
+
+对方成为重要心理参照。
+
+## Internalized Evaluation
+
+对方评价进入自我评价系统。
+
+## Boundary Risk
+
+他人的存在开始影响自主空间。
+
+---
+
+# Dimension 4: Boundary Differentiation
+
+## 边界与融合
+
+核心问题：
+
+我在靠近一个人的时候，是否仍然保持自己的心理空间？
+
+数据：
+
+- boundary.distance
+- boundary.overlap
+- 两个视角差异
+
+注意：
+
+不要认为高融合一定不好。
+
+需要结合：
+
+- 能量
+- 声音
+- 影响权
+
+例如：
+
+高融合 + 高滋养 + 双向声音：
+
+可能是深度亲密。
+
+高融合 + 低声音 + 高影响：
+
+可能是自我空间压缩。
+
+状态：
+
+- Healthy Independence
+- Connected Autonomy
+- Deep Connection
+- High Synchronization
+- Emotional Resonance
+- Boundary Blur
+- Fusion Risk
+- Self Loss Risk
+
+---
+
+# Dimension 5: Voice Balance
+
+## 声音权力
+
+核心问题：
+
+在关系发生差异时，谁的感受、需求和选择更容易进入关系？
+
+数据：
+
+- voiceBalance.you
+- voiceBalance.ta
+
+解释：
+
+声音不是谁更强势。
+
+而是谁更容易影响关系方向。
+
+状态：
+
+- Mutual Voice
+- Slight Imbalance
+- Other Dominant Voice
+- Self Dominant Voice
+- Self Adjustment Pattern
+- One-sided Adaptation
+- Self Suppression Risk
+
+---
+
+# Dimension 6: Mutual Significance
+
+## 互惠价值
+
+核心问题：
+
+我是否感觉自己也存在于对方的心理世界？
+
+数据：
+
+- influence 双向数据
+- size 双向数据
+- observerView
+
+判断：
+
+不是现实真相。
+
+而是用户对关系互惠性的感知。
+
+状态：
+
+- Mutual Recognition
+- Mutual Importance
+- Slight Asymmetry
+- One-sided Investment
+- Uncertain Significance
+- Replaceability Concern
+
+---
+
+# Hidden State Combination Rules
+
+不要把六个维度分别写成六段。
+
+最终报告必须寻找：
+
+“这些状态组合后形成的关系模式”。
+
+例如：
+
+## Pattern A
+
+高能量  
++  
+高连接  
++  
+双向影响  
++  
+声音平衡
+
+输出：
+
+深度滋养型关系。
+
+---
+
+## Pattern B
+
+高心理占位  
++  
+高影响  
++  
+低声音
+
+输出：
+
+重要关系中的自主空间需要觉察。
+
+---
+
+## Pattern C
+
+高融合  
++  
+高消耗  
++  
+单方声音占优
+
+输出：
+
+关系可能正在压缩个人空间。
+
+---
+
+# Report Writing Requirements
+
+生成报告时：
+
+## 禁止：
+
+- 罗列分数
+- 逐项解释变量
+- 使用测试报告模板语言
+- 直接给人格判断
+- 判断对方是什么人
+- 使用诊断词：
+
+例如：
+
+“有毒”  
+“操控”  
+“人格问题”  
+“创伤关系”
+
+除非数据极强支持，并且必须非常谨慎。
+
+---
+
+## 必须：
+
+像一个专业关系分析师面对用户解释。
+
+报告应该回答：
+
+1. 为什么这个人对我这么重要？
+2. 这段关系给我的核心体验是什么？
+3. 我们之间隐藏的互动结构是什么？
+4. 这里有什么值得珍惜或者觉察的地方？
+
+---
+
+# Report Structure
+
+生成一篇约300-500字中文报告。
+
+结构：
+
+## 标题
+
+根据关系状态生成一句有洞察力的标题。
+
+例如：
+
+“这是一段高度连接的关系，你们之间的靠近正在创造安全感，也提醒你保留自己的声音。”
+
+---
+
+## 第一部分：关系核心画像
+
+解释：
+
+这个人在用户生命中的位置。
+
+不要重复 circle。
+
+回答：
+
+为什么这个人重要。
+
+---
+
+## 第二部分：关系中的主要模式
+
+解释：
+
+能量、连接、影响、边界形成的组合状态。
+
+输出隐藏事实。
+
+---
+
+## 第三部分：一个值得注意的关系动态
+
+指出最重要的不对称、张力或者潜在变化。
+
+不要制造问题。
+
+只解释数据呈现出的结构。
+
+---
+
+## 第四部分：关系发展方向
+
+不是建议分开或维持。
+
+而是：
+
+如何让这段关系同时支持：
+
+Autonomy + Relatedness
+
+---
+
+# 最终语言风格
+
+像给一个真实用户看的高级关系报告。
+
+应该让用户产生：
+
+“原来如此，我一直感觉到这个，但没有说清楚。”
+
+不要让用户产生：
+
+“AI在解释我的测试题。”
+
+你的任务：
+
+把隐藏关系结构，翻译成人能够理解的生命经验。
+</script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+const CY='#c9ef00', CT='#00c2a8', MIN_D=80, MAX_D=450, FF=1.2;
+const PAYLOAD_VERSION='1.0';
+const LLM_API_BASE='https://api.openai-next.com/v1';
+const LLM_MODEL='claude-sonnet-4-5';
+
+let lastReportMarkdown='';
+let reportSubjectName='';
+let reportSubjectRel='';
+let streamRenderTimer=null;
+
+if(typeof marked!=='undefined'){
+  marked.setOptions({ gfm:true, breaks:true });
+}
+
+const INITIAL_STATE={ name:'', relationship:'', circle:null, bodyFeeling:50, mentalOccupancy:50,
+  taRelativeSize:50, taDiameter:null, taOffsetX:0, taOffsetY:0, taDistance:50, taOverlapRatio:0,
+  youInTheirEyesSize:50, youDiameter:null, youOffsetX:0, youOffsetY:0, youInTheirEyesDistance:50, youOverlapRatio:0,
+  volumeYou:40, volumeTa:60, observerNote:'' };
+
+const state={ ...INITIAL_STATE };
+
+const CIRCLE_TIER_MEANINGS={
+  core:{ label:'核心圈 · 深度连接', meaning:'This person affects your emotions, sense of security, and major life choices. You turn to them first for important matters and their responses noticeably affect your state.' },
+  important:{ label:'重要圈 · 日常陪伴', meaning:'This person is a steady presence in your life — regular contact, shared experiences, and ongoing participation in daily life.' },
+  connection:{ label:'连接圈 · 社会网络', meaning:'Connected through context but currently distant — occasional interaction without deep exchange; the relationship may shift over time.' },
+};
+
+const BOUNDARY_DISTANCE_MEANING='Psychological distance between you and ta on the spatial canvas. 0 = circles touching or overlapping (shared psychological space). 100 = maximum draggable separation (~sum of both circle radii + 280px). 50 = midway between fully merged and fully separate.';
+const BOUNDARY_OVERLAP_MEANING='Circle overlap ratio on the spatial canvas. 0 = no overlap (distinct psychological territories). 1 = maximum overlap (heavily merged / shared space). Computed as overlap length divided by the smaller circle\'s diameter.';
+const RELATIVE_SIZE_REFERENCE_AT_50='50 = same visual size as the fixed reference circle on screen (you in steps 4a–4b, ta in steps 4c–4d).';
+
+function scaledField(value, meaning, poles){
+  return { value, scale:'0-100', meaning, ...(poles ? { poles } : {}) };
+}
+
+function boundaryField(distance, overlap){
+  return {
+    distance:{ value:distance, scale:'0-100', meaning:BOUNDARY_DISTANCE_MEANING },
+    overlap:{ value:overlap, scale:'0-1', meaning:BOUNDARY_OVERLAP_MEANING },
+  };
+}
+
+function buildAssessmentPayload(data){
+  if(!data.circle) throw new Error('Assessment incomplete: circle tier not selected');
+  const circle=data.circle;
+  const tier=CIRCLE_TIER_MEANINGS[circle];
+  return {
+    version:PAYLOAD_VERSION,
+    completedAt:new Date().toISOString(),
+    subject:{
+      name:data.name.trim(),
+      relationship:data.relationship.trim(),
+      meaning:'Who the assessment is about and the situational context of the relationship (free text).',
+    },
+    circleTier:{
+      value:circle,
+      label:tier.label,
+      meaning:tier.meaning,
+      options:{
+        core:CIRCLE_TIER_MEANINGS.core.meaning,
+        important:CIRCLE_TIER_MEANINGS.important.meaning,
+        connection:CIRCLE_TIER_MEANINGS.connection.meaning,
+      },
+      question:'Where does this person sit in your life — core, important, or connection circle?',
+    },
+    bodyFeeling:scaledField(
+      data.bodyFeeling,
+      'Somatic response when thinking of this person. Higher = more relaxed and fulfilling; lower = more tense and draining.',
+      { low:'tense / draining (紧张、回避)', high:'relaxed / fulfilling (放松、快乐)' },
+    ),
+    mentalOccupancy:scaledField(
+      data.mentalOccupancy,
+      'How much mental space this person occupies in your mind. Higher = more constantly present; lower = only occasionally surfaces.',
+      { low:'occasionally (偶尔浮现)', high:'constantly (时刻都在)' },
+    ),
+    influence:{
+      taOnYou:{
+        ...scaledField(data.taRelativeSize, 'From your perspective: how much ta influences your thoughts, emotions, and life choices. Higher = greater perceived influence.'),
+        referenceAt50:RELATIVE_SIZE_REFERENCE_AT_50,
+        perspective:'your view — ta relative to you',
+        question:'How much does ta influence you?',
+      },
+      youOnTa:{
+        ...scaledField(data.youInTheirEyesSize, 'From ta\'s perspective (as you imagine it): how much you believe you influence ta\'s thoughts, emotions, and life choices. Higher = greater perceived influence.'),
+        referenceAt50:RELATIVE_SIZE_REFERENCE_AT_50,
+        perspective:'ta\'s view (imagined) — you relative to ta',
+        question:'In ta\'s world, how much influence do you have?',
+      },
+    },
+    boundary:{
+      fromYourPerspective:{
+        ...boundaryField(data.taDistance, data.taOverlapRatio),
+        perspective:'your view — ta\'s position relative to you',
+        question:'Psychological distance between you and ta. Closer = more shared psychological space; farther = more independence.',
+      },
+      fromTheirPerspective:{
+        ...boundaryField(data.youInTheirEyesDistance, data.youOverlapRatio),
+        perspective:'ta\'s view (imagined) — your position relative to ta',
+        question:'In ta\'s world, how close do you feel to each other? Closer = more connection felt by ta; farther = more independent space.',
+      },
+    },
+    voiceBalance:{
+      you:scaledField(data.volumeYou, 'How easily your feelings, needs, and ideas are considered when they differ from ta\'s.'),
+      ta:scaledField(data.volumeTa, 'How easily ta\'s feelings, needs, and ideas are considered when they differ from yours.'),
+      question:'When you have different feelings, needs, and ideas, whose voice is more easily heard?',
+    },
+    observerView:{
+      value:data.observerNote.trim(),
+      meaning:'Free-text outside view — what a trusted third party (family, therapist, friend, past/future self) might notice about this relationship.',
+      prompt:'If a trusted person observed this relationship, what might they notice? What would they say or advise?',
+    },
+  };
+}
+
+function refD(){ return innerWidth>=768?224:160; }
+function relToD(r){ return Math.max(MIN_D,Math.min(MAX_D,refD()*(r/50))); }
+function dToRel(d){ return Math.round(Math.max(0,Math.min(100,(d/refD())*50))); }
+function fixedShift(r){ return -(r*FF+r); }
+
+function circleCenterDistance(fixedRadius, interactiveRadius, offsetX, offsetY){
+  const baseGap=fixedRadius*FF+fixedRadius;
+  const ix=baseGap+offsetX, iy=offsetY;
+  return Math.sqrt(ix*ix+iy*iy);
+}
+function computeOverlapRatio(fixedRadius, interactiveRadius, offsetX, offsetY){
+  const dist=circleCenterDistance(fixedRadius, interactiveRadius, offsetX, offsetY);
+  const combined=fixedRadius+interactiveRadius;
+  if(dist>=combined) return 0;
+  return Math.max(0, Math.min(1, (combined-dist)/Math.min(fixedRadius, interactiveRadius)));
+}
+function computeNormalizedDistance(fixedRadius, interactiveRadius, offsetX, offsetY){
+  const dist=circleCenterDistance(fixedRadius, interactiveRadius, offsetX, offsetY);
+  const maxDist=fixedRadius+interactiveRadius+280;
+  return Math.round(Math.max(0, Math.min(100, (dist/maxDist)*100)));
+}
+
+const TOTAL_PAGES = 10;
+const PAGE_INFO = {
+  step1: { page: 1, step: 1 },
+  step2: { page: 2, step: 2 },
+  step3a: { page: 3, step: 3 },
+  step3b: { page: 4, step: 3 },
+  step4a: { page: 5, step: 4 },
+  step4b: { page: 6, step: 4 },
+  step4swap: { page: 6, step: 4 },
+  step4c: { page: 7, step: 4 },
+  step4d: { page: 8, step: 4 },
+  step5: { page: 9, step: 5 },
+  step6: { page: 10, step: 6 },
+};
+
+function renderNavDots(page) {
+  return Array.from({ length: TOTAL_PAGES }, (_, i) =>
+    `<span class="nav-dot${i + 1 === page ? ' active' : ''}"></span>`
+  ).join('');
+}
+
+function updateNav(id) {
+  const info = PAGE_INFO[id];
+  if (!info) return;
+  const stepEl = document.getElementById(id);
+  const center = stepEl?.querySelector('.nav-center');
+  if (!center) return;
+  const progress = center.querySelector('.progress');
+  if (progress) progress.textContent = String(info.step).padStart(2, '0') + ' / 06';
+  const dots = center.querySelector('.nav-dots');
+  if (dots) dots.innerHTML = renderNavDots(info.page);
+}
+
+function initAllNavDots() {
+  Object.keys(PAGE_INFO).forEach((id) => updateNav(id));
+}
+
+function go(id){
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  updateNav(id);
+  if(id==='step3b') updateMentalTitle();
+  if(id.startsWith('step4')&&id!=='step4swap') initStep4(id.slice(4));
+  if(id==='step5') initVolume();
+  if(id==='step7'){
+    const scroll=document.getElementById('reportScroll');
+    if(scroll) scroll.scrollTop=0;
+  }
+}
+
+document.getElementById('nameInput').addEventListener('input',e=>{
+  state.name=e.target.value;
+  document.getElementById('step1Next').disabled=!e.target.value.trim();
+});
+document.getElementById('relInput').addEventListener('input',e=>state.relationship=e.target.value);
+
+let selectedTier=null;
+function selectTier(tier){
+  selectedTier=tier; state.circle=tier;
+  document.querySelectorAll('.s2-section').forEach(s=>s.classList.toggle('active',s.dataset.tier===tier));
+  ['core','important','connection'].forEach(t=>{
+    document.getElementById('ring'+t.charAt(0).toUpperCase()+t.slice(1)).classList.toggle('active',t===tier);
+  });
+  document.getElementById('step2Next').disabled=false;
+}
+
+document.getElementById('bodySlider').addEventListener('input',e=>{
+  const val=+e.target.value; state.bodyFeeling=val;
+  document.getElementById('bodyValue').textContent=val+'%';
+  document.getElementById('bodyValue').style.opacity=(Math.abs(val-50)/100)+0.1;
+  const shift=(val-50)/10;
+  document.getElementById('s3Teal').style.transform=`translateX(calc(-50% + ${shift}vw)) scale(0.5)`;
+  document.getElementById('s3Lime').style.transform=`translateX(calc(-50% + ${-shift}vw))`;
+});
+
+function updateMentalTitle(){
+  const n=state.name.trim()||'ta';
+  document.getElementById('s3mTitle').textContent=n+'在你脑子里占据多大的面积？';
+}
+function updateMental(){
+  const val=+document.getElementById('mentalSlider').value;
+  state.mentalOccupancy=val;
+  const minDim=Math.min(innerWidth,innerHeight);
+  const size=minDim*0.4+(minDim*1.1)*(val/100);
+  const el=document.getElementById('s3mTeal');
+  el.style.width=el.style.height=size+'px';
+  el.style.transform=`translate(${(val/100)*10}%, ${(val/100)*5}%)`;
+}
+document.getElementById('mentalSlider').addEventListener('input',updateMental);
+updateMental();
+
+document.addEventListener('mousemove',e=>{
+  const mx=(e.clientX-innerWidth/2)/100, my=(e.clientY-innerHeight/2)/100;
+  const t=document.getElementById('s1Teal'), l=document.getElementById('s1Lime');
+  if(t) t.style.transform=`translateX(calc(-50% + ${mx*-1}px)) translateY(${my*-1}px)`;
+  if(l) l.style.transform=`translateX(calc(-50% + ${mx}px)) translateY(${my}px)`;
+});
+
+function makeCircle(label,color,size,cls){
+  const el=document.createElement('div');
+  el.className='s4-circle '+cls;
+  el.style.width=el.style.height=size+'px';
+  el.style.backgroundColor=color;
+  const span=document.createElement('span'); span.className='s4-label'; span.textContent=label;
+  el.appendChild(span); return el;
+}
+function pos(el,dx,dy){ el.style.transform=`translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`; }
+
+function renderBalls(canvas, you, ta){
+  canvas.innerHTML='';
+  const yc=makeCircle('you',CY,you.d,'fixed'); pos(yc,you.x,you.y);
+  const tc=makeCircle('ta',CT,ta.d,ta.interactive?'interactive '+(ta.mode||''):'fixed');
+  pos(tc,ta.x,ta.y);
+  canvas.appendChild(yc); canvas.appendChild(tc);
+  return {yc,tc};
+}
+
+function setupResize(canvasId, role, onUpdate){
+  const canvas=document.getElementById(canvasId); canvas.innerHTML='';
+  const ref=refD();
+  const fixedRole=role==='ta'?'you':'ta';
+  let diameter=role==='ta'?(state.taDiameter||relToD(state.taRelativeSize)):(state.youDiameter||relToD(state.youInTheirEyesSize));
+  const fixed=makeCircle(fixedRole,fixedRole==='you'?CY:CT,ref,'fixed');
+  const interactive=makeCircle(role,role==='ta'?CT:CY,diameter,'interactive resize');
+  pos(fixed,fixedShift(ref/2),0); pos(interactive,0,0);
+  canvas.appendChild(fixed); canvas.appendChild(interactive);
+  let dragging=false,startY=0,startD=diameter;
+  interactive.addEventListener('pointerdown',e=>{dragging=true;startY=e.clientY;startD=diameter;interactive.setPointerCapture(e.pointerId);});
+  interactive.addEventListener('pointermove',e=>{if(!dragging)return;diameter=Math.max(MIN_D,Math.min(MAX_D,startD+(startY-e.clientY)));
+    interactive.style.width=interactive.style.height=diameter+'px'; onUpdate(dToRel(diameter),diameter);});
+  interactive.addEventListener('pointerup',e=>{dragging=false;interactive.releasePointerCapture(e.pointerId);});
+}
+
+function setupMove(canvasId, role){
+  const canvas=document.getElementById(canvasId); canvas.innerHTML='';
+  const ref=refD();
+  const fixedRole=role==='ta'?'you':'ta';
+  const diameter=role==='ta'?(state.taDiameter||relToD(state.taRelativeSize)):(state.youDiameter||relToD(state.youInTheirEyesSize));
+  let ox=role==='ta'?state.taOffsetX:state.youOffsetX, oy=role==='ta'?state.taOffsetY:state.youOffsetY;
+  const fixedR=ref/2, interactiveR=diameter/2;
+  const fixed=makeCircle(fixedRole,fixedRole==='you'?CY:CT,ref,'fixed');
+  const interactive=makeCircle(role,role==='ta'?CT:CY,diameter,'interactive move');
+  pos(fixed,fixedShift(ref/2),0); pos(interactive,ox,oy);
+  canvas.appendChild(fixed); canvas.appendChild(interactive);
+  let dragging=false,sp={x:0,y:0},so={x:ox,y:oy};
+  const limX=innerWidth/2-60,limY=innerHeight/2-60;
+  function syncBoundary(){
+    const distance=computeNormalizedDistance(fixedR, interactiveR, ox, oy);
+    const overlap=computeOverlapRatio(fixedR, interactiveR, ox, oy);
+    if(role==='ta'){
+      state.taOffsetX=ox; state.taOffsetY=oy;
+      state.taDistance=distance; state.taOverlapRatio=overlap;
+    }else{
+      state.youOffsetX=ox; state.youOffsetY=oy;
+      state.youInTheirEyesDistance=distance; state.youOverlapRatio=overlap;
+    }
+  }
+  syncBoundary();
+  interactive.addEventListener('pointerdown',e=>{dragging=true;sp={x:e.clientX,y:e.clientY};so={x:ox,y:oy};interactive.setPointerCapture(e.pointerId);});
+  interactive.addEventListener('pointermove',e=>{if(!dragging)return;
+    ox=Math.max(-limX,Math.min(limX,so.x+e.clientX-sp.x)); oy=Math.max(-limY,Math.min(limY,so.y+e.clientY-sp.y));
+    pos(interactive,ox,oy); syncBoundary();});
+  interactive.addEventListener('pointerup',e=>{dragging=false;interactive.releasePointerCapture(e.pointerId);});
+}
+
+function initStep4(sub){
+  if(sub==='4a') setupResize('canvas4a','ta',(r,d)=>{state.taRelativeSize=r;state.taDiameter=d;});
+  if(sub==='4b') setupMove('canvas4b','ta');
+  if(sub==='4c'){ state.youInTheirEyesSize=50; state.youDiameter=relToD(50);
+    setupResize('canvas4c','you',(r,d)=>{state.youInTheirEyesSize=r;state.youDiameter=d;}); }
+  if(sub==='4d') setupMove('canvas4d','you');
+}
+
+function startSwap(){
+  go('step4swap');
+  const ref=refD(), fl=fixedShift(ref/2);
+  const fromYou={x:fl,y:0,d:ref}, fromTa={x:state.taOffsetX,y:state.taOffsetY,d:state.taDiameter||relToD(state.taRelativeSize)};
+  const toTa={x:fl,y:0,d:ref}, toYou={x:0,y:0,d:ref};
+  const canvas=document.getElementById('canvasSwap');
+  const start=performance.now(), dur=600;
+  function ease(t){ return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2; }
+  function tick(now){
+    const t=ease(Math.min(1,(now-start)/dur));
+    const you={x:fromYou.x+(toYou.x-fromYou.x)*t,y:fromYou.y+(toYou.y-fromYou.y)*t,d:fromYou.d+(toYou.d-fromYou.d)*t};
+    const ta={x:fromTa.x+(toTa.x-fromTa.x)*t,y:fromTa.y+(toTa.y-fromTa.y)*t,d:fromTa.d+(toTa.d-fromTa.d)*t};
+    renderBalls(canvas,{...you,interactive:false},{...ta,interactive:false});
+    if((now-start)<dur) requestAnimationFrame(tick);
+    else{ state.youInTheirEyesSize=50; state.youDiameter=ref; state.youOffsetX=0; state.youOffsetY=0; state.youInTheirEyesDistance=50; state.youOverlapRatio=0; go('step4c'); }
+  }
+  requestAnimationFrame(tick);
+}
+
+function renderEq(container,value){
+  container.innerHTML='';
+  const n=6, active=Math.ceil((value/100)*n);
+  for(let i=0;i<n;i++){
+    const bar=document.createElement('div');
+    bar.className='s5-eq-bar';
+    const h=((n-i)/n)*100;
+    bar.style.height=(i<active?h:2)+'%';
+    bar.style.opacity=i<active?'1':'0.1';
+    container.appendChild(bar);
+  }
+}
+function initVolume(){
+  renderEq(document.getElementById('eqYou'),state.volumeYou);
+  renderEq(document.getElementById('eqTa'),state.volumeTa);
+  document.getElementById('volYou').value=state.volumeYou;
+  document.getElementById('volTa').value=state.volumeTa;
+  document.getElementById('circleYou').style.transform='scale('+(0.9+state.volumeYou/500)+')';
+  document.getElementById('circleTa').style.transform='scale('+(0.9+state.volumeTa/500)+')';
+}
+document.getElementById('volYou').addEventListener('input',e=>{
+  state.volumeYou=+e.target.value;
+  renderEq(document.getElementById('eqYou'),state.volumeYou);
+  document.getElementById('circleYou').style.transform='scale('+(0.9+state.volumeYou/500)+')';
+});
+document.getElementById('volTa').addEventListener('input',e=>{
+  state.volumeTa=+e.target.value;
+  renderEq(document.getElementById('eqTa'),state.volumeTa);
+  document.getElementById('circleTa').style.transform='scale('+(0.9+state.volumeTa/500)+')';
+});
+
+function resetAll(skipConfirm){
+  if(!skipConfirm && !confirm('清空所有已填数据并回到第一步？')) return;
+  Object.assign(state, structuredClone(INITIAL_STATE));
+  state.taDiameter=relToD(50);
+  state.youDiameter=relToD(50);
+  selectedTier=null;
+
+  document.getElementById('nameInput').value='';
+  document.getElementById('relInput').value='';
+  document.getElementById('step1Next').disabled=true;
+  document.getElementById('bodySlider').value=50;
+  document.getElementById('bodyValue').textContent='50%';
+  document.getElementById('bodyValue').style.opacity='0.1';
+  document.getElementById('s3Teal').style.transform='translateX(-50%) scale(0.5)';
+  document.getElementById('s3Lime').style.transform='translateX(-50%)';
+  document.getElementById('mentalSlider').value=50;
+  updateMental();
+  document.getElementById('volYou').value=40;
+  document.getElementById('volTa').value=60;
+  document.getElementById('observerInput').value='';
+  document.getElementById('step2Next').disabled=true;
+  document.querySelectorAll('.s2-section').forEach(s=>s.classList.remove('active'));
+  ['Core','Important','Connection'].forEach(t=>{
+    document.getElementById('ring'+t).classList.remove('active');
+  });
+  initVolume();
+  lastReportMarkdown='';
+  reportSubjectName='';
+  reportSubjectRel='';
+  clearTimeout(streamRenderTimer);
+  streamRenderTimer=null;
+  document.getElementById('reportMeta').textContent='';
+  document.getElementById('reportBody').innerHTML='';
+  document.getElementById('reportExportMeta').textContent='';
+  document.getElementById('reportExportBody').innerHTML='';
+  const saveBtn=document.getElementById('saveReportBtn');
+  if(saveBtn) saveBtn.disabled=false;
+  go('step1');
+}
+
+function showLoading(open, text){
+  const overlay=document.getElementById('loadingOverlay');
+  const label=document.getElementById('loadingText');
+  if(text && label) label.textContent=text;
+  overlay.classList.toggle('open', !!open);
+  overlay.setAttribute('aria-busy', open ? 'true' : 'false');
+}
+
+function showToast(msg){
+  const toast=document.getElementById('payloadToast');
+  toast.textContent=msg;
+  toast.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t=setTimeout(()=>toast.classList.remove('show'), 2200);
+}
+
+function cleanReportMarkdown(raw){
+  return String(raw||'')
+    .replace(/[\s\S]*?<\/think>/gi, '')
+    .replace(/^```(?:markdown|md)?\s*\n?/i, '')
+    .replace(/\n?```\s*$/i, '')
+    .trim();
+}
+
+function formatReportMeta(name, rel){
+  const n=(name||'').trim()||'ta';
+  const r=(rel||'').trim();
+  return r ? ('关于 ' + n + '\n' + r) : ('关于 ' + n);
+}
+
+function renderReportHtml(md){
+  if(typeof marked==='undefined') throw new Error('Markdown 解析库未加载');
+  return marked.parse(md);
+}
+
+function renderReportPage(){
+  const meta=formatReportMeta(reportSubjectName, reportSubjectRel);
+  const html=renderReportHtml(lastReportMarkdown);
+  document.getElementById('reportMeta').textContent=meta;
+  const body=document.getElementById('reportBody');
+  body.innerHTML=html;
+  body.classList.remove('is-streaming');
+  document.getElementById('reportExportMeta').textContent=meta;
+  document.getElementById('reportExportBody').innerHTML=html;
+}
+
+function updateStreamView(accumulated, streaming){
+  clearTimeout(streamRenderTimer);
+  streamRenderTimer=setTimeout(()=>{
+    const cleaned=cleanReportMarkdown(accumulated);
+    let html='';
+    try{ html=cleaned ? renderReportHtml(cleaned) : ''; }catch{ html=''; }
+    const body=document.getElementById('reportBody');
+    body.innerHTML=html + (streaming ? '<span class="report-cursor" aria-hidden="true"></span>' : '');
+    body.classList.toggle('is-streaming', streaming);
+    if(streaming){
+      const scroll=document.getElementById('reportScroll');
+      if(scroll) scroll.scrollTop=scroll.scrollHeight;
+    }
+  }, streaming ? 48 : 0);
+}
+
+function parseSseLines(buffer, onData){
+  const parts=buffer.split('\n');
+  const rest=parts.pop() ?? '';
+  for(const line of parts){
+    const trimmed=line.trim();
+    if(!trimmed.startsWith('data:')) continue;
+    const data=trimmed.slice(5).trim();
+    if(!data || data==='[DONE]') continue;
+    let json;
+    try{ json=JSON.parse(data); }catch{ continue; }
+    if(json.error) throw new Error(json.error.message || JSON.stringify(json.error));
+    const delta=json.choices?.[0]?.delta;
+    const piece=(delta?.content ?? delta?.text ?? '');
+    if(piece) onData(piece);
+  }
+  return rest;
+}
+
+async function streamReport(apiKey, payload, handlers){
+  const systemPrompt=document.getElementById('systemPrompt').textContent.trim();
+  const res=await fetch(LLM_API_BASE + '/chat/completions', {
+    method:'POST',
+    headers:{
+      'Authorization':'Bearer ' + apiKey,
+      'Content-Type':'application/json',
+    },
+    body:JSON.stringify({
+      model:LLM_MODEL,
+      stream:true,
+      messages:[
+        { role:'system', content:systemPrompt },
+        { role:'user', content:'请根据以下关系测试数据生成分析报告。请直接输出 Markdown 格式正文。\n\n' + JSON.stringify(payload, null, 2) },
+      ],
+      temperature:0.7,
+      thinking:{ type:'disabled' },
+    }),
+  });
+
+  if(!res.ok){
+    const errText=await res.text();
+    let msg=errText;
+    try{ msg=JSON.parse(errText).error?.message || JSON.parse(errText).message || msg; }catch{}
+    throw new Error(msg || ('HTTP ' + res.status));
+  }
+  if(!res.body) throw new Error('浏览器不支持流式响应');
+
+  const reader=res.body.getReader();
+  const decoder=new TextDecoder();
+  let sseBuffer='';
+  let full='';
+  let gotChunk=false;
+
+  while(true){
+    const { done, value }=await reader.read();
+    if(done) break;
+    sseBuffer+=decoder.decode(value, { stream:true });
+    sseBuffer=parseSseLines(sseBuffer, (piece)=>{
+      if(!gotChunk){
+        gotChunk=true;
+        handlers.onFirstChunk?.();
+      }
+      full+=piece;
+      handlers.onChunk?.(full, piece);
+    });
+  }
+  if(sseBuffer.trim()) parseSseLines(sseBuffer + '\n', (piece)=>{
+    if(!gotChunk){
+      gotChunk=true;
+      handlers.onFirstChunk?.();
+    }
+    full+=piece;
+    handlers.onChunk?.(full, piece);
+  });
+
+  return full;
+}
+
+async function saveReportImage(){
+  if(!lastReportMarkdown){
+    showToast('暂无报告可保存');
+    return;
+  }
+  if(typeof html2canvas==='undefined'){
+    showToast('截图库未加载');
+    return;
+  }
+  const btn=document.getElementById('saveReportBtn');
+  btn.disabled=true;
+  showToast('正在生成图片…');
+  try{
+    renderReportPage();
+    const exportEl=document.getElementById('reportExport');
+    const canvas=await html2canvas(exportEl, {
+      scale:2,
+      backgroundColor:'#ffffff',
+      logging:false,
+      useCORS:true,
+      width:1080,
+      windowWidth:1080,
+      scrollX:0,
+      scrollY:0,
+    });
+    const link=document.createElement('a');
+    const safeName=(reportSubjectName||'report').replace(/[/\\?%*:|"<>]/g, '-');
+    link.download='关系报告-' + safeName + '-' + new Date().toISOString().slice(0, 10) + '.png';
+    link.href=canvas.toDataURL('image/png');
+    link.click();
+    showToast('图片已保存');
+  }catch(err){
+    console.error(err);
+    showToast('保存失败，请重试');
+  }finally{
+    btn.disabled=false;
+  }
+}
+
+async function finishPreview(){
+  state.observerNote=document.getElementById('observerInput').value;
+  const apiKey=prompt('输入 API Key（openai-next.com）');
+  if(!apiKey || !apiKey.trim()) return;
+
+  const finishBtn=document.getElementById('step6Finish');
+  const saveBtn=document.getElementById('saveReportBtn');
+  try{
+    const payload=buildAssessmentPayload(state);
+    console.info('[relationship-health-test] assessment payload:', payload);
+    if(finishBtn) finishBtn.disabled=true;
+    if(saveBtn) saveBtn.disabled=true;
+
+    reportSubjectName=state.name.trim();
+    reportSubjectRel=state.relationship.trim();
+    lastReportMarkdown='';
+    document.getElementById('reportMeta').textContent=formatReportMeta(reportSubjectName, reportSubjectRel);
+    document.getElementById('reportBody').innerHTML='';
+    document.getElementById('reportBody').classList.add('is-streaming');
+    go('step7');
+    showLoading(true, '正在生成报告…');
+
+    const raw=await streamReport(apiKey.trim(), payload, {
+      onFirstChunk:()=>showLoading(false),
+      onChunk:(full)=>updateStreamView(full, true),
+    });
+
+    lastReportMarkdown=cleanReportMarkdown(raw);
+    if(!lastReportMarkdown) throw new Error('报告内容为空');
+
+    updateStreamView(lastReportMarkdown, false);
+    renderReportPage();
+    if(saveBtn) saveBtn.disabled=false;
+  }catch(err){
+    console.error(err);
+    showLoading(false);
+    alert('生成报告失败：' + (err.message || err) + '\n\n若提示 CORS 或网络错误，请用本地静态服务打开此 HTML（如 python -m http.server）。');
+    if(!lastReportMarkdown) go('step6');
+  }finally{
+    showLoading(false);
+    if(finishBtn) finishBtn.disabled=false;
+  }
+}
+
+state.taDiameter=relToD(50); state.youDiameter=relToD(50);
+initAllNavDots();
+</script>
+</body>
+</html>

@@ -145,10 +145,46 @@
     .s3-canvas { position: relative; z-index: 10; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 40px; }
     .s3-main { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 48px; max-width: 600px; margin: 0 auto; width: 100%; }
     .s3-title { font-size: clamp(2rem, 5vw, 2.5rem); font-weight: 700; text-align: center; line-height: 1.15; }
-    input[type=range].h { -webkit-appearance: none; width: 100%; background: transparent; }
+    input[type=range].h {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      background: transparent;
+      color: var(--on);
+      cursor: pointer;
+      color-scheme: light;
+    }
     input[type=range].h:focus { outline: none; }
-    input[type=range].h::-webkit-slider-runnable-track { height: 2px; background: var(--on); }
-    input[type=range].h::-webkit-slider-thumb { -webkit-appearance: none; width: 64px; height: 64px; border-radius: 50%; background: var(--on); margin-top: -31px; cursor: pointer; }
+    input[type=range].h::-webkit-slider-runnable-track {
+      height: 2px;
+      background: var(--on);
+      border: none;
+    }
+    input[type=range].h::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 64px;
+      height: 64px;
+      border: none;
+      border-radius: 50%;
+      background: var(--on);
+      margin-top: -31px;
+      cursor: pointer;
+    }
+    input[type=range].h::-moz-range-track {
+      height: 2px;
+      background: var(--on);
+      border: none;
+      border-radius: 0;
+    }
+    input[type=range].h::-moz-range-thumb {
+      width: 64px;
+      height: 64px;
+      border: none;
+      border-radius: 50%;
+      background: var(--on);
+      cursor: pointer;
+    }
     .s3-labels { display: flex; justify-content: space-between; margin-top: 48px; }
     .s3-labels > div { display: flex; flex-direction: column; gap: 8px; }
     .s3-labels .main { font-size: 20px; font-weight: 600; }
@@ -164,9 +200,49 @@
     .s3m-labels .main { font-size: 18px; font-weight: 600; }
     .s3m-labels .sub { font-size: 12px; text-transform: lowercase; opacity: .4; }
     .s3m-labels > div:last-child { text-align: right; }
-    input[type=range].s3m { -webkit-appearance: none; width: 100%; max-width: 320px; background: transparent; }
-    input[type=range].s3m::-webkit-slider-runnable-track { height: 1.5px; background: var(--on); }
-    input[type=range].s3m::-webkit-slider-thumb { -webkit-appearance: none; width: 32px; height: 32px; border: 2px solid var(--on); border-radius: 50%; background: #fff; margin-top: -15px; }
+    input[type=range].s3m {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      max-width: 320px;
+      background: transparent;
+      color: var(--on);
+      cursor: pointer;
+      color-scheme: light;
+    }
+    input[type=range].s3m:focus { outline: none; }
+    input[type=range].s3m::-webkit-slider-runnable-track {
+      height: 1.5px;
+      background: var(--on);
+      border: none;
+    }
+    input[type=range].s3m::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 32px;
+      height: 32px;
+      border: 2px solid var(--on);
+      border-radius: 50%;
+      background: #fff;
+      margin-top: -15px;
+      cursor: pointer;
+      box-sizing: border-box;
+    }
+    input[type=range].s3m::-moz-range-track {
+      height: 1.5px;
+      background: var(--on);
+      border: none;
+      border-radius: 0;
+    }
+    input[type=range].s3m::-moz-range-thumb {
+      width: 32px;
+      height: 32px;
+      border: 2px solid var(--on);
+      border-radius: 50%;
+      background: #fff;
+      cursor: pointer;
+      box-sizing: border-box;
+    }
 
     /* Step 4 spatial */
     .s4-header { z-index: 30; flex-shrink: 0; padding: 64px 20px 0; text-align: center; }
@@ -218,7 +294,15 @@
     .s6-hints { margin: 28px 0 0; padding: 0; list-style: none; font-size: clamp(1.125rem, 2.4vw, 1.5rem); font-weight: 500; line-height: 1.8; }
     .s6-hints li + li { margin-top: 2px; }
     .s6-input-block { margin-top: auto; width: 100%; padding-top: 40px; }
-    .s6-label { display: block; margin-bottom: 12px; font-size: 14px; color: rgba(26,28,27,.55); }
+    .s6-label-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+    .s6-label { font-size: 14px; color: rgba(26,28,27,.55); }
+    .s6-skip-btn {
+      border: none; background: transparent; font: inherit; font-size: 12px; font-weight: 600;
+      color: rgba(26,28,27,.45); cursor: pointer; text-decoration: underline; text-underline-offset: 3px;
+      padding: 0; white-space: nowrap;
+    }
+    .s6-skip-btn:hover { color: var(--on); }
+    .s6-skip-btn:disabled { opacity: .4; cursor: not-allowed; }
 
     /* Step 7 report */
     .s7-wrap { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
@@ -238,9 +322,10 @@
     }
     .report-scroll {
       flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch;
+      width: 100%; max-width: 600px; margin: 0 auto;
       padding-right: 8px;
     }
-    .report-inner { width: 100%; max-width: 560px; }
+    .report-inner { width: 100%; text-align: left; }
     .s7-label {
       display: block; font-size: 14px; font-weight: 700; letter-spacing: .3em;
       text-transform: uppercase; color: rgba(26,28,27,.55); margin-bottom: 20px;
@@ -363,6 +448,33 @@
       text-transform: uppercase; color: rgba(26,28,27,.35);
     }
 
+    .save-image-overlay {
+      position: fixed; inset: 0; z-index: 700; display: none;
+      flex-direction: column; background: rgba(26,28,27,.92);
+    }
+    .save-image-overlay.open { display: flex; }
+    .save-image-head {
+      flex-shrink: 0; display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px; color: var(--white);
+    }
+    .save-image-head p { font-size: 14px; font-weight: 600; line-height: 1.4; }
+    .save-image-head small { display: block; margin-top: 4px; font-size: 12px; font-weight: 500; opacity: .65; }
+    .save-image-close {
+      border: 1px solid rgba(255,255,255,.35); border-radius: 999px;
+      background: transparent; color: var(--white); font: inherit; font-size: 13px; font-weight: 600;
+      padding: 8px 18px; cursor: pointer; flex-shrink: 0;
+    }
+    .save-image-scroll {
+      flex: 1; overflow: auto; -webkit-overflow-scrolling: touch;
+      padding: 0 16px 24px; text-align: center;
+    }
+    .save-image-scroll img {
+      max-width: 100%; height: auto; border-radius: 8px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.35);
+      -webkit-touch-callout: default;
+      user-select: none; -webkit-user-select: none;
+    }
+
     @media (max-width: 900px) {
       .s2-grid { grid-template-columns: 1fr; padding: 80px 20px 120px; overflow-y: auto; height: 100vh; }
       .s2-rings { width: 72vw; height: 72vw; }
@@ -372,14 +484,14 @@
       .s6-column { max-width: 100%; min-height: auto; }
       .s4-perspective { white-space: normal; font-size: 14px; }
       .s7-content { padding: 64px 20px 96px; }
-      .report-inner { max-width: 100%; }
+      .report-scroll { max-width: 100%; }
     }
   </style>
 </head>
 <body>
 
 <div class="banner">
-  <span>完整预览 · 双击打开 · React 版：npm run dev → /tools/relationship-health-test</span>
+  <span>Life Lab 关系健康测试 Relationship Wellness Test｜MVP 测试版</span>
   <button type="button" class="banner-reset" onclick="resetAll()">清空</button>
 </div>
 
@@ -392,6 +504,16 @@
   </div>
 </div>
 <div class="payload-toast" id="payloadToast"></div>
+
+<div class="save-image-overlay" id="saveImageOverlay" aria-hidden="true">
+  <div class="save-image-head">
+    <p id="saveImageHint">长按图片保存到相册<small>微信内无法直接下载，请长按图片选择「保存图片」</small></p>
+    <button type="button" class="save-image-close" onclick="closeSaveImageModal()">关闭</button>
+  </div>
+  <div class="save-image-scroll">
+    <img id="saveImagePreview" alt="关系报告" />
+  </div>
+</div>
 
 <!-- Step 1 -->
 <section class="step active" id="step1">
@@ -600,7 +722,10 @@
       </header>
       <ul class="s6-hints"><li>亲人</li><li>咨询师</li><li>朋友</li><li>过去或未来的自己</li></ul>
       <div class="s6-input-block">
-        <label class="s6-label" for="observerInput">约 20s 思考，记下你的第一印象</label>
+        <div class="s6-label-row">
+          <label class="s6-label" for="observerInput">约 20s 思考，记下你的第一印象</label>
+          <button type="button" class="s6-skip-btn" id="step6Skip" onclick="finishPreview()">点击跳过，查看报告</button>
+        </div>
         <div class="field-wrap wide">
           <textarea class="field-input area" id="observerInput" placeholder="ta 们会对你说什么？会建议你什么？" rows="3"></textarea>
         </div>
@@ -1625,6 +1750,36 @@ function showToast(msg){
   showToast._t=setTimeout(()=>toast.classList.remove('show'), 2200);
 }
 
+function isWeChat(){
+  return /MicroMessenger/i.test(navigator.userAgent);
+}
+
+function preferLongPressSave(){
+  return isWeChat() || /QQ\//i.test(navigator.userAgent) || /Weibo/i.test(navigator.userAgent);
+}
+
+function showSaveImageModal(dataUrl){
+  const overlay=document.getElementById('saveImageOverlay');
+  const img=document.getElementById('saveImagePreview');
+  const hint=document.getElementById('saveImageHint');
+  if(!overlay || !img) return;
+  img.src=dataUrl;
+  if(hint){
+    hint.innerHTML=isWeChat()
+      ? '长按图片保存到相册<small>微信内无法直接下载，请长按图片选择「保存图片」</small>'
+      : '长按图片保存到相册<small>也可截图保存</small>';
+  }
+  overlay.classList.add('open');
+  overlay.setAttribute('aria-hidden', 'false');
+}
+
+function closeSaveImageModal(){
+  const overlay=document.getElementById('saveImageOverlay');
+  if(!overlay) return;
+  overlay.classList.remove('open');
+  overlay.setAttribute('aria-hidden', 'true');
+}
+
 function cleanReportMarkdown(raw){
   return String(raw||'')
     .replace(/[\s\S]*?<\/think>/gi, '')
@@ -1765,8 +1920,9 @@ async function saveReportImage(){
     const exportEl=document.getElementById('reportExport');
     if(document.fonts && document.fonts.ready) await document.fonts.ready;
     const exportHeight=exportEl.scrollHeight;
+    const isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     const canvas=await html2canvas(exportEl, {
-      scale:2,
+      scale: isMobile ? 1.5 : 2,
       backgroundColor:'#ffffff',
       logging:false,
       useCORS:true,
@@ -1777,12 +1933,18 @@ async function saveReportImage(){
       scrollX:0,
       scrollY:0,
     });
-    const link=document.createElement('a');
-    const safeName=(reportSubjectName||'report').replace(/[/\\?%*:|"<>]/g, '-');
-    link.download='关系报告-' + safeName + '-' + new Date().toISOString().slice(0, 10) + '.png';
-    link.href=canvas.toDataURL('image/png');
-    link.click();
-    showToast('图片已保存');
+    const dataUrl=canvas.toDataURL('image/png');
+    if(preferLongPressSave() || isMobile){
+      showSaveImageModal(dataUrl);
+      showToast('长按图片即可保存');
+    }else{
+      const link=document.createElement('a');
+      const safeName=(reportSubjectName||'report').replace(/[/\\?%*:|"<>]/g, '-');
+      link.download='关系报告-' + safeName + '-' + new Date().toISOString().slice(0, 10) + '.png';
+      link.href=dataUrl;
+      link.click();
+      showToast('图片已保存');
+    }
   }catch(err){
     console.error(err);
     showToast('保存失败，请重试');
@@ -1797,11 +1959,13 @@ async function finishPreview(){
   if(!apiKey || !apiKey.trim()) return;
 
   const finishBtn=document.getElementById('step6Finish');
+  const skipBtn=document.getElementById('step6Skip');
   const saveBtn=document.getElementById('saveReportBtn');
   try{
     const payload=buildAssessmentPayload(state);
     console.info('[relationship-health-test] assessment payload:', payload);
     if(finishBtn) finishBtn.disabled=true;
+    if(skipBtn) skipBtn.disabled=true;
     if(saveBtn) saveBtn.disabled=true;
 
     reportSubjectName=state.name.trim();
@@ -1832,11 +1996,16 @@ async function finishPreview(){
   }finally{
     showLoading(false);
     if(finishBtn) finishBtn.disabled=false;
+    if(skipBtn) skipBtn.disabled=false;
   }
 }
 
 state.taDiameter=relToD(50); state.youDiameter=relToD(50);
 initAllNavDots();
+if(isWeChat()){
+  const saveBtn=document.getElementById('saveReportBtn');
+  if(saveBtn) saveBtn.textContent='生成图片';
+}
 </script>
 </body>
 </html>

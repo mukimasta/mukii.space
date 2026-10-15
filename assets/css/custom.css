@@ -208,3 +208,45 @@ header {
     order: 1;
   }
 }
+
+/* SoundMat index: video + photos */
+.soundmat-gallery {
+  margin-block: 0.5rem 2rem;
+}
+
+.soundmat-gallery__video {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #000;
+}
+
+.soundmat-gallery__photos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-block-start: 0.5rem;
+}
+
+.soundmat-gallery__photos img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+.soundmat-gallery__caption {
+  font-size: 0.9em;
+  opacity: 0.7;
+  margin-block-start: 0.5rem;
+}
+
+.soundmat-gallery__caption p {
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .soundmat-gallery__photos {
+    grid-template-columns: 1fr;
+  }
+}

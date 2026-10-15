@@ -1,0 +1,12 @@
+<div class="soundmat-gallery" id="video">
+  <video class="soundmat-gallery__video" controls playsinline preload="metadata" poster="/soundmat/in-use-poster.jpg">
+    <source src="https://media.mukii.space/soundmat/C0107-web-hq.mp4" type="video/mp4">
+    <source src="/soundmat/in-use.mp4" type="video/mp4">
+  </video>
+  <div class="soundmat-gallery__photos">
+    <img src="/soundmat/photo-01485.jpg" alt="{{ .Get "alt1" | default "A hand moves a stone on SoundMat" }}" loading="lazy">
+    <img src="/soundmat/photo-01486.jpg" alt="{{ .Get "alt2" | default "Stones on the felt surface of SoundMat" }}" loading="lazy">
+    <img src="/soundmat/photo-01491.jpg" alt="{{ .Get "alt3" | default "Two people around SoundMat" }}" loading="lazy">
+  </div>
+  {{ with .Inner }}<div class="soundmat-gallery__caption">{{ . | markdownify }}</div>{{ end }}
+</div>

@@ -1,0 +1,402 @@
+# SoundMat homepage copy. Every string is either one value for both languages,
+# or a pair: key.zh / key.en. build.py fails if a pair is missing one side.
+#
+# Text markup (inline):
+#   *italic*            [text](https://…)        [text](doc:soundmat-2-philosophy)
+#   [text]^note-id      → footnote trigger; the card (see [notes]) follows its paragraph
+#   raw HTML such as <br> or <span class="term">…</span> passes through
+# Blank lines separate paragraphs; lines starting with "1." make an ordered list.
+
+[meta]
+title = "SoundMat · Shared Ambience"
+description.zh = "一件声音装置，通过放置与挪动石头，让公共空间里的人共同塑造这里的声音氛围。"
+description.en = "A sound installation that lets people in a public space shape its sonic atmosphere together, by placing and moving stones."
+
+[ui]
+docs.zh = "文档"
+docs.en = "Docs"
+language = "Language"
+sources.zh = "来源："
+sources.en = "Sources: "
+from.zh = "来自 "
+from.en = "From "
+notes_title.zh = "Hanlin 的设计笔记"
+notes_title.en = "Hanlin’s Design Notes"
+notes_aria = "Hanlin’s design notes"
+prev_note = "Previous note"
+next_note = "Next note"
+more_images.zh = "更多影像"
+more_images.en = "More Images"
+more_images_aria = "More images"
+scroll_left = "Scroll left"
+scroll_right = "Scroll right"
+
+[hero]
+sub.zh = "一件声音装置，通过放置与挪动石头，让公共空间里的人共同塑造这里的声音氛围。"
+sub.en = "A sound installation that lets people in a public space shape its sonic atmosphere together, by placing and moving stones."
+
+[intro]
+body.zh = '''
+一张圆形的羊毛毛毡上放着许多天然的石头，连接着空间的音响。装置通过压力传感器读取垫面上石头的排列，实时生成氛围音乐。
+
+路过或停留的人，都可以挪动石头，轻轻改变整个空间的氛围。
+'''
+body.en = '''
+A round wool felt mat with natural stones on it, connected to the room's sound system. Pressure sensors detect the arrangement of the stones to generate ambient music in real time.
+
+Anyone passing through or lingering can move the stones, gently changing the atmosphere of the entire room.
+'''
+
+# Main film. Leave src empty to show the placeholder box instead of a player.
+[film]
+src = ""
+poster = ""
+caption.zh = "主视频，1–2 分钟。10 月 20 日 DXARTS Media Lab 拍摄。"
+caption.en = "Main film, 1–2 min. DXARTS Media Lab, Oct 20."
+
+[muzak]
+question.zh = "当你进入一个公共空间时，<br>你听到的背景音乐是由谁决定的？"
+question.en = "When you enter a public space, who decides the background music you hear?"
+captive_title.zh = "被困住的听众"
+captive_title.en = "Captive Audience"
+captive_body.zh = '''
+20 世纪中叶，[Muzak 音乐]^muzak开始在美国盛行，它逐渐进入商店、办公室和工厂。其中一个重要思想是：它将音乐视作可被组织和管理的环境元素，用来影响空间的氛围、人的情绪，[甚至人们工作和消费的方式]^stimulus。
+
+这时的音乐，被设计用来作用于人们，影响人们的行为，人们成了[被困住的听众]^captive。
+'''
+captive_body.en = '''
+In the mid-20th century, [Muzak music]^muzak began to thrive across America, finding its way into shops, offices, and factories. The central idea was to treat music as an environmental element that could be organized and managed to influence the atmosphere of a space, people's moods, and even [the ways they worked and shopped]^stimulus.
+
+Music came to be designed to act upon people and influence their behavior. There is a term for those who cannot escape it: the [*captive audience*]^captive.
+'''
+eno_title.zh = "既可以被忽略，又值得被聆听"
+eno_title.en = "As Ignorable as It Is Interesting"
+eno_body.zh = '''
+1978 年，Brian Eno 发行了[《Music for Airports》]^eno。Eno 在其中批评了 Muzak 音乐，称其为所有空间和其中的人们都添加一种同质化的刺激，把每个空间原本的声音和氛围都盖住、抹平了，拉平了人们的自然节律，丢失了真正的趣味。Eno 提出了氛围音乐（Ambient Music）的概念，他想要的是一种与环境共存的音乐，发挥空间本身的声学特点，为人们带来平静，留出思考的空间。
+
+到了这里，音乐为空间与空间中的人们所设计，为人们提供一种开放、自由的环境体验，“既可以被忽略，又值得被聆听”。
+'''
+eno_body.en = '''
+In 1978, Brian Eno released his [*Music for Airports*]^eno. In it, he criticized Muzak for imposing a homogenized stimulus on every space and everyone in it, blanketing each space’s own sounds and atmosphere, levelling out people’s natural rhythms, thus stripping away any genuine interest.
+
+Eno proposed Ambient Music instead. He wanted music that coexists with its environment, draws on the acoustic character of the space itself, and leaves “a space to think.”
+
+Music could now be made for spaces and the people in them, offering an open, free experience, as Eno put it: “as ignorable as it is interesting.”
+'''
+curated_title.zh = "被安排好的氛围"
+curated_title.en = "The Curated Atmosphere"
+curated_body.zh = '''
+从 Muzak 到 Ambient Music，我们不断重新思考音乐应该如何与人、与环境相处，但有一件事似乎始终没有改变：我们每天身处的公共空间的背景音乐，都还是被设计好、被赋予在场者的，被空间的拥有者和设计者决定的。
+
+音乐不仅是我们听到的内容，也是构成空间氛围的一部分。人们进入公共空间时，往往只是被动地接受被设计好的氛围。
+'''
+curated_body.en = '''
+From Muzak to Ambient Music, we have kept rethinking how music should relate to people and their surroundings. Yet one thing seems never to have changed: the background music in the public spaces we move through every day is still designed and decided in advance by the owners and designers of the space, bestowed upon people there.
+
+Music is not only something we hear, but also a part of what makes up the atmosphere of a space. When we enter a public space, we usually just receive an atmosphere that has already been designed for us.
+'''
+turn.zh = "但如果，一个空间的氛围，<br>可以由在场的人共同塑造呢？"
+turn.en = "But what if the atmosphere of a space could be shaped together by the people in it?"
+
+[shared]
+title.zh = "SoundMat – 共同营造的氛围"
+title.en = "SoundMat – Shared Ambience"
+lead.zh = '''
+我们希望，人们对于公共空间音乐氛围的营造能拥有更多主动权。从这个理念出发，我们设计了 SoundMat。
+
+路过或停留的人，都可以挪动石头，轻轻改变整个空间的氛围。
+'''
+lead.en = '''
+Starting from the idea of giving people greater agency in shaping the musical atmosphere of a space, we designed SoundMat.
+
+Anyone passing through or lingering can move the stones, gently changing the atmosphere of the entire room.
+'''
+body.zh = '''
+我们的设计希望最大限度地实现自由度与悦耳的平衡，无论如何放置，[音乐总是和谐好听]^harmony，但参与者仍然能感觉到这个改变是由他们做出的。他们不需要任何音乐基础，只需要一些好奇、想法与尝试。
+
+氛围不再是播放给人听的，而是由在场的人一起营造的，他们共同塑造了空间的 <span class="term">Shared Ambience</span>（共同氛围）。
+
+人们不再是被动的氛围接受者，而成了影响者。挪一颗石头，听着这个小小的动作充满了整个房间。石头留在原处，氛围也留了下来，人们走进空间，听到的是之前的人留下的声音，并影响着之后来到这里的每一个人，整个空间留下了他们的痕迹。
+'''
+body.en = '''
+Our design seeks to find the best balance between creative freedom and good listening: however the stones are placed, [the music always sounds harmonious]^harmony, whereas participants can still feel that each change is their own. No musical background is needed, what they need is just some curiosity, imagination, and willingness to explore.
+
+Atmosphere is no longer played to people, but created by the people present. Together, they shape the <span class="term">Shared Ambience</span>.
+
+People are no longer passive receivers of atmosphere, but the ones who shape it. Move one stone, and hear that small gesture fill the whole room. The stone stays where it is, and so does the atmosphere. The next person receives what was left before, and shapes it for everyone who comes later. Their traces pervade the entire space.
+'''
+
+# Footnote cards, opened from [text]^id in the text above.
+[notes.muzak]
+title = "Muzak"
+body.zh = "1934 年，Muzak 品牌开始提供商业音乐服务，随后逐渐进入酒店、餐厅、工厂、办公室等场所。它旋律简单、舒缓，结构简单、容易预测。Muzak 这个名字，是 music 和当时很火的 Kodak 拼起来的。后来它流行到小写的 muzak 成了“背景音乐”的代名词。"
+body.en = "In 1934, the Muzak brand began offering commercial music services, and gradually spread into hotels, restaurants, factories, and offices. Its music had simple, soothing melodies and simple, predictable structures. The name Muzak combines “music” with Kodak, one of the most popular brands of the time. It later became so widespread that lowercase “muzak” turned into a byword for background music."
+sources.zh = "[Mood Media (2022), The History of Muzak](https://us.moodmedia.com/blog/history-of-muzak/)；[HistoryLink, Muzak, Inc.](https://historylink.org/File/10072)"
+sources.en = "[Mood Media (2022), The History of Muzak](https://us.moodmedia.com/blog/history-of-muzak/); [HistoryLink, Muzak, Inc.](https://historylink.org/File/10072)"
+
+[notes.stimulus]
+title.zh = "15 分钟的“刺激递进”"
+title.en = "Fifteen-Minute “Stimulus Progression”"
+body.zh = "Muzak 的招牌做法叫 Stimulus Progression。例如在工厂里，它把曲目编排成 15 分钟一组，让音乐从舒缓逐渐变得明快，期望以此减轻工人的疲劳、提高工作效率。"
+body.en = "Muzak’s signature method was called Stimulus Progression. In factories, for example, music was arranged into 15-minute sequences, gradually progressing from calm to lively, in the hope of reducing workers’ fatigue and raising productivity."
+sources.zh = "[Jones & Schumacher (1992), Muzak: On functional music and power](https://doi.org/10.1080/15295039209366822)；[Hui (2014), Muzak-While-You-Work](https://doi.org/10.7788/ha-2014-0306)"
+sources.en = "[Jones & Schumacher (1992), Muzak: On functional music and power](https://doi.org/10.1080/15295039209366822); [Hui (2014), Muzak-While-You-Work](https://doi.org/10.7788/ha-2014-0306)"
+
+[notes.captive]
+title.zh = "被困住的听众"
+title.en = "The Captive Audience"
+body.zh = "1949 年 10 月起，纽约中央车站每天从早上 7 点到午夜，通过广播不间断地播放 Muzak 音乐和商业广告。旅客走不开，也关不掉，抗议随之而来。E. B. White 在《纽约客》上撰文批评：人们正在失去决定自己听不听的权利。三年后，类似的争论打到了美国最高法院：华盛顿特区的有轨电车在车厢里播放广播，乘客起诉。法院判电车公司胜诉，但 Douglas 大法官在反对意见里写下了一句话：“The streetcar audience is a captive audience.”（电车上的乘客，就是被困住的听众。）"
+body.en = "Starting in October 1949, Grand Central Terminal in New York broadcast Muzak and commercials over its public address system nonstop, from 7 a.m. to midnight. Travelers could neither walk away nor turn it off, and protests followed. In *The New Yorker*, E. B. White wrote that people were losing the right to decide whether to listen at all. Three years later, a similar dispute reached the U.S. Supreme Court: streetcars in Washington, D.C. were playing radio broadcasts, and passengers sued. The Court ruled for the transit company, but Justice Douglas wrote in his dissent: “The streetcar audience is a captive audience.”"
+sources.zh = "[Broadcasting (1949, Oct 10), Grand Central Voice](https://www.worldradiohistory.com/Archive-BC/BC-1949/1949-10-10-BC.pdf)；[The New Yorker (1949, Nov 5)](https://www.newyorker.com/magazine/1949/11/05/comment-3857)；[Public Utilities Commission v. Pollak (1952)](https://www.law.cornell.edu/supremecourt/text/343/451)；[Jordan (2014), Canned Music and Captive Audiences](https://doi.org/10.1080/10714421.2014.960734)"
+sources.en = "[*Broadcasting* (1949, Oct 10), Grand Central Voice](https://www.worldradiohistory.com/Archive-BC/BC-1949/1949-10-10-BC.pdf); [*The New Yorker* (1949, Nov 5)](https://www.newyorker.com/magazine/1949/11/05/comment-3857); [Public Utilities Commission v. Pollak (1952)](https://www.law.cornell.edu/supremecourt/text/343/451); [Jordan (2014), Canned Music and Captive Audiences](https://doi.org/10.1080/10714421.2014.960734)"
+
+[notes.eno]
+title.zh = "自己组合的音乐"
+title.en = "Music That Meets Itself"
+body.zh = "Eno 录下乐手和歌手的单个音，做成长度不同的磁带循环，让它们自己相遇、组合。所以这段音乐里每个音什么时候出现，连 Eno 自己也无法事先知道。"
+body.en = "Eno recorded single notes from musicians and singers, turned them into tape loops of different lengths, and let them meet and combine on their own. So when each note in the music appears is something even Eno could not know in advance."
+sources.zh = "[Eno (1978), Music for Airports 唱片说明原文](https://tiranacalling.wordpress.com/2012/04/30/music-for-airports-liner-notes/)"
+sources.en = "[Eno (1978), liner notes for Music for Airports](https://tiranacalling.wordpress.com/2012/04/30/music-for-airports-liner-notes/)"
+
+[notes.harmony]
+title.zh = "为什么怎么放都好听"
+title.en = "Why It Always Sounds Good"
+body.zh = "SoundMat 的音乐使用五声音阶的氛围音乐。这五个音不管怎么叠在一起，都不会出现刺耳的音程，所以无论石头放在哪里，都不会“弹错”。调性每隔几分钟沿五度圈缓缓转换，让音乐一直在变，却从不突兀。"
+body.en = "SoundMat plays ambient music built on the pentatonic scale. However these five notes are stacked, they never form a harsh interval, so wherever the stones are placed, there are no “wrong notes.” Every few minutes, the key slowly shifts around the circle of fifths, so the music keeps changing without ever feeling abrupt."
+
+# Full-bleed photos. img is a file in img/; position is CSS object-position.
+[figures.hero]
+img = "hero.jpg"
+source = "media/正式拍摄/调色/P1011302.jpg"
+alt = "SoundMat lit from above in a dark room, surrounded by speakers, with a tray of stones beside it"
+caption.zh = "2026 年 10 月，华盛顿大学 DXARTS Media Lab。"
+caption.en = "DXARTS Media Lab, University of Washington, October 2026."
+
+[figures.leaves]
+img = "leaves.jpg"
+source = "media/正式拍摄/调色/P1011188.jpg"
+alt = "SoundMat on a lawn strewn with red maple leaves, seven stones on its felt surface, in low afternoon sun"
+caption.zh = "2026 年 10 月，华盛顿大学。"
+caption.en = "University of Washington, October 2026."
+
+[figures.together]
+img = "together.jpg"
+source = "media/正式拍摄/调色/P1011236.jpg"
+position = "50% 12%"
+alt = "Two people laughing as they move stones on SoundMat outdoors"
+caption.zh = "2026 年 10 月，华盛顿大学。"
+caption.en = "University of Washington, October 2026."
+
+[figures.next]
+img = "next.jpg"
+source = "media/正式拍摄/调色/P1011231.jpg"
+alt = "SoundMat on a stool on a campus lawn, a person sitting on a bench in the distance"
+caption.zh = "2026 年 10 月，华盛顿大学。"
+caption.en = "University of Washington, October 2026."
+
+# Design-notes carousel. doc links the card to its source chapter;
+# doc_label overrides that chapter's title.
+[[design_notes]]
+doc = "soundmat-2-philosophy"
+date.zh = "2026.04.11"
+date.en = "April 11, 2026"
+body.zh = '''
+所以，SoundMat 如何成为一个好的声音装置？
+
+1. 音乐必须是耐听的，可重复的
+1. 音乐必须是轻类型风格，不能让人觉得吵，是大众接受度高的
+1. 交互简单直观，怎么放置都好听，但是依然能感受到参与感/反馈感
+1. 有变化，即使是在无人的场景下依然有变化，最好能有曲式的起承转合
+1. 沉浸的氛围感，营造一种氛围与感受而不是只是音乐播放器
+'''
+body.en = '''
+So how does SoundMat become a good sound installation?
+
+1. The music must be easy to listen to, and bear repeating
+1. A light style of music: never loud or annoying, and easy for most people to like
+1. Simple, intuitive interaction: it sounds good however things are placed, yet you can still feel your part in it
+1. It keeps changing, even with no one around, ideally with a sense of musical form
+1. An immersive atmosphere: a mood and a feeling, not just a music player
+'''
+
+[[design_notes]]
+doc = "soundmat-2-philosophy"
+small = true
+date.zh = "2026.04.11"
+date.en = "April 11, 2026"
+body.zh = '''
+场景：
+
+晚上七点，大堂里没有背景音乐播放器，只有一张低矮的圆形木台，上面摆着三块大小不一的黑色火山石。石头下面传出极缓慢的、像寺庙钟声余韵一样的声音，和大堂里的檀香味融在一起。一位住客办完入住走过来，没有人告诉她这是什么，她只是觉得声音好听，把旁边的一块鹅卵石放到了垫子边缘，一层轻微的风铃声加了进来。她停了几秒听了听，然后去房间了。鹅卵石留在上面，音乐继续，工作人员不急着收——这就是大堂的一部分。第二天早上，另一位工作人员换了石头的位置，今天的音乐和昨天不一样了。
+'''
+body.en = '''
+Scene:
+
+Seven in the evening. The lobby has no background music, only a low, round wooden platform with three black volcanic stones of different sizes. From beneath them comes a very slow sound, like the fading ring of a temple bell, mingling with the sandalwood in the air. A guest who has just checked in walks over. No one has told her what it is; she just likes the sound, and sets a nearby pebble at the edge of the mat. A faint layer of wind chimes joins in. She listens for a few seconds, then heads to her room. The pebble stays, the music goes on, and the staff are in no hurry to clear it: it is part of the lobby. The next morning, another staff member moves the stones, and today’s music is different from yesterday’s.
+'''
+
+[[design_notes]]
+doc = "soundmat-2-philosophy"
+date.zh = "2026.04.11"
+date.en = "April 11, 2026"
+body.zh = "我想，真正重要的是产品整体给人带来的感觉与氛围，所谓艺术装置，与这个空间连结，与路人互动。它在那里，本身就是一种美学。"
+body.en = "I think what really matters is the feeling and the atmosphere the whole thing creates. An art installation connects with its space and plays with the people passing by. Simply being there is an aesthetic in itself."
+
+[[design_notes]]
+doc = "soundmat-3-exterior-design"
+date.zh = "2026.04.12"
+date.en = "April 12, 2026"
+body.zh = "表面我想用绒状织物，吸引视觉，有温馨与高级感；摆放的物品，鹅卵石是最佳的选择，天然有重量和大小差异、手感好，和高雅的场景天然匹配。"
+body.en = "For the surface I want a soft pile fabric: it draws the eye, and feels warm and refined. For the things people place, river pebbles are the best choice. They vary naturally in weight and size, feel good in the hand, and suit refined settings."
+
+[[design_notes]]
+doc = "soundmat-3-exterior-design"
+date.zh = "2026.04.12"
+date.en = "April 12, 2026"
+body.zh = "克制、自然、高级感。外观上浅下深让表面“浮”起来，注意力集中在操作面上。整体不像电子产品，像一件家具或艺术品。"
+body.en = "Restrained, natural, refined. A light top over a dark body makes the surface seem to float, and keeps attention on the surface you play. As a whole it looks less like an electronic product than a piece of furniture or an artwork."
+
+[[design_notes]]
+doc = "soundmat-6-electronics-system-design"
+date.zh = "2026.05.11"
+date.en = "May 11, 2026"
+body.zh = '''
+所有电子元件需要藏在空腔内，引出的线缆越少越好。我们只使用一根供电线和一根音频线。
+
+作为艺术装置，在户外比如广场上使用时，最好能够直接解决供电问题而不用插座。PD 协议的 USB-C 供电可以解决这一点，既可以用充电器，也可以用快充充电宝供电。
+'''
+body.en = '''
+All the electronics have to hide inside the cavity, with as few cables coming out as possible. We use just one power cable and one audio cable.
+
+As an art installation used outdoors, say in a plaza, it should ideally solve its own power, with no wall socket. USB-C with Power Delivery does this: it runs from a charger or from a fast-charging power bank.
+'''
+
+[[design_notes]]
+doc = "soundmat-8-interaction-and-sonification"
+doc_label.zh = "SoundMat (8) 交互与声音化设计"
+doc_label.en = "SoundMat (8) Interaction and Sonification Design"
+date.zh = "2026.05"
+date.en = "May 2026"
+body.zh = '''
+声音化设计是 SoundMat 的灵魂。
+
+其中有两种控制思路：
+
+调控是调整已有音乐的声音参数，例如一段音乐的音量、音色、高低频、速度等等。生成则是对于每个操作都实时生成元素，例如演奏音符、打击乐、和声、音乐片段等等。
+
+在 SoundMat，生成是绝对的主导。用户不是去调整别人已有的音乐，而是自己创造音乐。
+'''
+body.en = '''
+Sonification is the soul of SoundMat.
+
+There are two ways to control it:
+
+Adjusting changes the parameters of music that already exists, such as the volume, timbre, EQ or tempo of a piece. Generating creates new elements in real time for every action, such as notes, percussion, harmony or musical fragments.
+
+In SoundMat, generation dominates completely. People are not adjusting someone else’s music; they are making their own.
+'''
+
+[[design_notes]]
+doc = "soundmat-8-interaction-and-sonification"
+doc_label.zh = "SoundMat (8) 交互与声音化设计"
+doc_label.en = "SoundMat (8) Interaction and Sonification Design"
+date.zh = "2026.05"
+date.en = "May 2026"
+body.zh = '''
+我在想，能不能做一种“叙事的环境”，环境叙事让用户在放石头的过程中慢慢展开一个场景。我最想做的环境叙事就是日本寺院。
+
+SoundMat 其中的一个环境音乐模式就是《京都岚山》。
+'''
+body.en = '''
+I wondered whether we could make a “narrative environment”, where placing stones slowly unfolds a scene. The one I wanted most was a Japanese temple.
+
+One of SoundMat’s ambient modes is *Kyoto Arashiyama*.
+'''
+
+# "More images" strip. doc makes the image a link to that chapter.
+[[strip]]
+img = "s/fxn-134017.jpg"
+source = "media/正式拍摄/调色/fxn 2026-10-20 134017C10F0E4F8CB9.jpg"
+alt = "A person standing at SoundMat in the dark media lab, moving stones"
+
+[[strip]]
+img = "s/P1011208.jpg"
+source = "media/正式拍摄/调色/P1011208.jpg"
+alt = "SoundMat on the grass among red maple leaves, stones on the felt"
+
+[[strip]]
+img = "s/P1011279.jpg"
+source = "media/正式拍摄/调色/P1011279.jpg"
+alt = "Two people stacking stones on SoundMat outdoors"
+
+[[strip]]
+img = "s/P1011304.jpg"
+source = "media/正式拍摄/调色/P1011304.jpg"
+alt = "A person beside SoundMat in the dark lab, a tray of stones behind"
+
+[[strip]]
+img = "s/DSC01485.jpg"
+source = "media/June19/DSC01485.JPG"
+alt = "Hands placing stones on SoundMat, its LED ring glowing at the edge"
+
+[[strip]]
+img = "s/making-inside.jpg"
+source = "media/制作/1792665661648.jpg"
+doc = "soundmat-4-structural-design"
+alt = "Inside SoundMat: the board on its supports, the Raspberry Pi, the power converter and the LED strip around the rim"
+
+[[strip]]
+img = "s/doc-11-02.jpg"
+source = "media/docs/11-02-电子系统制造.png"
+doc = "soundmat-11-electronics-manufacturing"
+alt = "The hand-soldered circuit boards: an ESP32 and multiplexers on perfboard"
+
+[[strip]]
+img = "s/doc-06-03.jpg"
+source = "media/docs/06-03-电子系统设计.png（明暗反转）"
+doc = "soundmat-6-electronics-system-design"
+alt = "Hand-drawn diagram of the power module: USB-C PD trigger, buck converter, LED strip, Raspberry Pi and ESP32"
+
+[[strip]]
+img = "s/doc-05-04.jpg"
+source = "media/docs/05-04-传感器原理及设计.png（明暗反转，只取 a–d）"
+doc = "soundmat-5-sensor-principles-and-design"
+alt = "Hand-drawn diagrams of how the sensor grid is scanned"
+
+[credits]
+team_label.zh = "项目团队"
+team_label.en = "Project Team"
+team = ["Hanlin Xue", "Po-Yu Chen", "Chenfei Ma", "Sora Kim"]
+advisor_label.zh = "指导老师"
+advisor_label.en = "Advisor"
+advisor = "Meichun Liu"
+advisor_sub.zh = "华盛顿大学"
+advisor_sub.en = "University of Washington"
+
+[footer]
+thanks_title.zh = "致谢"
+thanks_title.en = "Acknowledgement"
+thanks.zh = '''
+感谢 [Yiyue Luo](https://yyueluo.com/) 教授在 EE 546C 课程上的指导。
+
+Thanks to the Department of Digital Arts and Experimental Media (DXARTS) for the kind use of the DXARTS Media Lab in preparation of the documentation of this project.
+'''
+thanks.en = '''
+Thanks to Prof. [Yiyue Luo](https://yyueluo.com/) for the guidance in EE 546C.
+
+Thanks to the Department of Digital Arts and Experimental Media (DXARTS) for the kind use of the DXARTS Media Lab in preparation of the documentation of this project.
+'''
+links_title.zh = "链接"
+links_title.en = "Links"
+docs_link = "Project documentation"
+refs_title.zh = "参考资料"
+refs_title.en = "References"
+refs = [
+  "Brian Eno, [liner notes to *Ambient 1: Music for Airports*](https://tiranacalling.wordpress.com/2012/04/30/music-for-airports-liner-notes/), 1978.",
+  "[*Broadcasting*, 10 Oct 1949, “Grand Central Voice.”](https://www.worldradiohistory.com/Archive-BC/BC-1949/1949-10-10-BC.pdf)",
+  "[*The New Yorker*, 5 Nov 1949.](https://www.newyorker.com/magazine/1949/11/05/comment-3857)",
+  "[*Public Utilities Commission v. Pollak*, 343 U.S. 451 (1952).](https://www.law.cornell.edu/supremecourt/text/343/451)",
+  "Jones & Schumacher, [“Muzak: On Functional Music and Power,”](https://doi.org/10.1080/15295039209366822) 1992.",
+  "Hui, [“Muzak-While-You-Work,”](https://doi.org/10.7788/ha-2014-0306) 2014.",
+  "Jordan, [“Canned Music and Captive Audiences,”](https://doi.org/10.1080/10714421.2014.960734) 2014.",
+]

@@ -1,5 +1,8 @@
 ---
 title: "SoundMat"
-layout: soundmat-home
-description: "A sound installation that lets people in a public space shape its sonic atmosphere together, by placing and moving stones."
+# The homepage itself is built by soundmat-home/build.py into static/soundmat/.
+# Hugo keeps this section only so the docs have a parent; it renders no page.
+build:
+  render: link
+  list: always
 ---

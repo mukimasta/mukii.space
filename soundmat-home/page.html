@@ -1,0 +1,177 @@
+{#- SoundMat homepage. Rendered once per language by build.py; copy lives in content.toml. -#}
+{%- macro figure(f, style="", eager=False) -%}
+<figure class="bleed"{% if style %} style="{{ style }}"{% endif %}>
+    {{ img(f.img, f.alt, sizes="100vw", position=f.get("position"), eager=eager) }}
+    <figcaption>{{ f.caption }}</figcaption>
+  </figure>
+{%- endmacro -%}
+<!doctype html>
+<html lang="{{ html_lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>{{ t.meta.title }}</title>
+<meta name="description" content="{{ t.meta.description|e }}">
+<link rel="canonical" href="{{ site }}{{ urls[lang] }}">
+<link rel="alternate" hreflang="zh-CN" href="{{ site }}{{ urls.zh }}">
+<link rel="alternate" hreflang="en" href="{{ site }}{{ urls.en }}">
+<link rel="alternate" hreflang="x-default" href="{{ site }}{{ urls.zh }}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ t.meta.title }}">
+<meta property="og:description" content="{{ t.meta.description|e }}">
+<meta property="og:url" content="{{ site }}{{ urls[lang] }}">
+<meta property="og:image" content="{{ site }}{{ og_image }}">
+<meta property="og:locale" content="{{ 'zh_CN' if lang == 'zh' else 'en_US' }}">
+<meta name="twitter:card" content="summary_large_image">
+{%- for f in preload_fonts %}
+<link rel="preload" href="{{ f }}" as="font" type="font/woff2" crossorigin>
+{%- endfor %}
+<link rel="stylesheet" href="{{ css }}">
+{%- if lang == "zh" %}
+<script>/* old ?lang=en links */if(/[?&]lang=en\b/.test(location.search))location.replace("{{ urls.en }}")</script>
+{%- endif %}
+</head>
+<body>
+<header class="top">
+  <div><b>SoundMat</b></div>
+  <div class="top-r">
+    <a class="docs" href="{{ docs_url }}" target="_blank" rel="noopener">{{ t.ui.docs }}</a>
+    <nav class="lang" aria-label="{{ t.ui.language }}">
+      <a href="{{ urls.en }}" hreflang="en" lang="en"{% if lang == "en" %} aria-current="page"{% endif %}>EN</a>
+      <a href="{{ urls.zh }}" hreflang="zh-CN" lang="zh-CN"{% if lang == "zh" %} aria-current="page"{% endif %}>中文</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <h1>SoundMat</h1>
+    <p class="sub">{{ t.hero.sub }}</p>
+  </div>
+
+  {{ figure(t.figures.hero, eager=True) }}
+
+  <section>
+    <div class="col">
+      {{ md(t.intro.body) }}
+    </div>
+  </section>
+
+  {% if t.film.src -%}
+  <figure class="film">
+    <video controls playsinline preload="none"{% if film_poster %} poster="{{ film_poster }}"{% endif %} src="{{ t.film.src }}"></video>
+    <figcaption>{{ t.film.caption }}</figcaption>
+  </figure>
+  {%- else -%}
+  <div class="placeholder">{{ t.film.caption }}</div>
+  {%- endif %}
+
+  <section>
+    <div class="col">
+      <h2>{{ t.muzak.question }}</h2>
+
+      <h3 class="sh">{{ t.muzak.captive_title }}</h3>
+      {{ md(t.muzak.captive_body) }}
+
+      <h3 class="sh">{{ t.muzak.eno_title }}</h3>
+      {{ md(t.muzak.eno_body) }}
+    </div>
+
+    {{ figure(t.figures.leaves, style="margin-top:clamp(56px,8vw,104px)") }}
+
+    <div class="col">
+      <h3 class="sh" style="margin-top:clamp(56px,8vw,104px)">{{ t.muzak.curated_title }}</h3>
+      {{ md(t.muzak.curated_body) }}
+    </div>
+    <div class="col" style="margin-top:3.5em">
+      <p class="turn">{{ t.muzak.turn }}</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="col">
+      <h3 class="sh sh-main" style="margin-top:0">{{ t.shared.title }}</h3>
+      {{ md(t.shared.lead) }}
+    </div>
+    {{ figure(t.figures.together, style="margin-block:2.4em") }}
+    <div class="col">
+      {{ md(t.shared.body) }}
+    </div>
+  </section>
+
+  {{ figure(t.figures.next) }}
+
+  <section class="notes">
+    <div class="nwrap">
+      <h3 class="sh" style="margin-top:0">{{ t.ui.notes_title }}</h3>
+      <div class="nstack" id="nstack" role="region" aria-roledescription="carousel" aria-label="{{ t.ui.notes_aria }}">
+        {%- for n in t.design_notes %}
+        <article class="ncard" data-pos="{{ '0' if loop.first else 'x' }}" aria-roledescription="slide">
+          <div class="nq{% if n.get("small") %} nq-s{% endif %}">{{ md(n.body) }}</div>
+          <div class="nfoot"><span>{{ t.ui.from }}<a href="{{ doc_url(n.doc) }}" target="_blank" rel="noopener">{{ n.get("doc_label") or doc_title(n.doc) }}</a></span><span>{{ n.date }}</span></div>
+        </article>
+        {%- endfor %}
+      </div>
+      <div class="nnav">
+        <button type="button" id="nprev" aria-label="{{ t.ui.prev_note }}">←</button>
+        <span class="ncount" id="ncount" aria-live="polite">1 / {{ t.design_notes|length }}</span>
+        <button type="button" id="nnext" aria-label="{{ t.ui.next_note }}">→</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="strip" aria-label="{{ t.ui.more_images_aria }}">
+    <div class="strip-head">
+      <h3 class="sh" style="margin:0">{{ t.ui.more_images }}</h3>
+      <div class="snav"><button type="button" id="sprev" aria-label="{{ t.ui.scroll_left }}">←</button><button type="button" id="snext" aria-label="{{ t.ui.scroll_right }}">→</button></div>
+    </div>
+    <div class="sband"><div class="srow" id="srow" tabindex="0">
+      {%- for s in t.strip %}
+      <figure class="sitem">
+        {%- if s.get("doc") %}<a class="slink" href="{{ doc_url(s.doc) }}" target="_blank" rel="noopener" aria-label="{{ doc_title(s.doc)|e }}">{% endif -%}
+        {{ img(s.img, s.alt, sizes=strip_sizes) }}
+        {%- if s.get("doc") %}</a>{% endif -%}
+      </figure>
+      {%- endfor %}
+    </div></div>
+  </section>
+</main>
+
+<footer>
+  <div class="credits">
+    <div>
+      <p class="cr-label">{{ t.credits.team_label }}</p>
+      {%- for name in t.credits.team %}
+      <p class="cr-name">{{ name }}</p>
+      {%- endfor %}
+    </div>
+    <div>
+      <p class="cr-label">{{ t.credits.advisor_label }}</p>
+      <p class="cr-name">{{ t.credits.advisor }}</p>
+      <p class="cr-sub">{{ t.credits.advisor_sub }}</p>
+    </div>
+  </div>
+  <div class="fcols">
+  <div>
+    <h3>{{ t.footer.thanks_title }}</h3>
+    {{ md(t.footer.thanks) }}
+  </div>
+  <div>
+    <h3>{{ t.footer.links_title }}</h3>
+    <p><a href="{{ docs_url }}">{{ t.footer.docs_link }}</a></p>
+    <p><a href="https://github.com/mukimasta/soundmat">GitHub</a></p>
+    <details class="refs">
+      <summary>{{ t.footer.refs_title }}</summary>
+      <ol>
+        {%- for r in t.footer.refs %}
+        <li>{{ inline(r) }}</li>
+        {%- endfor %}
+      </ol>
+    </details>
+  </div>
+  </div>
+</footer>
+
+<script src="{{ js }}" defer></script>
+</body>
+</html>

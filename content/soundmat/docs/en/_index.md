@@ -20,8 +20,6 @@ description: "Place stones. Make music."
 **[GitHub](https://github.com/mukimasta/soundmat)**
 {{< /soundmat-hero >}}
 
-{{< soundmat-gallery >}}UW Design Show, June 2026.{{< /soundmat-gallery >}}
-
 ## Documentation
 
 - [SoundMat (1) Idea](/soundmat/docs/en/soundmat-1-idea/)

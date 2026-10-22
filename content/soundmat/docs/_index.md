@@ -20,8 +20,6 @@ description: "放下石头,音乐生长"
 **[GitHub](https://github.com/mukimasta/soundmat)**
 {{< /soundmat-hero >}}
 
-{{< soundmat-gallery >}}2026 年 6 月，UW Design Show。{{< /soundmat-gallery >}}
-
 ## 项目文档
 
 - [SoundMat (1) Idea](/soundmat/docs/soundmat-1-idea/)

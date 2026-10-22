@@ -239,7 +239,7 @@ def convert_wiki_links(text: str, wiki_map: list[tuple[str, str]]) -> str:
         target = match.group(1).strip()
         for wiki_target, slug in wiki_map:
             if target == wiki_target.strip():
-                return f"[{target}](/soundmat/{slug}/)"
+                return f"[{target}](/soundmat/docs/{slug}/)"
         return f"[{target}](#)"
     return WIKI_LINK_RE.sub(repl, text)
 
@@ -250,13 +250,14 @@ def convert_next_links(text: str, wiki_map: list[tuple[str, str]]) -> str:
         target = match.group(2).strip()
         for wiki_target, slug in wiki_map:
             if target == wiki_target.strip():
-                return f"{prefix}[{target}](/soundmat/{slug}/)"
+                return f"{prefix}[{target}](/soundmat/docs/{slug}/)"
         return match.group(0)
     text = NEXT_LINK_RE.sub(repl, text)
     return re.sub(r"下一篇：\s*$", "", text, flags=re.MULTILINE)
 
 
 def front_matter(article: Article) -> str:
+    # Docs live under /soundmat/docs/; the old /soundmat/<slug>/ URL stays as an alias.
     lines = ["---", f'title: "{article.title}"', "aliases:"]
     lines.append(f"  - /soundmat/{article.slug}/")
     for alias in article.aliases:
@@ -288,13 +289,13 @@ def parse_index_entries(index_text: str, wiki_map: list[tuple[str, str]]) -> lis
 def write_index(content_dir: Path, entries: list[tuple[str, str]], dry_run: bool) -> None:
     lines = [
         "---",
-        'title: "SoundMat"',
+        'title: "SoundMat 文档"',
         f'description: "{INDEX_DESCRIPTION}"',
         "---",
         "",
     ]
     for label, slug in entries:
-        lines.append(f"- [{label}](/soundmat/{slug}/)")
+        lines.append(f"- [{label}](/soundmat/docs/{slug}/)")
     lines.append("")
     target = content_dir / "_index.md"
     body = "\n".join(lines)
@@ -344,7 +345,7 @@ def sync_article(
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--vault", type=Path, default=DEFAULT_VAULT, help="Obsidian vault path")
-    parser.add_argument("--content", type=Path, default=REPO_ROOT / "content/soundmat")
+    parser.add_argument("--content", type=Path, default=REPO_ROOT / "content/soundmat/docs")
     parser.add_argument("--static", type=Path, default=REPO_ROOT / "static/soundmat")
     parser.add_argument("--image-map", type=Path, default=DEFAULT_IMAGE_MAP)
     parser.add_argument("--dry-run", action="store_true", help="Print actions without writing files")

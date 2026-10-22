@@ -17,6 +17,6 @@ subtitle: ""
 
 ### SoundMat
 
-[SoundMat 中文主页](/soundmat/) | [SoundMat homepage (English)](/soundmat/en/)
+[SoundMat 中文主页](/soundmat/?lang=zh) | [SoundMat homepage (English)](/soundmat/?lang=en)
 
 ---

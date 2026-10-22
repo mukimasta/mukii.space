@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SoundMat · Shared Ambience</title>
+<meta name="description" content="{{ .Description }}">
+<link rel="canonical" href="{{ .Permalink }}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="SoundMat · Shared Ambience">
+<meta property="og:description" content="{{ .Description }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:image" content="{{ "soundmat/img/hero.jpg" | absURL }}">
+<meta name="twitter:card" content="summary_large_image">
+{{- if fileExists "static/favicon.ico" }}
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+{{- end }}
+<style>[hidden]:not([hidden=until-found i]){display:none!important}img{max-width:100%}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&family=Noto+Sans+SC:wght@300;400;500&display=swap">
+<style>
+/* Layout: one quiet reading column in a dark room; images break out full-bleed; the mat is the only lit object. */
+:root{
+  --room:#121110;      /* the dark room */
+  --room-2:#1b1a18;    /* slightly lifted surface */
+  --felt:#ddd3c1;      /* felt: main text */
+  --stone:#8e8980;     /* secondary text */
+  --rule:#2c2a27;      /* hairlines */
+  --led:#b8a6f2;       /* the LED ring glow, used sparingly */
+  --sans:"IBM Plex Sans","Noto Sans SC",system-ui,-apple-system,"PingFang SC",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --zh:"Noto Sans SC","PingFang SC","Hiragino Sans GB",system-ui,sans-serif;
+  --col:38rem;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--room);color:var(--felt);font-family:var(--sans);font-weight:300;font-size:1.0625rem;line-height:1.75;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));-webkit-font-smoothing:antialiased}
+html[data-lang="zh"] body{font-family:var(--zh);line-height:1.95;letter-spacing:.01em}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--room)}
+html:not([data-lang="zh"]) [lang="zh"], html[data-lang="zh"] [lang="en"]{display:none!important}
+a{color:var(--felt);text-decoration-color:var(--stone);text-underline-offset:3px}
+a:hover{text-decoration-color:var(--felt)}
+:focus-visible{outline:2px solid var(--led);outline-offset:3px}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;justify-content:space-between;align-items:center;
+  max-width:none;margin:0 calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:14px max(16px,calc((100vw - 72rem)/2));background:var(--room);font-family:var(--mono);font-size:.75rem;letter-spacing:.06em;color:var(--stone)}
+.top b{color:var(--felt);font-weight:500}
+.top-r{display:flex;align-items:center;gap:clamp(12px,2vw,20px)}
+.docs{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:var(--stone);text-decoration:none;padding:4px 2px}
+.docs:hover{color:var(--felt)}
+.docs:focus-visible{outline:1px solid var(--felt);outline-offset:3px}
+.lang{display:flex;gap:2px;border:1px solid var(--rule);border-radius:999px;padding:2px}
+.lang button{all:unset;cursor:pointer;padding:3px 10px;border-radius:999px;font-family:var(--mono);font-size:.72rem}
+.lang button[aria-pressed="true"]{background:var(--felt);color:var(--room)}
+
+.col{max-width:var(--col);margin:0 auto}
+section{padding-block:clamp(56px,10vw,120px)}
+h1,h2,h3{font-weight:400;text-wrap:balance;margin:0}
+h2{font-size:clamp(1.5rem,3.2vw,2rem);line-height:1.3;margin-bottom:1.6em;letter-spacing:-.005em}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);margin-bottom:1.4em;display:block}
+p{margin:0 0 1.25em}
+.dim{color:var(--stone)}
+
+/* hero */
+.hero{max-width:var(--col);margin:0 auto;padding-block:clamp(72px,16vw,180px) clamp(40px,8vw,90px)}
+.hero h1{font-size:clamp(3rem,10vw,7.5rem);line-height:1;letter-spacing:-.03em;font-weight:300}
+.hero .sub{margin-top:1.4em;font-size:clamp(1.1rem,2.2vw,1.35rem);line-height:1.6;max-width:36rem}
+
+/* full-bleed figures */
+.bleed{margin-left:calc(-1*max(16px,env(safe-area-inset-left,0px)));margin-right:calc(-1*max(16px,env(safe-area-inset-right,0px)))}
+figure{margin:0}
+figure img{display:block;width:100%;height:auto}
+.bleed img{max-height:88vh;object-fit:cover}
+figcaption{font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;color:var(--stone);padding:10px max(16px,env(safe-area-inset-left,0px)) 0;max-width:72rem;margin:0 auto}
+.wide{max-width:72rem;margin:0 auto}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:640px){.pair{grid-template-columns:1fr}}
+.pair img{aspect-ratio:3/2;object-fit:cover}
+
+/* timeline */
+.timeline{list-style:none;margin:2.4em 0;padding:0;border-top:1px solid var(--rule)}
+.timeline li{display:grid;grid-template-columns:6.5rem 1fr;gap:16px;padding:18px 0;border-bottom:1px solid var(--rule)}
+.timeline .y{font-family:var(--mono);font-size:.82rem;color:var(--stone);padding-top:.25em;font-variant-numeric:tabular-nums}
+.timeline .who{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--stone);display:block;margin-top:.4em}
+.timeline li.now .y,.timeline li.now .who{color:var(--led)}
+.timeline p{margin:0}
+@media (max-width:480px){.timeline li{grid-template-columns:1fr;gap:4px}}
+
+/* stimulus progression chart */
+.sp{margin:2em 0 2.4em;border:1px solid var(--rule);padding:18px 18px 14px}
+.sp .bars{display:flex;align-items:flex-end;gap:3px;height:84px}
+.sp .bars span{flex:1;background:var(--stone);opacity:.55}
+.sp .bars span.gap{background:none}
+.sp .axis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.68rem;color:var(--stone);margin-top:8px;font-variant-numeric:tabular-nums}
+.sp .cap{font-family:var(--mono);font-size:.72rem;color:var(--stone);margin-top:10px;line-height:1.5}
+
+blockquote{margin:2em 0;padding:0;font-size:clamp(1.25rem,2.6vw,1.6rem);line-height:1.45;font-weight:300}
+blockquote cite{display:block;font-style:normal;font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:var(--stone);margin-top:.9em}
+
+.turn{font-size:clamp(1.5rem,3.2vw,2rem);line-height:1.3;font-weight:400;letter-spacing:-.005em;text-wrap:balance;margin:0}   /* same type as the opening question (h2) */
+.term{font-family:var(--mono);font-size:.82em;letter-spacing:.04em;color:var(--felt);white-space:nowrap}
+
+/* the mat */
+.matwrap{max-width:72rem;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,22rem);gap:clamp(24px,5vw,64px);align-items:center}
+@media (max-width:820px){.matwrap{grid-template-columns:1fr}}
+.mat{position:relative;width:100%;max-width:640px;aspect-ratio:1;justify-self:center}
+.mat canvas{width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+.mat canvas.dragging{cursor:grabbing}
+.matside .state{font-family:var(--mono);font-size:.75rem;color:var(--stone);letter-spacing:.04em;margin-bottom:1em}
+.btn{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:10px;border:1px solid var(--felt);border-radius:999px;padding:10px 18px;font-family:var(--mono);font-size:.78rem;letter-spacing:.06em}
+.btn:hover{border-color:var(--led);color:var(--led)}
+.btn .dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+.btn[aria-pressed="true"] .dot{background:var(--led);box-shadow:0 0 10px var(--led)}
+.rings{list-style:none;padding:0;margin:1.6em 0 0;font-family:var(--mono);font-size:.72rem;color:var(--stone);display:grid;gap:4px}
+.rings li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--rule);padding-bottom:4px}
+.rings b{font-weight:400;color:var(--felt);font-variant-numeric:tabular-nums}
+
+/* system */
+.more{font-family:var(--mono);font-size:.82rem;letter-spacing:.04em}
+.flow{display:flex;flex-wrap:wrap;gap:8px 0;align-items:center;margin:2em 0;font-family:var(--mono);font-size:.78rem}
+.flow span{border:1px solid var(--rule);padding:8px 12px}
+.flow i{font-style:normal;color:var(--stone);padding:0 8px}
+.flow span.loop{border-color:var(--led);color:var(--led)}
+
+/* lineage table */
+.tbl{overflow-x:auto;margin:2em 0}
+table{border-collapse:collapse;width:100%;min-width:34rem;font-size:.92rem}
+th,td{text-align:left;vertical-align:top;padding:12px 14px 12px 0;border-bottom:1px solid var(--rule)}
+th{font-family:var(--mono);font-weight:400;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--stone)}
+tr.us td{color:var(--felt)} tr.us td:first-child{color:var(--led)}
+td{color:var(--stone)} td:first-child{color:var(--felt);white-space:nowrap}
+
+/* section titles: quiet dividers */
+h3.sh{font-family:var(--mono);font-weight:400;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);margin:4.5em 0 1.8em}
+html[data-lang="zh"] h3.sh{letter-spacing:.2em;font-family:var(--zh);font-size:.78rem}
+h2 + h3.sh{margin-top:2.6em}
+h3.sh.sh-main{font-size:.92rem;color:var(--felt)}
+html[data-lang="zh"] h3.sh.sh-main{font-size:1rem;color:var(--felt)}
+
+/* asides: a highlighted phrase opens a small card under the paragraph */
+.nb{white-space:nowrap}
+.tn{all:unset;cursor:pointer;color:inherit;font:inherit;text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--stone);text-decoration-thickness:1px;text-underline-offset:4px;border-radius:3px;transition:background-color .2s,color .2s}
+.tn:hover,.tn[aria-expanded="true"]{color:var(--felt);background-color:rgba(221,211,193,.12);text-decoration-color:var(--felt)}
+.tn:focus-visible{outline:1px solid var(--felt);outline-offset:2px}
+.note-card{margin:-.4em 0 1.6em;padding:16px 18px;background:var(--room-2);border-radius:10px;font-size:.88rem;line-height:1.7;color:var(--stone)}
+.note-card b{display:block;font-weight:400;color:var(--felt);margin-bottom:.35em}
+.note-card p{margin:0}
+.note-card .src{display:block;margin-top:.8em;font-size:.76rem;color:var(--stone);opacity:.8}
+.note-card a{color:var(--stone)}
+html:not([data-lang="zh"]) .note-card[lang="zh"],html[data-lang="zh"] .note-card[lang="en"]{display:none!important}
+
+.placeholder{border:1px dashed var(--rule);aspect-ratio:16/9;display:grid;place-items:center;text-align:center;color:var(--stone);font-family:var(--mono);font-size:.78rem;padding:16px;max-width:72rem;margin:0 auto}
+/* Hanlin's design notes: a small stack of tilted cards, one note at a time */
+section.notes{padding-block:clamp(64px,10vw,120px) clamp(16px,3vw,32px)}
+.nwrap{max-width:48rem;margin:0 auto}
+.nstack{display:grid;margin-top:6px;touch-action:pan-y}
+.ncard{grid-area:1/1;justify-self:start;width:100%;display:flex;flex-direction:column;justify-content:space-between;gap:1.3em;min-height:9rem;padding:clamp(22px,3.6vw,36px) clamp(22px,4vw,40px);background:var(--room);color:var(--felt);border:1px solid #34312d;border-radius:0;transform:rotate(var(--r));transition:transform .28s ease,opacity .28s ease,background-color .28s ease}
+.ncard[data-pos="0"]{z-index:3;transform:none}
+.ncard[data-pos="1"]{z-index:2;background:var(--room);transform:translate(6px,7px) rotate(1.1deg)}
+.ncard[data-pos="2"]{z-index:1;background:var(--room);transform:translate(-5px,13px) rotate(-1.3deg)}
+.ncard[data-pos="x"]{z-index:0;opacity:0;transform:translateY(16px)}
+.ncard>*{transition:opacity .2s ease}
+.ncard:not([data-pos="0"])>*{opacity:0}
+.nq{font-size:1rem;line-height:1.7}
+html[data-lang="zh"] .nq{line-height:1.85}
+.nq-s{font-size:.9rem}
+@media (max-width:560px){.nq{font-size:.95rem}.nq-s{font-size:.86rem}}
+.nq p{margin:0 0 .5em}.nq p:last-child{margin-bottom:0}
+.nq ol{margin:.2em 0 0;padding-left:1.3em}.nq li{margin:0 0 .15em;padding-left:.2em}.nq li::marker{color:var(--stone)}
+.nfoot{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:.4em 1.6em;font-family:var(--mono);font-size:.72rem;letter-spacing:.03em;line-height:1.5;color:var(--stone)}
+.nfoot>span:last-child{margin-left:auto;text-align:right}
+.nfoot a{color:var(--stone);text-decoration-color:var(--rule)}.nfoot a:hover{color:var(--felt);text-decoration-color:var(--stone)}
+.nnav{display:flex;align-items:center;justify-content:center;gap:4px;margin-top:30px;font-family:var(--mono);font-size:.78rem;color:var(--stone)}
+.nnav button{all:unset;cursor:pointer;padding:6px 10px;border-radius:999px;color:var(--felt);line-height:1}
+.nnav button:hover{background:rgba(221,211,193,.1)}
+.nnav button:focus-visible{outline:1px solid var(--felt);outline-offset:2px}
+.ncount{min-width:3.6em;text-align:center;font-variant-numeric:tabular-nums}
+/* image strip: a deeper-black band with hairlines; uniform 4:3 tiles, images run edge to edge between the hairlines */
+:root{--tw:clamp(300px,38vw,560px)}
+@media (max-width:560px){:root{--tw:82vw}}
+section.strip{padding-block:clamp(56px,8vw,96px) 0}
+.strip-head{max-width:72rem;margin:0 auto 16px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.snav{display:flex;gap:2px;font-family:var(--mono);font-size:.78rem}
+.snav button{all:unset;cursor:pointer;padding:6px 10px;border-radius:999px;color:var(--felt);line-height:1}
+.snav button:hover{background:rgba(221,211,193,.1)}
+.snav button:disabled{opacity:.25;cursor:default;background:none}
+.snav button:focus-visible{outline:1px solid var(--felt);outline-offset:2px}
+.sband{margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));background:#0b0a09;border-block:1px solid var(--rule)}
+.srow{display:flex;gap:clamp(10px,1.2vw,16px);overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scrollbar-width:none;
+  padding:0 max(16px,calc((100vw - 72rem)/2));scroll-padding-inline:max(16px,calc((100vw - 72rem)/2));cursor:grab}
+.srow::-webkit-scrollbar{display:none}
+.srow.dragging{cursor:grabbing;scroll-snap-type:none}
+.srow:focus-visible{outline:none}
+.sitem{flex:none;width:var(--tw);margin:0;scroll-snap-align:start}
+.sitem img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;user-select:none;-webkit-user-drag:none}
+.phbox{width:100%;aspect-ratio:4/3;display:grid;place-items:center;color:var(--stone);font-family:var(--mono);font-size:.72rem;outline:1px dashed var(--rule);outline-offset:-1px}
+.slink{display:block;position:relative}
+.slink img{transition:filter .2s}
+.slink:hover img{filter:brightness(1.12)}
+.slink::after{content:"↗";position:absolute;right:12px;bottom:10px;font-family:var(--mono);font-size:.85rem;line-height:1;color:var(--felt);opacity:0;transition:opacity .2s}
+.slink:hover::after,.slink:focus-visible::after{opacity:.9}
+@media (hover:none){.slink::after{opacity:.6}}
+.slink:focus-visible{outline:1px solid var(--felt);outline-offset:-1px}
+/* zh: keep the last character of the opening question from wrapping alone on phones */
+@media (max-width:480px){html[data-lang="zh"] h2,html[data-lang="zh"] .turn{font-size:min(1.5rem,calc((100vw - 32px)/15.5))}}
+
+/* optical centre: the left column is wider, so the gutter sits right of centre; nudge the whole group 18px left */
+footer{max-width:72rem;margin:0 auto;padding-block:88px 80px;padding-inline:0 36px;font-size:.88rem;color:var(--stone);display:grid;grid-template-columns:repeat(2,fit-content(20rem));justify-content:center;column-gap:clamp(32px,6vw,96px)}
+.credits,.fcols{grid-column:1/-1;display:grid;grid-template-columns:subgrid;row-gap:32px}
+.credits{padding-bottom:56px;margin-bottom:48px;border-bottom:1px solid var(--rule)}
+.credits p{margin:0}
+.credits>div{grid-column:-2/-1}   /* team above advisor, both in the right column */
+.credits .cr-label{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--felt);font-weight:500;margin-bottom:.9em}
+.credits .cr-name{font-size:1.15rem;line-height:1.55;color:var(--felt);font-weight:300}
+.credits .cr-sub{font-size:.88rem;color:var(--stone);margin-top:.2em}
+footer h3{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--felt);margin-bottom:.9em}
+footer p{margin:0 0 .6em}
+.refs{margin-top:1.6em;contain:inline-size}
+.refs summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--felt)}
+.refs summary::-webkit-details-marker{display:none}
+.refs summary::after{content:" +";color:var(--stone)}
+.refs[open] summary::after{content:" −"}
+.refs ol{margin-top:.9em;font-size:.8rem;line-height:1.6}
+.refs li{margin-bottom:.7em}
+.refs li::marker{color:var(--stone)}
+footer ol{margin:0;padding-left:1.1em} footer li{margin-bottom:.5em}
+@media (max-width:560px){footer{grid-template-columns:minmax(0,1fr);padding-inline:0}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div><b>SoundMat</b></div>
+  <div class="top-r">
+    <a class="docs" href="/soundmat/docs/en/" data-zh="/soundmat/docs/" data-en="/soundmat/docs/en/" target="_blank" rel="noopener"><span lang="en">Docs</span><span lang="zh">文档</span></a>
+    <div class="lang" role="group" aria-label="Language">
+      <button id="lang-en" aria-pressed="true">EN</button>
+      <button id="lang-zh" aria-pressed="false">中文</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <h1>SoundMat</h1>
+    <p class="sub">
+      <span lang="en">A sound installation that lets people in a public space shape its sonic atmosphere together, by placing and moving stones.</span>
+      <span lang="zh">一件声音装置，通过放置与挪动石头，让公共空间里的人共同塑造这里的声音氛围。</span>
+    </p>
+  </div>
+
+  <figure class="bleed">
+    <!-- 原图：/Users/mukii/Projects/SoundMat/media/正式拍摄/调色/P1011302.jpg -->
+    <img src="img/hero.jpg" alt="SoundMat lit from above in a dark room, surrounded by speakers, with a tray of stones beside it">
+    <figcaption><span lang="en">DXARTS Media Lab, University of Washington, October 2026.</span><span lang="zh">2026 年 10 月，华盛顿大学 DXARTS Media Lab。</span></figcaption>
+  </figure>
+
+  <section>
+    <div class="col">
+      <p lang="en">A round wool felt mat with natural stones on it, connected to the room's sound system. Pressure sensors detect the arrangement of the stones to generate ambient music in real time.</p>
+      <p lang="en">Anyone passing through or lingering can move the stones, gently changing the atmosphere of the entire room.</p>
+      <p lang="zh">一张圆形的羊毛毛毡上放着许多天然的石头，连接着空间的音响。装置通过压力传感器读取垫面上石头的排列，实时生成氛围音乐。</p>
+      <p lang="zh">路过或停留的人，都可以挪动石头，轻轻改变整个空间的氛围。</p>
+    </div>
+  </section>
+
+  <div class="placeholder"><span lang="en">Main film, 1–2 min. DXARTS Media Lab, Oct 20.</span><span lang="zh">主视频，1–2 分钟。10 月 20 日 DXARTS Media Lab 拍摄。</span></div>
+
+  <section>
+    <div class="col">
+      <h2>
+        <span lang="en">When you enter a public space, who decides the background music you hear?</span>
+        <span lang="zh">当你进入一个公共空间时，<br>你听到的背景音乐是由谁决定的？</span>
+      </h2>
+
+      <h3 class="sh"><span lang="en">Captive Audience</span><span lang="zh">被困住的听众</span></h3>
+
+      <p lang="en">In the mid-20th century, <button class="tn" aria-expanded="false" aria-controls="en-n1">Muzak music</button> began to thrive across America, finding its way into shops, offices, and factories. The central idea was to treat music as an environmental element that could be organized and managed to influence the atmosphere of a space, people's moods, and even <span class="nb"><button class="tn" aria-expanded="false" aria-controls="en-n2">the ways they worked and shopped</button>.</span></p>
+      <div lang="en" class="note-card" id="en-n1" hidden><b>Muzak</b><p>In 1934, the Muzak brand began offering commercial music services, and gradually spread into hotels, restaurants, factories, and offices. Its music had simple, soothing melodies and simple, predictable structures. The name Muzak combines “music” with Kodak, one of the most popular brands of the time. It later became so widespread that lowercase “muzak” turned into a byword for background music.</p><span class="src">Sources: <a href="https://us.moodmedia.com/blog/history-of-muzak/" target="_blank" rel="noopener">Mood Media (2022), The History of Muzak</a>; <a href="https://historylink.org/File/10072" target="_blank" rel="noopener">HistoryLink, Muzak, Inc.</a></span></div>
+      <div lang="en" class="note-card" id="en-n2" hidden><b>Fifteen-Minute “Stimulus Progression”</b><p>Muzak’s signature method was called Stimulus Progression. In factories, for example, music was arranged into 15-minute sequences, gradually progressing from calm to lively, in the hope of reducing workers’ fatigue and raising productivity.</p><span class="src">Sources: <a href="https://doi.org/10.1080/15295039209366822" target="_blank" rel="noopener">Jones &amp; Schumacher (1992), Muzak: On functional music and power</a>; <a href="https://doi.org/10.7788/ha-2014-0306" target="_blank" rel="noopener">Hui (2014), Muzak-While-You-Work</a></span></div>
+      <p lang="zh">20 世纪中叶，<button class="tn" aria-expanded="false" aria-controls="zh-n1">Muzak 音乐</button>开始在美国盛行，它逐渐进入商店、办公室和工厂。其中一个重要思想是：它将音乐视作可被组织和管理的环境元素，用来影响空间的氛围、人的情绪，<span class="nb"><button class="tn" aria-expanded="false" aria-controls="zh-n2">甚至人们工作和消费的方式</button>。</span></p>
+      <div lang="zh" class="note-card" id="zh-n1" hidden><b>Muzak</b><p>1934 年，Muzak 品牌开始提供商业音乐服务，随后逐渐进入酒店、餐厅、工厂、办公室等场所。它旋律简单、舒缓，结构简单、容易预测。Muzak 这个名字，是 music 和当时很火的 Kodak 拼起来的。后来它流行到小写的 muzak 成了“背景音乐”的代名词。</p><span class="src">来源：<a href="https://us.moodmedia.com/blog/history-of-muzak/" target="_blank" rel="noopener">Mood Media (2022), The History of Muzak</a>；<a href="https://historylink.org/File/10072" target="_blank" rel="noopener">HistoryLink, Muzak, Inc.</a></span></div>
+      <div lang="zh" class="note-card" id="zh-n2" hidden><b>15 分钟的“刺激递进”</b><p>Muzak 的招牌做法叫 Stimulus Progression。例如在工厂里，它把曲目编排成 15 分钟一组，让音乐从舒缓逐渐变得明快，期望以此减轻工人的疲劳、提高工作效率。</p><span class="src">来源：<a href="https://doi.org/10.1080/15295039209366822" target="_blank" rel="noopener">Jones &amp; Schumacher (1992), Muzak: On functional music and power</a>；<a href="https://doi.org/10.7788/ha-2014-0306" target="_blank" rel="noopener">Hui (2014), Muzak-While-You-Work</a></span></div>
+
+      <p lang="en">Music came to be designed to act upon people and influence their behavior. There is a term for those who cannot escape it: the <span class="nb"><button class="tn" aria-expanded="false" aria-controls="en-n3"><i>captive audience</i></button>.</span></p>
+      <div lang="en" class="note-card" id="en-n3" hidden><b>The Captive Audience</b><p>Starting in October 1949, Grand Central Terminal in New York broadcast Muzak and commercials over its public address system nonstop, from 7 a.m. to midnight. Travelers could neither walk away nor turn it off, and protests followed. In <i>The New Yorker</i>, E. B. White wrote that people were losing the right to decide whether to listen at all. Three years later, a similar dispute reached the U.S. Supreme Court: streetcars in Washington, D.C. were playing radio broadcasts, and passengers sued. The Court ruled for the transit company, but Justice Douglas wrote in his dissent: “The streetcar audience is a captive audience.”</p><span class="src">Sources: <a href="https://www.worldradiohistory.com/Archive-BC/BC-1949/1949-10-10-BC.pdf" target="_blank" rel="noopener"><i>Broadcasting</i> (1949, Oct 10), Grand Central Voice</a>; <a href="https://www.newyorker.com/magazine/1949/11/05/comment-3857" target="_blank" rel="noopener"><i>The New Yorker</i> (1949, Nov 5)</a>; <a href="https://www.law.cornell.edu/supremecourt/text/343/451" target="_blank" rel="noopener">Public Utilities Commission v. Pollak (1952)</a>; <a href="https://doi.org/10.1080/10714421.2014.960734" target="_blank" rel="noopener">Jordan (2014), Canned Music and Captive Audiences</a></span></div>
+      <p lang="zh">这时的音乐，被设计用来作用于人们，影响人们的行为，人们成了<span class="nb"><button class="tn" aria-expanded="false" aria-controls="zh-n3">被困住的听众</button>。</span></p>
+      <div lang="zh" class="note-card" id="zh-n3" hidden><b>被困住的听众</b><p>1949 年 10 月起，纽约中央车站每天从早上 7 点到午夜，通过广播不间断地播放 Muzak 音乐和商业广告。旅客走不开，也关不掉，抗议随之而来。E. B. White 在《纽约客》上撰文批评：人们正在失去决定自己听不听的权利。三年后，类似的争论打到了美国最高法院：华盛顿特区的有轨电车在车厢里播放广播，乘客起诉。法院判电车公司胜诉，但 Douglas 大法官在反对意见里写下了一句话：“The streetcar audience is a captive audience.”（电车上的乘客，就是被困住的听众。）</p><span class="src">来源：<a href="https://www.worldradiohistory.com/Archive-BC/BC-1949/1949-10-10-BC.pdf" target="_blank" rel="noopener">Broadcasting (1949, Oct 10), Grand Central Voice</a>；<a href="https://www.newyorker.com/magazine/1949/11/05/comment-3857" target="_blank" rel="noopener">The New Yorker (1949, Nov 5)</a>；<a href="https://www.law.cornell.edu/supremecourt/text/343/451" target="_blank" rel="noopener">Public Utilities Commission v. Pollak (1952)</a>；<a href="https://doi.org/10.1080/10714421.2014.960734" target="_blank" rel="noopener">Jordan (2014), Canned Music and Captive Audiences</a></span></div>
+
+      <h3 class="sh"><span lang="en">As Ignorable as It Is Interesting</span><span lang="zh">既可以被忽略，又值得被聆听</span></h3>
+
+      <p lang="en">In 1978, Brian Eno released his <button class="tn" aria-expanded="false" aria-controls="en-n4"><i>Music for Airports</i></button>. In it, he criticized Muzak for imposing a homogenized stimulus on every space and everyone in it, blanketing each space’s own sounds and atmosphere, levelling out people’s natural rhythms, thus stripping away any genuine interest.</p>
+      <div lang="en" class="note-card" id="en-n4" hidden><b>Music That Meets Itself</b><p>Eno recorded single notes from musicians and singers, turned them into tape loops of different lengths, and let them meet and combine on their own. So when each note in the music appears is something even Eno could not know in advance.</p><span class="src">Sources: <a href="https://tiranacalling.wordpress.com/2012/04/30/music-for-airports-liner-notes/" target="_blank" rel="noopener">Eno (1978), liner notes for Music for Airports</a></span></div>
+      <p lang="en">Eno proposed Ambient Music instead. He wanted music that coexists with its environment, draws on the acoustic character of the space itself, and leaves “a space to think.”</p>
+      <p lang="zh">1978 年，Brian Eno 发行了<button class="tn" aria-expanded="false" aria-controls="zh-n4">《Music for Airports》</button>。Eno 在其中批评了 Muzak 音乐，称其为所有空间和其中的人们都添加一种同质化的刺激，把每个空间原本的声音和氛围都盖住、抹平了，拉平了人们的自然节律，丢失了真正的趣味。Eno 提出了氛围音乐（Ambient Music）的概念，他想要的是一种与环境共存的音乐，发挥空间本身的声学特点，为人们带来平静，留出思考的空间。</p>
+      <div lang="zh" class="note-card" id="zh-n4" hidden><b>自己组合的音乐</b><p>Eno 录下乐手和歌手的单个音，做成长度不同的磁带循环，让它们自己相遇、组合。所以这段音乐里每个音什么时候出现，连 Eno 自己也无法事先知道。</p><span class="src">来源：<a href="https://tiranacalling.wordpress.com/2012/04/30/music-for-airports-liner-notes/" target="_blank" rel="noopener">Eno (1978), Music for Airports 唱片说明原文</a></span></div>
+
+      <p lang="en">Music could now be made for spaces and the people in them, offering an open, free experience, as Eno put it: “as ignorable as it is interesting.”</p>
+      <p lang="zh">到了这里，音乐为空间与空间中的人们所设计，为人们提供一种开放、自由的环境体验，“既可以被忽略，又值得被聆听”。</p>
+    </div>
+
+    <figure class="bleed" style="margin-top:clamp(56px,8vw,104px)">
+      <!-- 原图：/Users/mukii/Projects/SoundMat/media/正式拍摄/调色/P1011188.jpg -->
+      <img src="img/leaves.jpg" alt="SoundMat on a lawn strewn with red maple leaves, seven stones on its felt surface, in low afternoon sun">
+      <figcaption><span lang="en">University of Washington, October 2026.</span><span lang="zh">2026 年 10 月，华盛顿大学。</span></figcaption>
+    </figure>
+
+    <div class="col">
+      <h3 class="sh" style="margin-top:clamp(56px,8vw,104px)"><span lang="en">The Curated Atmosphere</span><span lang="zh">被安排好的氛围</span></h3>
+
+      <p lang="en">From Muzak to Ambient Music, we have kept rethinking how music should relate to people and their surroundings. Yet one thing seems never to have changed: the background music in the public spaces we move through every day is still designed and decided in advance by the owners and designers of the space, bestowed upon people there.</p>
+      <p lang="zh">从 Muzak 到 Ambient Music，我们不断重新思考音乐应该如何与人、与环境相处，但有一件事似乎始终没有改变：我们每天身处的公共空间的背景音乐，都还是被设计好、被赋予在场者的，被空间的拥有者和设计者决定的。</p>
+      <p lang="en">Music is not only something we hear, but also a part of what makes up the atmosphere of a space. When we enter a public space, we usually just receive an atmosphere that has already been designed for us.</p>
+      <p lang="zh">音乐不仅是我们听到的内容，也是构成空间氛围的一部分。人们进入公共空间时，往往只是被动地接受被设计好的氛围。</p>
+    </div>
+    <div class="col" style="margin-top:3.5em">
+      <p class="turn">
+        <span lang="en">But what if the atmosphere of a space could be shaped together by the people in it?</span>
+        <span lang="zh">但如果，一个空间的氛围，<br>可以由在场的人共同塑造呢？</span>
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="col">
+      <h3 class="sh sh-main" style="margin-top:0"><span lang="en">SoundMat – Shared Ambience</span><span lang="zh">SoundMat – 共同营造的氛围</span></h3>
+
+      <p lang="en">Starting from the idea of giving people greater agency in shaping the musical atmosphere of a space, we designed SoundMat.</p>
+      <p lang="en">Anyone passing through or lingering can move the stones, gently changing the atmosphere of the entire room.</p>
+      <p lang="zh">我们希望，人们对于公共空间音乐氛围的营造能拥有更多主动权。从这个理念出发，我们设计了 SoundMat。</p>
+      <p lang="zh">路过或停留的人，都可以挪动石头，轻轻改变整个空间的氛围。</p>
+
+    </div>
+    <figure class="bleed" style="margin-block:2.4em">
+      <!-- 原图：/Users/mukii/Projects/SoundMat/media/正式拍摄/调色/P1011236.jpg -->
+      <img src="img/together.jpg" style="object-position:50% 12%" alt="Two people laughing as they move stones on SoundMat outdoors">
+      <figcaption><span lang="en">University of Washington, October 2026.</span><span lang="zh">2026 年 10 月，华盛顿大学。</span></figcaption>
+    </figure>
+    <div class="col">
+
+      <p lang="en">Our design seeks to find the best balance between creative freedom and good listening: however the stones are placed, <span class="nb"><button class="tn" aria-expanded="false" aria-controls="en-n6">the music always sounds harmonious</button>,</span> whereas participants can still feel that each change is their own. No musical background is needed, what they need is just some curiosity, imagination, and willingness to explore.</p>
+      <div lang="en" class="note-card" id="en-n6" hidden><b>Why It Always Sounds Good</b><p>SoundMat plays ambient music built on the pentatonic scale. However these five notes are stacked, they never form a harsh interval, so wherever the stones are placed, there are no “wrong notes.” Every few minutes, the key slowly shifts around the circle of fifths, so the music keeps changing without ever feeling abrupt.</p></div>
+      <p lang="zh">我们的设计希望最大限度地实现自由度与悦耳的平衡，无论如何放置，<span class="nb"><button class="tn" aria-expanded="false" aria-controls="zh-n6">音乐总是和谐好听</button>，</span>但参与者仍然能感觉到这个改变是由他们做出的。他们不需要任何音乐基础，只需要一些好奇、想法与尝试。</p>
+      <div lang="zh" class="note-card" id="zh-n6" hidden><b>为什么怎么放都好听</b><p>SoundMat 的音乐使用五声音阶的氛围音乐。这五个音不管怎么叠在一起，都不会出现刺耳的音程，所以无论石头放在哪里，都不会“弹错”。调性每隔几分钟沿五度圈缓缓转换，让音乐一直在变，却从不突兀。</p></div>
+
+      <p lang="en">Atmosphere is no longer played to people, but created by the people present. Together, they shape the <span class="term">Shared Ambience</span>.</p>
+      <p lang="zh">氛围不再是播放给人听的，而是由在场的人一起营造的，他们共同塑造了空间的 <span class="term">Shared Ambience</span>（共同氛围）。</p>
+
+      <p lang="en">People are no longer passive receivers of atmosphere, but the ones who shape it. Move one stone, and hear that small gesture fill the whole room. The stone stays where it is, and so does the atmosphere. The next person receives what was left before, and shapes it for everyone who comes later. Their traces pervade the entire space.</p>
+      <p lang="zh">人们不再是被动的氛围接受者，而成了影响者。挪一颗石头，听着这个小小的动作充满了整个房间。石头留在原处，氛围也留了下来，人们走进空间，听到的是之前的人留下的声音，并影响着之后来到这里的每一个人，整个空间留下了他们的痕迹。</p>
+    </div>
+  </section>
+
+  <figure class="bleed">
+    <!-- 原图：/Users/mukii/Projects/SoundMat/media/正式拍摄/调色/P1011231.jpg -->
+    <img src="img/next.jpg" alt="SoundMat on a stool on a campus lawn, a person sitting on a bench in the distance">
+    <figcaption><span lang="en">University of Washington, October 2026.</span><span lang="zh">2026 年 10 月，华盛顿大学。</span></figcaption>
+  </figure>
+
+  <section class="notes">
+    <div class="nwrap">
+      <h3 class="sh" style="margin-top:0"><span lang="en">Hanlin’s Design Notes</span><span lang="zh">Hanlin 的设计笔记</span></h3>
+      <div class="nstack" id="nstack" role="region" aria-roledescription="carousel" aria-label="Hanlin’s design notes">
+        <article class="ncard" data-pos="0" aria-roledescription="slide">
+          <div class="nq" lang="en"><p>So how does SoundMat become a good sound installation?</p><ol><li>The music must be easy to listen to, and bear repeating</li><li>A light style of music: never loud or annoying, and easy for most people to like</li><li>Simple, intuitive interaction: it sounds good however things are placed, yet you can still feel your part in it</li><li>It keeps changing, even with no one around, ideally with a sense of musical form</li><li>An immersive atmosphere: a mood and a feeling, not just a music player</li></ol></div>
+          <div class="nq" lang="zh"><p>所以，SoundMat 如何成为一个好的声音装置？</p><ol><li>音乐必须是耐听的，可重复的</li><li>音乐必须是轻类型风格，不能让人觉得吵，是大众接受度高的</li><li>交互简单直观，怎么放置都好听，但是依然能感受到参与感/反馈感</li><li>有变化，即使是在无人的场景下依然有变化，最好能有曲式的起承转合</li><li>沉浸的氛围感，营造一种氛围与感受而不是只是音乐播放器</li></ol></div>
+          <div class="nfoot"><span><span lang="zh">来自 <a href="/soundmat/docs/soundmat-2-philosophy/" target="_blank" rel="noopener">SoundMat (2) Philosophy 产品设计哲学</a></span><span lang="en">From <a href="/soundmat/docs/en/soundmat-2-philosophy/" target="_blank" rel="noopener">SoundMat (2) Product Design Philosophy</a></span></span><span><span lang="zh">2026.04.11</span><span lang="en">April 11, 2026</span></span></div>
+        </article>
+        <article class="ncard" data-pos="x" aria-roledescription="slide">
+          <div class="nq nq-s" lang="en"><p>Scene:</p><p>Seven in the evening. The lobby has no background music, only a low, round wooden platform with three black volcanic stones of different sizes. From beneath them comes a very slow sound, like the fading ring of a temple bell, mingling with the sandalwood in the air. A guest who has just checked in walks over. No one has told her what it is; she just likes the sound, and sets a nearby pebble at the edge of the mat. A faint layer of wind chimes joins in. She listens for a few seconds, then heads to her room. The pebble stays, the music goes on, and the staff are in no hurry to clear it: it is part of the lobby. The next morning, another staff member moves the stones, and today’s music is different from yesterday’s.</p></div>
+          <div class="nq nq-s" lang="zh"><p>场景：</p><p>晚上七点，大堂里没有背景音乐播放器，只有一张低矮的圆形木台，上面摆着三块大小不一的黑色火山石。石头下面传出极缓慢的、像寺庙钟声余韵一样的声音，和大堂里的檀香味融在一起。一位住客办完入住走过来，没有人告诉她这是什么，她只是觉得声音好听，把旁边的一块鹅卵石放到了垫子边缘，一层轻微的风铃声加了进来。她停了几秒听了听，然后去房间了。鹅卵石留在上面，音乐继续，工作人员不急着收——这就是大堂的一部分。第二天早上，另一位工作人员换了石头的位置，今天的音乐和昨天不一样了。</p></div>
+          <div class="nfoot"><span><span lang="zh">来自 <a href="/soundmat/docs/soundmat-2-philosophy/" target="_blank" rel="noopener">SoundMat (2) Philosophy 产品设计哲学</a></span><span lang="en">From <a href="/soundmat/docs/en/soundmat-2-philosophy/" target="_blank" rel="noopener">SoundMat (2) Product Design Philosophy</a></span></span><span><span lang="zh">2026.04.11</span><span lang="en">April 11, 2026</span></span></div>
+        </article>
+        <article class="ncard" data-pos="x" aria-roledescription="slide">
+          <div class="nq" lang="en"><p>I think what really matters is the feeling and the atmosphere the whole thing creates. An art installation connects with its space and plays with the people passing by. Simply being there is an aesthetic in itself.</p></div>
+          <div class="nq" lang="zh"><p>我想，真正重要的是产品整体给人带来的感觉与氛围，所谓艺术装置，与这个空间连结，与路人互动。它在那里，本身就是一种美学。</p></div>
+          <div class="nfoot"><span><span lang="zh">来自 <a href="/soundmat/docs/soundmat-2-philosophy/" target="_blank" rel="noopener">SoundMat (2) Philosophy 产品设计哲学</a></span><span lang="en">From <a href="/soundmat/docs/en/soundmat-2-philosophy/" target="_blank" rel="noopener">SoundMat (2) Product Design Philosophy</a></span></span><span><span lang="zh">2026.04.11</span><span lang="en">April 11, 2026</span></span></div>
+        </article>
+        <article class="ncard" data-pos="x" aria-roledescription="slide">
+          <div class="nq" lang="en"><p>For the surface I want a soft pile fabric: it draws the eye, and feels warm and refined. For the things people place, river pebbles are the best choice. They vary naturally in weight and size, feel good in the hand, and suit refined settings.</p></div>
+          <div class="nq" lang="zh"><p>表面我想用绒状织物，吸引视觉，有温馨与高级感；摆放的物品，鹅卵石是最佳的选择，天然有重量和大小差异、手感好，和高雅的场景天然匹配。</p></div>
+          <div class="nfoot"><span><span lang="zh">来自 <a href="/soundmat/docs/soundmat-3-exterior-design/" target="_blank" rel="noopener">SoundMat (3) 外观设计</a></span><span lang="en">From <a href="/soundmat/docs/en/soundmat-3-exterior-design/" target="_blank" rel="noopener">SoundMat (3) Exterior Design</a></span></span><span><span lang="zh">2026.04.12</span><span lang="en">April 12, 2026</span></span></div>
+        </article>
+        <article class="ncard" data-pos="x" aria-roledescription="slide">
+          <div class="nq" lang="en"><p>Restrained, natural, refined. A light top over a dark body makes the surface seem to float, and keeps attention on the surface you play. As a whole it looks less like an electronic product than a piece of furniture or an artwork.</p></div>
+          <div class="nq" lang="zh"><p>克制、自然、高级感。外观上浅下深让表面“浮”起来，注意力集中在操作面上。整体不像电子产品，像一件家具或艺术品。</p></div>
+          <div class="nfoot"><span><span lang="zh">来自 <a href="/soundmat/docs/soundmat-3-exterior-design/" target="_blank" rel="noopener">SoundMat (3) 外观设计</a></span><span lang="en">From <a href="/soundmat/docs/en/soundmat-3-exterior-design/" target="_blank" rel="noopener">SoundMat (3) Exterior Design</a></span></span><span><span lang="zh">2026.04.12</span><span lang="en">April 12, 2026</span></span></div>
+        </article>
+        <article class="ncard" data-pos="x" aria-roledescription="slide">
+          <div class="nq" lang="en"><p>All the electronics have to hide inside the cavity, with as few cables coming out as possible. We use just one power cable and one audio cable.</p><p>As an art installation used outdoors, say in a plaza, it should ideally solve its own power, with no wall socket. USB-C with Power Delivery does this: it runs from a charger or from a fast-charging power bank.</p></div>
+          <div class="nq" lang="zh"><p>所有电子元件需要藏在空腔内，引出的线缆越少越好。我们只使用一根供电线和一根音频线。</p><p>作为艺术装置，在户外比如广场上使用时，最好能够直接解决供电问题而不用插座。PD 协议的 USB-C 供电可以解决这一点，既可以用充电器，也可以用快充充电宝供电。</p></div>
+          <div class="nfoot"><span><span lang="zh">来自 <a href="/soundmat/docs/soundmat-6-electronics-system-design/" target="_blank" rel="noopener">SoundMat (6) 电子系统设计</a></span><span lang="en">From <a href="/soundmat/docs/en/soundmat-6-electronics-system-design/" target="_blank" rel="noopener">SoundMat (6) Electronics System Design</a></span></span><span><span lang="zh">2026.05.11</span><span lang="en">May 11, 2026</span></span></div>
+        </article>
+        <article class="ncard" data-pos="x" aria-roledescription="slide">
+          <div class="nq" lang="en"><p>Sonification is the soul of SoundMat.</p><p>There are two ways to control it:</p><p>Adjusting changes the parameters of music that already exists, such as the volume, timbre, EQ or tempo of a piece. Generating creates new elements in real time for every action, such as notes, percussion, harmony or musical fragments.</p><p>In SoundMat, generation dominates completely. People are not adjusting someone else’s music; they are making their own.</p></div>
+          <div class="nq" lang="zh"><p>声音化设计是 SoundMat 的灵魂。</p><p>其中有两种控制思路：</p><p>调控是调整已有音乐的声音参数，例如一段音乐的音量、音色、高低频、速度等等。生成则是对于每个操作都实时生成元素，例如演奏音符、打击乐、和声、音乐片段等等。</p><p>在 SoundMat，生成是绝对的主导。用户不是去调整别人已有的音乐，而是自己创造音乐。</p></div>
+          <div class="nfoot"><span><span lang="zh">来自 <a href="/soundmat/docs/soundmat-8-interaction-and-sonification/" target="_blank" rel="noopener">SoundMat (8) 交互与声音化设计</a></span><span lang="en">From <a href="/soundmat/docs/en/soundmat-8-interaction-and-sonification/" target="_blank" rel="noopener">SoundMat (8) Interaction and Sonification Design</a></span></span><span><span lang="zh">2026.05</span><span lang="en">May 2026</span></span></div>
+        </article>
+        <article class="ncard" data-pos="x" aria-roledescription="slide">
+          <div class="nq" lang="en"><p>I wondered whether we could make a “narrative environment”, where placing stones slowly unfolds a scene. The one I wanted most was a Japanese temple.</p><p>One of SoundMat’s ambient modes is <i>Kyoto Arashiyama</i>.</p></div>
+          <div class="nq" lang="zh"><p>我在想，能不能做一种“叙事的环境”，环境叙事让用户在放石头的过程中慢慢展开一个场景。我最想做的环境叙事就是日本寺院。</p><p>SoundMat 其中的一个环境音乐模式就是《京都岚山》。</p></div>
+          <div class="nfoot"><span><span lang="zh">来自 <a href="/soundmat/docs/soundmat-8-interaction-and-sonification/" target="_blank" rel="noopener">SoundMat (8) 交互与声音化设计</a></span><span lang="en">From <a href="/soundmat/docs/en/soundmat-8-interaction-and-sonification/" target="_blank" rel="noopener">SoundMat (8) Interaction and Sonification Design</a></span></span><span><span lang="zh">2026.05</span><span lang="en">May 2026</span></span></div>
+        </article>
+      </div>
+      <div class="nnav">
+        <button type="button" id="nprev" aria-label="Previous note">←</button>
+        <span class="ncount" id="ncount" aria-live="polite">1 / 8</span>
+        <button type="button" id="nnext" aria-label="Next note">→</button>
+      </div>
+    </div>
+  </section>
+  <section class="strip" aria-label="More images">
+    <div class="strip-head">
+      <h3 class="sh" style="margin:0"><span lang="en">More Images</span><span lang="zh">更多影像</span></h3>
+      <div class="snav"><button type="button" id="sprev" aria-label="Scroll left">←</button><button type="button" id="snext" aria-label="Scroll right">→</button></div>
+    </div>
+    <div class="sband"><div class="srow" id="srow" tabindex="0">
+      <figure class="sitem"><!-- 原图：/Users/mukii/Projects/SoundMat/media/正式拍摄/调色/fxn 2026-10-20 134017C10F0E4F8CB9.jpg -->
+        <img src="img/s/fxn-134017.jpg" width="1200" height="900" loading="lazy" alt="A person standing at SoundMat in the dark media lab, moving stones"></figure>
+      <figure class="sitem"><!-- 原图：/Users/mukii/Projects/SoundMat/media/正式拍摄/调色/P1011208.jpg -->
+        <img src="img/s/P1011208.jpg" width="1200" height="900" loading="lazy" alt="SoundMat on the grass among red maple leaves, stones on the felt"></figure>
+      <figure class="sitem"><!-- 原图：/Users/mukii/Projects/SoundMat/media/正式拍摄/调色/P1011279.jpg -->
+        <img src="img/s/P1011279.jpg" width="1200" height="900" loading="lazy" alt="Two people stacking stones on SoundMat outdoors"></figure>
+      <figure class="sitem"><!-- 原图：/Users/mukii/Projects/SoundMat/media/正式拍摄/调色/P1011304.jpg -->
+        <img src="img/s/P1011304.jpg" width="1200" height="900" loading="lazy" alt="A person beside SoundMat in the dark lab, a tray of stones behind"></figure>
+      <figure class="sitem"><!-- 原图：/Users/mukii/Projects/SoundMat/media/June19/DSC01485.JPG -->
+        <img src="img/s/DSC01485.jpg" width="1200" height="900" loading="lazy" alt="Hands placing stones on SoundMat, its LED ring glowing at the edge"></figure>
+      <figure class="sitem"><!-- 原图：/Users/mukii/Projects/SoundMat/media/制作/1792665661648.jpg -->
+        <a class="slink" href="/soundmat/docs/soundmat-4-structural-design/" data-zh="/soundmat/docs/soundmat-4-structural-design/" data-en="/soundmat/docs/en/soundmat-4-structural-design/" target="_blank" rel="noopener" aria-label="SoundMat (4) 结构设计"><img src="img/s/making-inside.jpg" width="1200" height="900" loading="lazy" alt="Inside SoundMat: the board on its supports, the Raspberry Pi, the power converter and the LED strip around the rim"></a></figure>
+      <figure class="sitem"><!-- 原图：/Users/mukii/Projects/SoundMat/media/docs/11-02-电子系统制造.png -->
+        <a class="slink" href="/soundmat/docs/soundmat-11-electronics-manufacturing/" data-zh="/soundmat/docs/soundmat-11-electronics-manufacturing/" data-en="/soundmat/docs/en/soundmat-11-electronics-manufacturing/" target="_blank" rel="noopener" aria-label="SoundMat (11) 电子系统制造"><img src="img/s/doc-11-02.jpg" width="1200" height="900" loading="lazy" alt="The hand-soldered circuit boards: an ESP32 and multiplexers on perfboard"></a></figure>
+      <figure class="sitem"><!-- 原图：/Users/mukii/Projects/SoundMat/media/docs/06-03-电子系统设计.png（明暗反转） -->
+        <a class="slink" href="/soundmat/docs/soundmat-6-electronics-system-design/" data-zh="/soundmat/docs/soundmat-6-electronics-system-design/" data-en="/soundmat/docs/en/soundmat-6-electronics-system-design/" target="_blank" rel="noopener" aria-label="SoundMat (6) 电子系统设计"><img src="img/s/doc-06-03.jpg" width="1200" height="900" loading="lazy" alt="Hand-drawn diagram of the power module: USB-C PD trigger, buck converter, LED strip, Raspberry Pi and ESP32"></a></figure>
+      <figure class="sitem"><!-- 原图：/Users/mukii/Projects/SoundMat/media/docs/05-04-传感器原理及设计.png（明暗反转，只取 a–d） -->
+        <a class="slink" href="/soundmat/docs/soundmat-5-sensor-principles-and-design/" data-zh="/soundmat/docs/soundmat-5-sensor-principles-and-design/" data-en="/soundmat/docs/en/soundmat-5-sensor-principles-and-design/" target="_blank" rel="noopener" aria-label="SoundMat (5) 传感器原理及设计"><img src="img/s/doc-05-04.jpg" width="1200" height="900" loading="lazy" alt="Hand-drawn diagrams of how the sensor grid is scanned"></a></figure>
+    </div></div>
+  </section>
+</main>
+
+<footer>
+  <div class="credits">
+    <div>
+      <p class="cr-label"><span lang="en">Project Team</span><span lang="zh">项目团队</span></p>
+      <p class="cr-name">Hanlin Xue</p>
+      <p class="cr-name">Po-Yu Chen</p>
+      <p class="cr-name">Chenfei Ma</p>
+      <p class="cr-name">Sora Kim</p>
+    </div>
+    <div>
+      <p class="cr-label"><span lang="en">Advisor</span><span lang="zh">指导老师</span></p>
+      <p class="cr-name">Meichun Liu</p>
+      <p class="cr-sub"><span lang="en">University of Washington</span><span lang="zh">华盛顿大学</span></p>
+    </div>
+  </div>
+  <div class="fcols">
+  <div>
+    <h3><span lang="en">Acknowledgement</span><span lang="zh">致谢</span></h3>
+    <p><span lang="en">Thanks to Prof. <a href="https://yyueluo.com/">Yiyue Luo</a> for the guidance in EE 546C.</span><span lang="zh">感谢 <a href="https://yyueluo.com/">Yiyue Luo</a> 教授在 EE 546C 课程上的指导。</span></p>
+    <p>Thanks to the Department of Digital Arts and Experimental Media (DXARTS) for the kind use of the DXARTS Media Lab in preparation of the documentation of this project.</p>
+  </div>
+  <div>
+    <h3><span lang="en">Links</span><span lang="zh">链接</span></h3>
+    <p><a href="/soundmat/docs/en/" data-zh="/soundmat/docs/" data-en="/soundmat/docs/en/">Project documentation</a></p>
+    <p><a href="https://github.com/mukimasta/soundmat">GitHub</a></p>
+      <details class="refs">
+      <summary><span lang="en">References</span><span lang="zh">参考资料</span></summary>
+      <ol>
+      <li>Brian Eno, <a href="https://tiranacalling.wordpress.com/2012/04/30/music-for-airports-liner-notes/">liner notes to <i>Ambient 1: Music for Airports</i></a>, 1978.</li>
+      <li><a href="https://www.worldradiohistory.com/Archive-BC/BC-1949/1949-10-10-BC.pdf"><i>Broadcasting</i>, 10 Oct 1949, “Grand Central Voice.”</a></li>
+      <li><a href="https://www.newyorker.com/magazine/1949/11/05/comment-3857"><i>The New Yorker</i>, 5 Nov 1949.</a></li>
+      <li><a href="https://www.law.cornell.edu/supremecourt/text/343/451"><i>Public Utilities Commission v. Pollak</i>, 343 U.S. 451 (1952).</a></li>
+      <li>Jones &amp; Schumacher, <a href="https://doi.org/10.1080/15295039209366822">“Muzak: On Functional Music and Power,”</a> 1992.</li>
+      <li>Hui, <a href="https://doi.org/10.7788/ha-2014-0306">“Muzak-While-You-Work,”</a> 2014.</li>
+      <li>Jordan, <a href="https://doi.org/10.1080/10714421.2014.960734">“Canned Music and Captive Audiences,”</a> 2014.</li>
+    </ol>
+    </details>
+  </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  /* ---------- language ---------- */
+  var root=document.documentElement;
+  function setLang(l){root.setAttribute('data-lang',l);root.lang=l==='zh'?'zh-CN':'en';
+    document.getElementById('lang-en').setAttribute('aria-pressed',l==='en');
+    document.getElementById('lang-zh').setAttribute('aria-pressed',l==='zh');
+    try{localStorage.setItem('sm-lang',l)}catch(e){} if(!window._noMat)drawRings();}
+  var saved='en';try{saved=localStorage.getItem('sm-lang')||'en'}catch(e){}
+  var q=null;try{q=new URLSearchParams(location.search).get('lang')}catch(e){}
+  if(q==='en'||q==='zh'){saved=q;try{localStorage.setItem('sm-lang',q)}catch(e){}}
+  root.setAttribute('data-lang',saved);root.lang=saved==='zh'?'zh-CN':'en';
+  document.getElementById('lang-en').setAttribute('aria-pressed',saved==='en');
+  document.getElementById('lang-zh').setAttribute('aria-pressed',saved==='zh');
+  document.getElementById('lang-en').onclick=function(){setLang('en')};
+  document.getElementById('lang-zh').onclick=function(){setLang('zh')};
+
+  /* ---------- asides ---------- */
+  document.querySelectorAll('.tn').forEach(function(b){b.addEventListener('click',function(){
+    var c=document.getElementById(b.getAttribute('aria-controls'));if(!c)return;
+    var open=c.hasAttribute('hidden');if(open)c.removeAttribute('hidden');else c.setAttribute('hidden','');
+    b.setAttribute('aria-expanded',open)})});
+
+  /* ---------- stimulus progression bars ---------- */
+  var sp=document.getElementById('spBars');if(sp)
+  for(var b=0;b<4;b++){for(var s=0;s<5;s++){var e=document.createElement('span');e.style.height=(28+s*16)+'%';sp.appendChild(e)}
+    if(b<3){var g=document.createElement('span');g.className='gap';sp.appendChild(g)}}
+
+  /* ---------- the mat ---------- */
+  var RINGS=[
+    {en:'Nature',zh:'自然'},{en:'Bells',zh:'钟'},{en:'Rain',zh:'雨'},{en:'High notes',zh:'高音'},
+    {en:'Mid notes',zh:'中音'},{en:'Pad',zh:'铺底'},{en:'Mid drone',zh:'中音持续'},{en:'Low drone',zh:'低音持续'}];
+  var cv=document.getElementById('matCanvas');if(!cv){window._noMat=true;return;}var ctx=cv.getContext('2d');
+  var size=0,dpr=Math.min(window.devicePixelRatio||1,2);
+  var DEFAULT=[[0.93,0.3],[0.9,2.4],[0.8,4.1],[0.66,0.9],[0.62,1.25],[0.6,5.2],[0.47,2.9],[0.35,3.8],[0.28,0.6],[0.2,5.5],[0.12,2.0],[0.06,4.6]];
+  var stones,fromVisitor=false;
+  try{var st=JSON.parse(localStorage.getItem('sm-stones')||'null');if(st&&st.length){stones=st;fromVisitor=true}}catch(e){}
+  if(!stones)stones=DEFAULT.map(function(p,i){return{r:p[0],a:p[1],s:0.85+((i*37)%7)/20}});
+  function save(){try{localStorage.setItem('sm-stones',JSON.stringify(stones))}catch(e){}}
+  function ringOf(r){return Math.min(7,Math.max(0,Math.floor((1-r)*8)))}
+  function resize(){var w=cv.clientWidth;size=w;cv.width=w*dpr;cv.height=w*dpr;draw()}
+  function draw(){
+    var c=size/2,R=size/2*0.94;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,size,size);
+    var css=getComputedStyle(root),felt=css.getPropertyValue('--felt').trim(),led=css.getPropertyValue('--led').trim();
+    // felt disc
+    var g=ctx.createRadialGradient(c,c*0.8,R*0.1,c,c,R);g.addColorStop(0,'#cfc5b2');g.addColorStop(1,'#a99f8d');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(c,c,R,0,Math.PI*2);ctx.fill();
+    // led ring
+    var t=performance.now()/1000,lv=audioOn?0.55+0.25*Math.sin(t*1.35):0.18;
+    ctx.save();ctx.shadowColor=led;ctx.shadowBlur=18*lv;ctx.strokeStyle=led;ctx.globalAlpha=lv;ctx.lineWidth=2;ctx.beginPath();ctx.arc(c,c,R+3,0,Math.PI*2);ctx.stroke();ctx.restore();
+    // engraved rings and 8 sections
+    ctx.strokeStyle='rgba(120,92,60,.55)';ctx.lineWidth=Math.max(1,size/420);
+    for(var i=1;i<8;i++){ctx.beginPath();ctx.arc(c,c,R*i/8,0,Math.PI*2);ctx.stroke()}
+    ctx.strokeStyle='rgba(120,92,60,.25)';ctx.lineWidth=Math.max(.6,size/900);
+    for(var k=0;k<8;k++){var an=k*Math.PI/4;ctx.beginPath();ctx.moveTo(c+Math.cos(an)*R/8,c+Math.sin(an)*R/8);ctx.lineTo(c+Math.cos(an)*R,c+Math.sin(an)*R);ctx.stroke()}
+    // stones
+    stones.forEach(function(s,i){var x=c+Math.cos(s.a)*s.r*R,y=c+Math.sin(s.a)*s.r*R,rad=R*0.055*s.s;
+      ctx.save();ctx.translate(x,y);ctx.rotate(i*1.7);
+      ctx.fillStyle='rgba(0,0,0,.28)';ctx.beginPath();ctx.ellipse(rad*0.18,rad*0.3,rad*1.05,rad*0.78,0,0,Math.PI*2);ctx.fill();
+      var shade=['#5d5a55','#6f6a62','#8a857c','#e9e6df','#4a4845','#7b6f5c'][i%6];
+      var sg=ctx.createRadialGradient(-rad*.3,-rad*.35,rad*.1,0,0,rad*1.1);sg.addColorStop(0,'rgba(255,255,255,.35)');sg.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=shade;ctx.beginPath();ctx.ellipse(0,0,rad,rad*0.74,0,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle=sg;ctx.fill();
+      if(drag&&drag.i===i){ctx.strokeStyle=led;ctx.lineWidth=1.5;ctx.stroke()}
+      ctx.restore()});
+  }
+  function counts(){var n=[0,0,0,0,0,0,0,0];stones.forEach(function(s){if(s.r<=1)n[ringOf(s.r)]++});return n}
+  function drawRings(){var n=counts(),l=root.getAttribute('data-lang')||'en',ul=document.getElementById('ringList');ul.innerHTML='';
+    RINGS.forEach(function(r,i){var li=document.createElement('li');li.innerHTML='<span>'+(l==='zh'?r.zh:r.en)+'</span><b>'+n[i]+'</b>';ul.appendChild(li)});
+    document.getElementById('matState').textContent=fromVisitor?(l==='zh'?'上一位访客留下的摆法':'As the last visitor left it'):(l==='zh'?'示例摆法':'Example arrangement');}
+
+  var drag=null;
+  function pos(e){var b=cv.getBoundingClientRect(),c=b.width/2,R=c*0.94,x=e.clientX-b.left-c,y=e.clientY-b.top-c;return{r:Math.sqrt(x*x+y*y)/R,a:Math.atan2(y,x),x:x,y:y,R:R}}
+  cv.addEventListener('pointerdown',function(e){var p=pos(e),best=-1,bd=1e9;
+    stones.forEach(function(s,i){var dx=Math.cos(s.a)*s.r*p.R-p.x,dy=Math.sin(s.a)*s.r*p.R-p.y,d=dx*dx+dy*dy;if(d<bd){bd=d;best=i}});
+    if(best>=0&&Math.sqrt(bd)<p.R*0.09){drag={i:best};cv.setPointerCapture(e.pointerId);cv.classList.add('dragging');draw()}});
+  cv.addEventListener('pointermove',function(e){if(!drag)return;var p=pos(e);stones[drag.i].r=Math.min(0.97,Math.max(0.03,p.r));stones[drag.i].a=p.a;draw();drawRings();update()});
+  function end(){if(!drag)return;drag=null;cv.classList.remove('dragging');fromVisitor=true;save();draw();drawRings();update()}
+  cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end);
+  window.addEventListener('resize',resize);
+
+  /* ---------- sound (Web Audio, synthesized) ---------- */
+  var AC=null,audioOn=false,master,rainGain,drones=[],timer=null;
+  var PENTA=[0,2,4,7,9];
+  function hz(base,step){var o=Math.floor(step/5),d=PENTA[((step%5)+5)%5];return base*Math.pow(2,(o*12+d)/12)}
+  function angleStep(a,span){var t=((a/(2*Math.PI))%1+1)%1;t=t<.5?t*2:(1-t)*2;return Math.round(t*span)} // symmetric, no jump at 0°
+  function noiseBuf(){var b=AC.createBuffer(1,AC.sampleRate*2,AC.sampleRate),d=b.getChannelData(0),l=0;for(var i=0;i<d.length;i++){var w=Math.random()*2-1;l=(l+0.02*w)/1.02;d[i]=l*3.5}return b}
+  function startAudio(){
+    AC=new (window.AudioContext||window.webkitAudioContext)();
+    master=AC.createGain();master.gain.value=0;master.connect(AC.destination);master.gain.setTargetAtTime(0.8,AC.currentTime,1.5);
+    // a long, soft reverb
+    var conv=AC.createConvolver(),len=AC.sampleRate*5,ir=AC.createBuffer(2,len,AC.sampleRate);
+    for(var ch=0;ch<2;ch++){var d=ir.getChannelData(ch);for(var i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3)}
+    conv.buffer=ir;var wet=AC.createGain();wet.gain.value=0.5;conv.connect(wet);wet.connect(master);
+    window._wet=conv;
+    // bed: always there
+    [98,98.4].forEach(function(f){var o=AC.createOscillator(),g=AC.createGain();o.frequency.value=f;g.gain.value=0.035;o.connect(g);g.connect(master);g.connect(conv);o.start()});
+    // rain bed
+    var n=AC.createBufferSource();n.buffer=noiseBuf();n.loop=true;var bp=AC.createBiquadFilter();bp.type='bandpass';bp.frequency.value=2600;bp.Q.value=.7;
+    rainGain=AC.createGain();rainGain.gain.value=0;n.connect(bp);bp.connect(rainGain);rainGain.connect(master);rainGain.connect(conv);n.start();
+    // two drone voices (rings 6,7)
+    [{ring:7,base:65.41},{ring:6,base:130.81}].forEach(function(v){var o=AC.createOscillator(),o2=AC.createOscillator(),g=AC.createGain(),lp=AC.createBiquadFilter();
+      o.type='sine';o2.type='triangle';o2.detune.value=4;lp.type='lowpass';lp.frequency.value=500;g.gain.value=0;
+      o.connect(g);o2.connect(g);g.connect(lp);lp.connect(master);lp.connect(conv);o.start();o2.start();v.o=o;v.o2=o2;v.g=g;drones.push(v)});
+    update();timer=setInterval(tick,250);
+  }
+  function update(){if(!AC)return;var n=counts(),t=AC.currentTime;
+    rainGain.gain.setTargetAtTime(Math.min(0.5,n[2]*0.09),t,3); // more stones, more rain, slowly
+    drones.forEach(function(v){var on=stones.filter(function(s){return ringOf(s.r)===v.ring});
+      v.g.gain.setTargetAtTime(on.length?Math.min(0.12,0.05+on.length*0.025):0,t,4);
+      if(on.length){var a=Math.atan2(on.reduce(function(s,x){return s+Math.sin(x.a)},0),on.reduce(function(s,x){return s+Math.cos(x.a)},0));
+        var f=hz(v.base,angleStep(a,4));v.o.frequency.setTargetAtTime(f,t,3);v.o2.frequency.setTargetAtTime(f,t,3)}});
+  }
+  function blip(f,dur,vol,type){var o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime;o.type=type||'sine';o.frequency.value=f;g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+0.01);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.connect(g);g.connect(master);g.connect(window._wet);o.start(t);o.stop(t+dur+.1);return o}
+  var lastBell=0,lastThunder=0;
+  function tick(){var n=counts(),t=AC.currentTime;
+    if(n[0]&&Math.random()<0.05*n[0]){if(Math.random()<.5){var o=blip(2400,.18,.05);o.frequency.linearRampToValueAtTime(3400,t+.09)}else{var d=blip(1000,1.2,.04);d.frequency.linearRampToValueAtTime(800,t+.02)}}
+    if(n[1]&&t-lastBell>6){lastBell=t;var bf=hz(392,Math.floor(Math.random()*5));[1,2,3,4.2].forEach(function(r,i){blip(bf*r,8/(i+1),.03/(i+1))})}
+    if(n[2]>=4&&t-lastThunder>14&&Math.random()<.08*n[2]){lastThunder=t;var s=AC.createBufferSource();s.buffer=noiseBuf();var lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=160;var g=AC.createGain();g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(.7,t+.6);g.gain.linearRampToValueAtTime(0.0001,t+7);s.connect(lp);lp.connect(g);g.connect(master);s.start(t);s.stop(t+7.5)}
+    stones.forEach(function(s){var r=ringOf(s.r);if((r===3||r===4)&&Math.random()<(r===3?.03:.05)){blip(hz(r===3?523.25:261.63,angleStep(s.a,7)),r===3?3:5,.035,r===3?'sine':'triangle')}
+      if(r===5&&Math.random()<.02){blip(hz(196,angleStep(s.a,7)),9,.025)}});
+  }
+  var btn=document.getElementById('soundBtn');
+  btn.addEventListener('click',function(){
+    if(!AC){startAudio();audioOn=true}
+    else if(audioOn){master.gain.setTargetAtTime(0,AC.currentTime,.5);audioOn=false}
+    else{AC.resume();master.gain.setTargetAtTime(.8,AC.currentTime,1);audioOn=true}
+    btn.setAttribute('aria-pressed',audioOn)});
+  (function loop(){if(audioOn)draw();requestAnimationFrame(loop)})();
+
+  resize();drawRings();
+})();
+</script>
+<script>
+/* design notes: one card in front, two peeking behind; arrows, swipe, arrow keys */
+(function(){
+  var stack=document.getElementById('nstack');if(!stack)return;
+  var cards=[].slice.call(stack.querySelectorAll('.ncard')),n=cards.length,cur=0,count=document.getElementById('ncount');
+  function render(){cards.forEach(function(c,i){var p=(i-cur+n)%n;
+      c.setAttribute('data-pos',p===0?'0':p===1?'1':p===2?'2':'x');c.setAttribute('aria-hidden',p===0?'false':'true');
+      c.setAttribute('aria-label',(i+1)+' / '+n)});
+    count.textContent=(cur+1)+' / '+n}
+  function go(d){cur=(cur+d+n)%n;render()}
+  document.getElementById('nprev').addEventListener('click',function(){go(-1)});
+  document.getElementById('nnext').addEventListener('click',function(){go(1)});
+  var x0=null;
+  stack.addEventListener('pointerdown',function(e){x0=e.clientX});
+  stack.addEventListener('pointerup',function(e){if(x0===null)return;var dx=e.clientX-x0;x0=null;if(Math.abs(dx)>40)go(dx<0?1:-1)});
+  stack.addEventListener('pointercancel',function(){x0=null});
+  stack.parentNode.addEventListener('keydown',function(e){if(e.key==='ArrowLeft')go(-1);else if(e.key==='ArrowRight')go(1)});
+  render();
+})();
+</script>
+<script>
+/* image strip: arrows, mouse drag; disabled arrows at the ends */
+(function(){
+  var row=document.getElementById('srow');if(!row)return;
+  var prev=document.getElementById('sprev'),next=document.getElementById('snext');
+  function ends(){prev.disabled=row.scrollLeft<=2;next.disabled=row.scrollLeft+row.clientWidth>=row.scrollWidth-2}
+  function step(d){row.scrollBy({left:d*Math.round(row.clientWidth*0.7),behavior:'smooth'})}
+  prev.addEventListener('click',function(){step(-1)});next.addEventListener('click',function(){step(1)});
+  row.addEventListener('scroll',ends,{passive:true});window.addEventListener('resize',ends);
+  var down=false,x0=0,s0=0,moved=false;
+  row.addEventListener('pointerdown',function(e){if(e.pointerType!=='mouse')return;down=true;moved=false;x0=e.clientX;s0=row.scrollLeft});
+  window.addEventListener('pointermove',function(e){if(!down)return;var dx=e.clientX-x0;if(Math.abs(dx)>4){moved=true;row.classList.add('dragging')}if(moved)row.scrollLeft=s0-dx});
+  window.addEventListener('pointerup',function(){if(!down)return;down=false;row.classList.remove('dragging')});
+  row.addEventListener('click',function(e){if(moved){e.preventDefault();e.stopPropagation();moved=false}},true);
+  ends();
+})();
+</script>
+<script>
+/* doc links follow the page language */
+(function(){var root=document.documentElement;
+  function upd(){var l=root.getAttribute('data-lang')==='zh'?'zh':'en';
+    document.querySelectorAll('a[data-zh][data-en]').forEach(function(a){a.href=a.getAttribute('data-'+l)})}
+  upd();new MutationObserver(upd).observe(root,{attributes:true,attributeFilter:['data-lang']});
+})();
+</script>
+</body>
+</html>

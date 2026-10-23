@@ -49,22 +49,20 @@
     <p class="sub">{{ t.hero.sub }}</p>
   </div>
 
-  {{ figure(t.figures.hero, eager=True) }}
+  <figure class="bleed film">
+    {%- if t.film.src %}
+    <video controls playsinline preload="metadata"{% if film_poster %} poster="{{ film_poster }}"{% endif %} src="{{ t.film.src }}"></video>
+    <figcaption>{{ t.film.caption }}</figcaption>
+    {%- else %}
+    <div class="placeholder">{{ t.film.caption }}</div>
+    {%- endif %}
+  </figure>
 
   <section>
     <div class="col">
       {{ md(t.intro.body) }}
     </div>
   </section>
-
-  {% if t.film.src -%}
-  <figure class="film">
-    <video controls playsinline preload="none"{% if film_poster %} poster="{{ film_poster }}"{% endif %} src="{{ t.film.src }}"></video>
-    <figcaption>{{ t.film.caption }}</figcaption>
-  </figure>
-  {%- else -%}
-  <div class="placeholder">{{ t.film.caption }}</div>
-  {%- endif %}
 
   <section>
     <div class="col">
@@ -152,7 +150,7 @@
     </div>
   </div>
   <div class="fcols">
-  <div>
+  <div class="thanks">
     <h3>{{ t.footer.thanks_title }}</h3>
     {{ md(t.footer.thanks) }}
   </div>

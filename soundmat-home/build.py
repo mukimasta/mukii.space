@@ -309,7 +309,7 @@ def main() -> int:
     images = Images()
     made = images.made
 
-    og_image = images.jpeg(content["figures"]["hero"]["img"], 1200)
+    og_image = images.jpeg(content["meta"]["og_image"], 1200)
     js = write_hashed("main", "js", (HERE / "main.js").read_text(encoding="utf-8"), made)
     # First pass with placeholder asset names, only to learn which characters the pages use.
     draft = render(content, titles, images, env,

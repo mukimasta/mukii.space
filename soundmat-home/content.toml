@@ -9,6 +9,7 @@
 
 [meta]
 title = "SoundMat · Shared Ambience"
+og_image = "hero.jpg"   # link-preview picture, a file in img/
 description.zh = "一件声音装置，通过放置与挪动石头，让公共空间里的人共同塑造这里的声音氛围。"
 description.en = "A sound installation that lets people in a public space shape its sonic atmosphere together, by placing and moving stones."
 
@@ -47,7 +48,7 @@ A round wool felt mat with natural stones on it, connected to the room's sound s
 Anyone passing through or lingering can move the stones, gently changing the atmosphere of the entire room.
 '''
 
-# Main film. Leave src empty to show the placeholder box instead of a player.
+# Main film, at the top of the page. Leave src empty to show the placeholder box instead of a player.
 [film]
 src = ""
 poster = ""
@@ -165,13 +166,6 @@ body.zh = "SoundMat 的音乐使用五声音阶的氛围音乐。这五个音不
 body.en = "SoundMat plays ambient music built on the pentatonic scale. However these five notes are stacked, they never form a harsh interval, so wherever the stones are placed, there are no “wrong notes.” Every few minutes, the key slowly shifts around the circle of fifths, so the music keeps changing without ever feeling abrupt."
 
 # Full-bleed photos. img is a file in img/; position is CSS object-position.
-[figures.hero]
-img = "hero.jpg"
-source = "media/正式拍摄/调色/P1011302.jpg"
-alt = "SoundMat lit from above in a dark room, surrounded by speakers, with a tray of stones beside it"
-caption.zh = "2026 年 10 月，华盛顿大学 DXARTS Media Lab。"
-caption.en = "DXARTS Media Lab, University of Washington, October 2026."
-
 [figures.leaves]
 img = "leaves.jpg"
 source = "media/正式拍摄/调色/P1011188.jpg"
@@ -196,6 +190,13 @@ caption.en = "University of Washington, October 2026."
 
 # Design-notes carousel. doc links the card to its source chapter;
 # doc_label overrides that chapter's title.
+[[design_notes]]
+doc = "soundmat-2-philosophy"
+date.zh = "2026.04.11"
+date.en = "April 11, 2026"
+body.zh = "我想，真正重要的是产品整体给人带来的感觉与氛围，所谓艺术装置，与这个空间连结，与路人互动。它在那里，本身就是一种美学。"
+body.en = "I think what really matters is the feeling and the atmosphere the whole thing creates. An art installation connects with its space and plays with the people passing by. Simply being there is an aesthetic in itself."
+
 [[design_notes]]
 doc = "soundmat-2-philosophy"
 date.zh = "2026.04.11"
@@ -234,13 +235,6 @@ Scene:
 
 Seven in the evening. The lobby has no background music, only a low, round wooden platform with three black volcanic stones of different sizes. From beneath them comes a very slow sound, like the fading ring of a temple bell, mingling with the sandalwood in the air. A guest who has just checked in walks over. No one has told her what it is; she just likes the sound, and sets a nearby pebble at the edge of the mat. A faint layer of wind chimes joins in. She listens for a few seconds, then heads to her room. The pebble stays, the music goes on, and the staff are in no hurry to clear it: it is part of the lobby. The next morning, another staff member moves the stones, and today’s music is different from yesterday’s.
 '''
-
-[[design_notes]]
-doc = "soundmat-2-philosophy"
-date.zh = "2026.04.11"
-date.en = "April 11, 2026"
-body.zh = "我想，真正重要的是产品整体给人带来的感觉与氛围，所谓艺术装置，与这个空间连结，与路人互动。它在那里，本身就是一种美学。"
-body.en = "I think what really matters is the feeling and the atmosphere the whole thing creates. An art installation connects with its space and plays with the people passing by. Simply being there is an aesthetic in itself."
 
 [[design_notes]]
 doc = "soundmat-3-exterior-design"

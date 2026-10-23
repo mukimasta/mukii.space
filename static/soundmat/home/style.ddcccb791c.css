@@ -111,9 +111,8 @@ html:lang(zh) h3.sh.sh-main{font-size:1rem;color:var(--felt)}
 .note-card .src{display:block;margin-top:.8em;font-size:.76rem;color:var(--stone);opacity:.8}
 .note-card a{color:var(--stone)}
 .placeholder{border:1px dashed var(--rule);aspect-ratio:16/9;display:grid;place-items:center;text-align:center;color:var(--stone);font-family:var(--mono);font-size:.78rem;padding:16px;max-width:72rem;margin:0 auto}
-.film{max-width:72rem;margin:0 auto}
-.film video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#000}
-.film figcaption{padding-inline:0}
+.film video,.film .placeholder{width:100%;height:auto;aspect-ratio:16/9;max-height:88vh;max-width:none}
+.film video{display:block;background:#000}
 section.notes{padding-block:clamp(64px,10vw,120px) clamp(16px,3vw,32px)}
 .nwrap{max-width:48rem;margin:0 auto}
 .nstack{display:grid;margin-top:6px;touch-action:pan-y}
@@ -174,6 +173,7 @@ footer{max-width:72rem;margin:0 auto;padding-block:88px 80px;padding-inline:0 36
 .credits .cr-sub{font-size:.88rem;color:var(--stone);margin-top:.2em}
 footer h3{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--felt);margin-bottom:.9em}
 footer p{margin:0 0 .6em}
+.thanks a{color:inherit}
 .refs{margin-top:1.6em;contain:inline-size}
 .refs summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--felt)}
 .refs summary::-webkit-details-marker{display:none}

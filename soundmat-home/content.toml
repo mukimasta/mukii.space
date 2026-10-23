@@ -50,10 +50,11 @@ Anyone passing through or lingering can move the stones, gently changing the atm
 
 # Main film, at the top of the page. Leave src empty to show the placeholder box instead of a player.
 [film]
-src = ""
-poster = ""
-caption.zh = "主视频，1–2 分钟。10 月 20 日 DXARTS Media Lab 拍摄。"
-caption.en = "Main film, 1–2 min. DXARTS Media Lab, Oct 20."
+src = "https://media.mukii.space/soundmat/soundmat-film-20261023.mp4"   # never overwrite: the GYDC snapshot uses it
+poster = "film-poster.jpg"
+source = "media/正式拍摄/edited/SoundmatVideo-1m16.mp4"
+caption.zh = "2026 年 10 月，华盛顿大学 DXARTS Media Lab。"
+caption.en = "DXARTS Media Lab, University of Washington, October 2026."
 
 [muzak]
 question.zh = "当你进入一个公共空间时，<br>你听到的背景音乐是由谁决定的？"

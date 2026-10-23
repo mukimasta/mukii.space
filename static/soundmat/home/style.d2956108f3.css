@@ -1,7 +1,7 @@
 @font-face{font-family:"IBM Plex Sans";font-style:normal;font-weight:300 500;font-display:swap;src:url(/soundmat/home/fonts/IBMPlexSans.57f93d5d6b.woff2) format("woff2")}
 @font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:400;font-display:swap;src:url(/soundmat/home/fonts/IBMPlexMono-Regular.6b5651026b.woff2) format("woff2")}
 @font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:500;font-display:swap;src:url(/soundmat/home/fonts/IBMPlexMono-Medium.d4a1f2dd15.woff2) format("woff2")}
-@font-face{font-family:"Noto Sans SC";font-style:normal;font-weight:300 500;font-display:swap;src:url(/soundmat/home/fonts/NotoSansSC.6b4e051f87.woff2) format("woff2")}
+@font-face{font-family:"Noto Sans SC";font-style:normal;font-weight:300 500;font-display:swap;src:url(/soundmat/home/fonts/NotoSansSC.e7ae829f90.woff2) format("woff2")}
 :root{
   --room:#121110;      
   --room-2:#1b1a18;    

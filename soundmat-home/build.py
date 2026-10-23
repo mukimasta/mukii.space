@@ -4,7 +4,8 @@
 # ///
 """Build the SoundMat homepage into the Hugo static folder.
 
-    uv run soundmat-home/build.py
+    uv run soundmat-home/build.py                    # the live homepage
+    uv run soundmat-home/build.py --snapshot gydc    # a frozen copy at /soundmat/gydc/
 
 Sources (this folder): content.toml (copy), page.html (structure), style.css,
 main.js, img/ (photos), fonts/ (full font files, fetched on first run).
@@ -13,16 +14,25 @@ Output (served by Hugo as-is):
     static/soundmat/index.html      Chinese page, /soundmat/
     static/soundmat/en/index.html   English page, /soundmat/en/
     static/soundmat/home/           fingerprinted CSS, JS, fonts, images
+
+A snapshot is a self-contained copy (pages and its own home/ assets) under
+static/soundmat/<name>/. Normal builds never touch it, so it stays as it was
+when taken. See README.md for when and how to take one.
 """
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import html
 import re
+import shutil
+import subprocess
 import sys
 import tomllib
 import urllib.request
+from dataclasses import dataclass
+from datetime import date
 from io import BytesIO
 from pathlib import Path
 
@@ -35,12 +45,9 @@ from PIL import Image
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
 DOCS = REPO / "content/soundmat/docs"
-OUT = REPO / "static/soundmat"
-ASSETS = OUT / "home"
-ASSET_URL = "/soundmat/home/"
 SITE = "https://mukii.space"
 LANGS = ("zh", "en")
-URLS = {"zh": "/soundmat/", "en": "/soundmat/en/"}
+HOME = "/soundmat/"
 DOCS_URLS = {"zh": "/soundmat/docs/", "en": "/soundmat/docs/en/"}
 
 # Image widths to generate; a width larger than the source is skipped.
@@ -62,6 +69,29 @@ FONTS = [
 
 class BuildError(Exception):
     pass
+
+
+@dataclass
+class Target:
+    """Where one build goes: the live homepage, or a frozen snapshot of it."""
+    root: str                   # URL of the Chinese page, e.g. /soundmat/ or /soundmat/gydc/
+    snapshot: str | None = None
+
+    @property
+    def out(self) -> Path:
+        return REPO / "static" / self.root.strip("/")
+
+    @property
+    def assets(self) -> Path:
+        return self.out / "home"
+
+    @property
+    def asset_url(self) -> str:
+        return self.root + "home/"
+
+    @property
+    def urls(self) -> dict[str, str]:
+        return {"zh": self.root, "en": self.root + "en/"}
 
 
 def short_hash(data: bytes) -> str:
@@ -159,7 +189,8 @@ class Markup:
 # ---------------------------------------------------------------- images
 
 class Images:
-    def __init__(self):
+    def __init__(self, target: Target):
+        self.target = target
         self.made: set[Path] = set()
         self.cache: dict[tuple, dict] = {}
 
@@ -179,12 +210,12 @@ class Images:
             sizes = [w for w in widths if w < w0] + [min(w0, max(widths))]
             files = []
             for w in sorted(set(sizes)):
-                out = ASSETS / "img" / f"{stem}.{tag}-{w}.webp"
+                out = self.target.assets / "img" / f"{stem}.{tag}-{w}.webp"
                 if not out.exists():
                     out.parent.mkdir(parents=True, exist_ok=True)
                     im.resize((w, round(h0 * w / w0)), Image.LANCZOS).save(out, "WEBP", quality=80, method=6)
                 self.made.add(out)
-                files.append((w, ASSET_URL + "img/" + out.name))
+                files.append((w, self.target.asset_url + "img/" + out.name))
         result = {"files": files, "width": w0, "height": h0}
         self.cache[key] = result
         return result
@@ -192,7 +223,7 @@ class Images:
     def jpeg(self, name: str, width: int) -> str:
         src = HERE / "img" / name
         data = src.read_bytes()
-        out = ASSETS / "img" / f"{name.rsplit('.', 1)[0].replace('/', '-')}.{short_hash(data)}-{width}.jpg"
+        out = self.target.assets / "img" / f"{name.rsplit('.', 1)[0].replace('/', '-')}.{short_hash(data)}-{width}.jpg"
         if not out.exists():
             out.parent.mkdir(parents=True, exist_ok=True)
             with Image.open(BytesIO(data)) as im:
@@ -200,7 +231,7 @@ class Images:
                 im.resize((width, round(im.height * width / im.width)), Image.LANCZOS).save(
                     out, "JPEG", quality=82, optimize=True, progressive=True)
         self.made.add(out)
-        return ASSET_URL + "img/" + out.name
+        return self.target.asset_url + "img/" + out.name
 
     def tag(self, name, alt, sizes, position=None, eager=False) -> str:
         widths = STRIP_WIDTHS if sizes != "100vw" else BLEED_WIDTHS
@@ -223,7 +254,7 @@ def visible_text(page: str) -> str:
     return html.unescape(re.sub(r"<[^>]+>", " ", page) + " " + attrs)
 
 
-def build_fonts(pages: dict[str, str], made: set[Path]) -> tuple[str, list[str]]:
+def build_fonts(pages: dict[str, str], target: Target, made: set[Path]) -> tuple[str, list[str]]:
     """Subset each font to the characters the pages use; return @font-face CSS."""
     all_text = "".join(pages.values())
     latin = "".join(sorted({c for c in all_text if ord(c) < 0x2E80})) + "‘’“”–—…·"
@@ -237,7 +268,7 @@ def build_fonts(pages: dict[str, str], made: set[Path]) -> tuple[str, list[str]]
             urllib.request.urlretrieve(GOOGLE_FONTS + remote, src)
         chars = cjk if family == "Noto Sans SC" else latin
         key = short_hash(src.read_bytes()[:4096] + str(src.stat().st_size).encode() + chars.encode() + repr(axes).encode())
-        out = ASSETS / "fonts" / f"{filename.split('[')[0].split('.')[0]}.{key}.woff2"
+        out = target.assets / "fonts" / f"{filename.split('[')[0].split('.')[0]}.{key}.woff2"
         if not out.exists():
             out.parent.mkdir(parents=True, exist_ok=True)
             font = TTFont(src)
@@ -253,7 +284,7 @@ def build_fonts(pages: dict[str, str], made: set[Path]) -> tuple[str, list[str]]
             font.flavor = "woff2"
             font.save(out)
         made.add(out)
-        url = ASSET_URL + "fonts/" + out.name
+        url = target.asset_url + "fonts/" + out.name
         css.append(f'@font-face{{font-family:"{family}";font-style:normal;font-weight:{weight};'
                    f'font-display:swap;src:url({url}) format("woff2")}}')
         if family in ("IBM Plex Sans", "Noto Sans SC"):
@@ -263,12 +294,12 @@ def build_fonts(pages: dict[str, str], made: set[Path]) -> tuple[str, list[str]]
 
 # ---------------------------------------------------------------- build
 
-def write_hashed(name: str, ext: str, data: str, made: set[Path]) -> str:
-    out = ASSETS / f"{name}.{short_hash(data.encode())}.{ext}"
+def write_hashed(name: str, ext: str, data: str, target: Target, made: set[Path]) -> str:
+    out = target.assets / f"{name}.{short_hash(data.encode())}.{ext}"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(data, encoding="utf-8")
     made.add(out)
-    return ASSET_URL + out.name
+    return target.asset_url + out.name
 
 
 def minify_css(css: str) -> str:
@@ -276,7 +307,7 @@ def minify_css(css: str) -> str:
     return re.sub(r"\n\s*\n+", "\n", css).strip() + "\n"
 
 
-def render(content: dict, titles, images: Images, env: Environment, assets: dict) -> dict[str, str]:
+def render(content: dict, titles, images: Images, env: Environment, target: Target, assets: dict) -> dict[str, str]:
     pages, used_notes = {}, set()
     for lang in LANGS:
         t = resolve(content, lang)
@@ -291,7 +322,8 @@ def render(content: dict, titles, images: Images, env: Environment, assets: dict
         if t["film"].get("src") and t["film"].get("poster"):
             film_poster = images.variants(t["film"]["poster"], (1920,))["files"][-1][1]
         pages[lang] = env.get_template("page.html").render(
-            t=t, lang=lang, html_lang="zh-CN" if lang == "zh" else "en", site=SITE, urls=URLS,
+            t=t, lang=lang, html_lang="zh-CN" if lang == "zh" else "en", site=SITE, urls=target.urls,
+            home_urls=Target(HOME).urls, snapshot=target.snapshot,
             docs_url=DOCS_URLS[lang], md=markup.block, inline=markup.inline, img=images.tag,
             doc_url=doc_url, doc_title=lambda slug, lang=lang: (doc_url(slug), titles[lang][slug])[1],
             strip_sizes=STRIP_SIZES, film_poster=film_poster, **assets)
@@ -301,35 +333,66 @@ def render(content: dict, titles, images: Images, env: Environment, assets: dict
     return pages
 
 
+def git(*args: str) -> str:
+    return subprocess.run(["git", "-C", str(REPO), *args], check=True, capture_output=True, text=True).stdout.strip()
+
+
+def snapshot_target(name: str, replace: bool) -> Target:
+    if not re.fullmatch(r"[a-z0-9-]+", name) or name in ("en", "home", "docs"):
+        raise BuildError(f"bad snapshot name: {name}")
+    if git("status", "--porcelain", "--", "soundmat-home"):
+        raise BuildError("commit soundmat-home/ first: a snapshot must match a commit so it can be rebuilt")
+    target = Target(f"{HOME}{name}/", snapshot=name)
+    if target.out.exists():
+        if not replace:
+            raise BuildError(f"{target.out.relative_to(REPO)} exists; pass --replace to overwrite the frozen copy")
+        shutil.rmtree(target.out)
+    return target
+
+
 def main() -> int:
+    parser = argparse.ArgumentParser(description="Build the SoundMat homepage.")
+    parser.add_argument("--snapshot", metavar="NAME", help="write a frozen copy to /soundmat/NAME/ instead")
+    parser.add_argument("--replace", action="store_true", help="allow overwriting an existing snapshot")
+    args = parser.parse_args()
+    target = snapshot_target(args.snapshot, args.replace) if args.snapshot else Target(HOME)
+
     content = tomllib.loads((HERE / "content.toml").read_text(encoding="utf-8"))
     titles = doc_titles()
     env = Environment(loader=FileSystemLoader(HERE), undefined=StrictUndefined, autoescape=False,
                       trim_blocks=False, lstrip_blocks=False)
-    images = Images()
+    images = Images(target)
     made = images.made
 
     og_image = images.jpeg(content["meta"]["og_image"], 1200)
-    js = write_hashed("main", "js", (HERE / "main.js").read_text(encoding="utf-8"), made)
+    js = write_hashed("main", "js", (HERE / "main.js").read_text(encoding="utf-8"), target, made)
+    stamp = None
+    if target.snapshot:
+        stamp = f"snapshot '{target.snapshot}' of soundmat-home at {git('rev-parse', '--short', 'HEAD')}, {date.today()}"
     # First pass with placeholder asset names, only to learn which characters the pages use.
-    draft = render(content, titles, images, env,
-                   dict(css="", js=js, og_image=og_image, preload_fonts=[]))
-    font_css, preload = build_fonts(draft, made)
-    css = write_hashed("style", "css", minify_css(font_css + (HERE / "style.css").read_text(encoding="utf-8")), made)
-    pages = render(content, titles, images, env,
-                   dict(css=css, js=js, og_image=og_image, preload_fonts=preload))
+    draft = render(content, titles, images, env, target,
+                   dict(css="", js=js, og_image=og_image, preload_fonts=[], stamp=stamp))
+    font_css, preload = build_fonts(draft, target, made)
+    css = write_hashed("style", "css", minify_css(font_css + (HERE / "style.css").read_text(encoding="utf-8")),
+                       target, made)
+    pages = render(content, titles, images, env, target,
+                   dict(css=css, js=js, og_image=og_image, preload_fonts=preload, stamp=stamp))
 
     for lang, page in pages.items():
-        out = OUT / URLS[lang].removeprefix("/soundmat/") / "index.html"
+        out = target.out / target.urls[lang].removeprefix(target.root) / "index.html"
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(page, encoding="utf-8")
         print(f"wrote {out.relative_to(REPO)}")
 
-    stale = [p for p in ASSETS.rglob("*") if p.is_file() and p not in made]
+    stale = [p for p in target.assets.rglob("*") if p.is_file() and p not in made]
     for p in stale:
         p.unlink()
     total = sum(p.stat().st_size for p in made)
-    print(f"{len(made)} assets in {ASSETS.relative_to(REPO)} ({total / 1e6:.1f} MB), removed {len(stale)} stale")
+    print(f"{len(made)} assets in {target.assets.relative_to(REPO)} ({total / 1e6:.1f} MB), removed {len(stale)} stale")
+    if target.snapshot:
+        tag = f"soundmat-{target.snapshot}"
+        git("tag", "-f", tag, "HEAD")
+        print(f"tagged HEAD as {tag}; commit static/{target.root.strip('/')}/ and push with --tags")
     return 0
 
 

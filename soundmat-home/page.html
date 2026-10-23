@@ -12,10 +12,16 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>{{ t.meta.title }}</title>
 <meta name="description" content="{{ t.meta.description|e }}">
+{%- if snapshot %}
+<!-- {{ stamp }} -->
+<meta name="robots" content="noindex">
+<link rel="canonical" href="{{ site }}{{ home_urls[lang] }}">
+{%- else %}
 <link rel="canonical" href="{{ site }}{{ urls[lang] }}">
 <link rel="alternate" hreflang="zh-CN" href="{{ site }}{{ urls.zh }}">
 <link rel="alternate" hreflang="en" href="{{ site }}{{ urls.en }}">
 <link rel="alternate" hreflang="x-default" href="{{ site }}{{ urls.zh }}">
+{%- endif %}
 <meta property="og:type" content="website">
 <meta property="og:title" content="{{ t.meta.title }}">
 <meta property="og:description" content="{{ t.meta.description|e }}">
@@ -27,7 +33,7 @@
 <link rel="preload" href="{{ f }}" as="font" type="font/woff2" crossorigin>
 {%- endfor %}
 <link rel="stylesheet" href="{{ css }}">
-{%- if lang == "zh" %}
+{%- if lang == "zh" and not snapshot %}
 <script>/* old ?lang=en links */if(/[?&]lang=en\b/.test(location.search))location.replace("{{ urls.en }}")</script>
 {%- endif %}
 </head>

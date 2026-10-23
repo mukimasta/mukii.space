@@ -361,7 +361,7 @@ alt = "Hand-drawn diagrams of how the sensor grid is scanned"
 [credits]
 team_label.zh = "项目团队"
 team_label.en = "Project Team"
-team = ["Hanlin Xue", "Po-Yu Chen", "Chenfei Ma", "Sora Kim"]
+team = ["Hanlin Xue", "Po-Yu Chen", "Fay Ma", "Sora Kim"]
 advisor_label.zh = "指导老师"
 advisor_label.en = "Advisor"
 advisor = "Meichun Liu"

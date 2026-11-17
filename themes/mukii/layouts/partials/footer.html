@@ -1,8 +1,10 @@
 <footer class="site-footer">
     {{- with .Site.Copyright }}
-    <span>{{ . }}</span>
+    <p>{{ . }}</p>
     {{- else }}
-    <span>&copy; {{ now.Year }} {{ .Site.Title }}</span>
+    <p>&copy; {{ now.Year }} {{ .Site.Title }}</p>
     {{- end }}
-    <a href="mailto:mukimasta@outlook.com">mukimasta@outlook.com</a>
+    {{- if .IsHome }}
+    <p><a href="mailto:mukimasta@outlook.com">mukimasta@outlook.com</a></p>
+    {{- end }}
 </footer>

@@ -3,7 +3,7 @@ languageCode = 'en-us'
 title = 'MUKIMASTA'
 mainSections = []
 
-theme = 'dario'
+theme = 'mukii'
 
 [markup.goldmark.renderer]
 hardWraps = true

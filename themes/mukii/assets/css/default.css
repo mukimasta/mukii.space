@@ -1,0 +1,577 @@
+/* mukii.space
+   One column, one ink colour. Inter for Latin, Noto Sans SC for Chinese,
+   both subset by scripts/build_fonts.py. Dark mode follows the system until
+   the reader picks one; [data-theme] on <html> holds the choice. */
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/inter.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Noto Sans SC";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/noto-sans-sc.woff2") format("woff2");
+}
+
+:root {
+  --bg: #fff;
+  --fg: #1a1a1a;
+  --soft: rgba(26, 26, 26, 0.06);   /* code, table header */
+  --line: rgba(26, 26, 26, 0.14);   /* borders */
+  --sans: "Inter", "Noto Sans SC", sans-serif;
+  --mono: ui-monospace, Menlo, Consolas, "Noto Sans Mono CJK SC", monospace;
+  --measure: 600px;
+  --radius: 6px;
+
+  /* names the Professional / Journey pages use */
+  --color-text-primary: var(--fg);
+  --color-text-secondary: var(--fg);
+  --color-text-tertiary: var(--fg);
+  --color-border-secondary: var(--line);
+  --color-border-tertiary: var(--line);
+  --color-background-secondary: var(--soft);
+  --border-radius-md: var(--radius);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111;
+    --fg: #d4d4d4;
+    --soft: rgba(212, 212, 212, 0.08);
+    --line: rgba(212, 212, 212, 0.18);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #111;
+  --fg: #d4d4d4;
+  --soft: rgba(212, 212, 212, 0.08);
+  --line: rgba(212, 212, 212, 0.18);
+  color-scheme: dark;
+}
+
+/* ---------------------------------------------------------------- base */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--bg);
+  color: var(--fg);
+  font: 400 16px/28px var(--sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-size-adjust: 100%;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+body {
+  margin: 0;
+  padding: 128px 24px 64px;
+  overflow-x: hidden;
+}
+
+.site-header,
+.content-wrapper,
+.site-footer {
+  max-width: var(--measure);
+  margin-inline: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: underline 1px;
+  text-underline-offset: 2.5px;
+}
+
+/* rhythm (from paco.me): 28px lines, one empty line between blocks,
+   64px between sections */
+p {
+  margin: 0 0 28px;
+}
+
+strong {
+  font-weight: 600;
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ---------------------------------------------------------------- header */
+
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px 20px;
+  flex-wrap: wrap;
+  margin-bottom: 64px;
+}
+
+.site-title {
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.site-nav__link,
+.site-title {
+  text-decoration: none;
+}
+
+.site-nav__link:hover,
+.site-title:hover,
+.site-nav__link.is-active {
+  text-decoration: underline 1px;
+  text-underline-offset: 2.5px;
+}
+
+.theme-toggle {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-self: center;
+  opacity: 0.85;
+}
+
+.theme-toggle:hover {
+  opacity: 1;
+}
+
+.theme-toggle svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ---------------------------------------------------------------- headings */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 28px;
+  margin: 64px 0 28px;
+}
+
+/* inside long texts a heading sits close to the text it introduces;
+   levels differ by weight and space, not size */
+.kind-page .content-container h2 {
+  font-weight: 600;
+  margin: 56px 0 12px;
+}
+
+.kind-page .content-container h3 {
+  margin: 48px 0 12px;
+}
+
+.kind-page .content-container h4,
+.kind-page .content-container h5,
+.kind-page .content-container h6 {
+  margin: 36px 0 8px;
+}
+
+.content-container > h1:first-of-type,
+.content-container > section > h2:first-child,
+.content-container > .back-to-parent + h1 {
+  margin-top: 0;
+}
+
+/* page title on articles: same size, set apart by space */
+.content-container > h1 {
+  margin-bottom: 0;
+}
+
+/* the description under a title (h4 in single.html) */
+.content-container > h1 + h4 {
+  margin: 0;
+  font-weight: 400;
+}
+
+.author-date {
+  font-size: 14px;
+  margin: 0 0 56px;
+}
+
+.content-container > h1 + h4:empty {
+  display: none;
+}
+
+.content-container > h1 + h4:empty + .author-date,
+.content-container > h1 + .author-date {
+  margin-top: 0;
+}
+
+/* section headings inside text, with the theme's # anchor on hover */
+.anchor {
+  display: none;
+  margin-left: 8px;
+  text-decoration: none;
+  opacity: 0.4;
+}
+
+h1:hover .anchor,
+h2:hover .anchor,
+h3:hover .anchor,
+h4:hover .anchor,
+h5:hover .anchor,
+h6:hover .anchor {
+  display: inline;
+}
+
+/* ---------------------------------------------------------------- text blocks */
+
+ul,
+ol {
+  padding-left: 1.2em;
+  margin: 0 0 28px;
+}
+
+li {
+  margin: 0 0 8px;
+}
+
+li > ul,
+li > ol {
+  margin: 8px 0 0;
+}
+
+blockquote {
+  margin: 0 0 28px;
+  padding-left: 16px;
+  border-left: 1px solid var(--line);
+}
+
+hr {
+  border: 0;
+  height: auto;
+  margin: 64px 0;
+  text-align: center;
+  line-height: 1;
+  overflow: visible;
+}
+
+hr::after {
+  content: "◇";
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+/* ---------------------------------------------------------------- code */
+
+code {
+  font-family: var(--mono);
+  font-size: 0.875em;
+  background: var(--soft);
+  border-radius: 4px;
+  padding: 0.15em 0.35em;
+}
+
+pre {
+  margin: 0 0 28px;
+  padding: 14px 16px;
+  background: var(--soft) !important;
+  border-radius: var(--radius);
+  overflow-x: auto;
+  font-size: 13.5px;
+  line-height: 22px;
+}
+
+pre code {
+  background: none !important;
+  padding: 0;
+  font-size: inherit;
+  color: var(--fg);
+}
+
+/* ---------------------------------------------------------------- tables, figures */
+
+table {
+  border-collapse: collapse;
+  margin: 0 0 28px;
+  font-size: 14px;
+  line-height: 22px;
+  display: block;
+  overflow-x: auto;
+}
+
+th,
+td {
+  border-bottom: 1px solid var(--line);
+  padding: 6px 12px 6px 0;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  font-weight: 500;
+}
+
+figure {
+  margin: 0 0 28px;
+}
+
+figcaption {
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.katex {
+  font-size: 1em;
+}
+
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.mermaid {
+  margin: 0 0 28px;
+}
+
+/* ---------------------------------------------------------------- footnotes */
+
+.footnotes {
+  margin-top: 48px;
+  font-size: 14px;
+  line-height: 24px;
+}
+
+.footnotes hr {
+  margin: 0 0 24px;
+}
+
+.footnotes-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.footnote-item {
+  margin-bottom: 10px;
+}
+
+sup[id^="fnref"] a {
+  text-decoration: none;
+  font-size: 12px;
+  padding: 0 3px;
+  border-radius: 3px;
+  background: var(--soft);
+}
+
+.footnote-backref {
+  text-decoration: none;
+  margin-left: 2px;
+}
+
+.footnote-tooltip {
+  position: absolute;
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--line);
+  padding: 16px 18px;
+  border-radius: var(--radius);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  max-width: 400px;
+  z-index: 1000;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.footnote-tooltip p {
+  margin: 0 0 8px;
+}
+
+.footnote-tooltip p:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------------------------------------------------------------- back link, footer */
+
+.back-to-parent {
+  font-size: 14px;
+  margin: 0 0 28px;
+}
+
+.back-to-parent a {
+  text-decoration: none;
+}
+
+.back-to-parent a:hover {
+  text-decoration: underline 1px;
+}
+
+.site-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px 20px;
+  flex-wrap: wrap;
+  margin-top: 120px;
+  font-size: 14px;
+}
+
+.site-footer a {
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  text-decoration: underline 1px;
+}
+
+/* ---------------------------------------------------------------- SoundMat docs */
+
+.soundmat-lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 0.45em;
+  margin: 0 0 16px;
+  font-size: 14px;
+}
+
+.soundmat-lang-switch__link {
+  text-decoration: none;
+  opacity: 0.6;
+}
+
+.soundmat-lang-switch__link:hover {
+  opacity: 1;
+}
+
+.soundmat-lang-switch__link.is-active {
+  opacity: 1;
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.soundmat-lang-switch__sep {
+  opacity: 0.45;
+  user-select: none;
+}
+
+.soundmat-hero {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem 2.25rem;
+  margin: 1.25rem 0 1.75rem;
+}
+
+.soundmat-hero__links {
+  flex: 0 0 auto;
+}
+
+.soundmat-hero__links p {
+  margin: 0.85em 0;
+}
+
+.soundmat-hero__links p:first-child {
+  margin-top: 0;
+}
+
+.soundmat-hero__links p:last-child {
+  margin-bottom: 0;
+}
+
+.soundmat-hero__media {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.soundmat-hero__media img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.soundmat-gallery {
+  margin: 0.5rem 0 2rem;
+}
+
+.soundmat-gallery__video {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #000;
+}
+
+.soundmat-gallery__photos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.soundmat-gallery__photos img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+.soundmat-gallery__caption {
+  font-size: 14px;
+  margin-top: 0.5rem;
+}
+
+.soundmat-gallery__caption p {
+  margin: 0;
+}
+
+/* ---------------------------------------------------------------- small screens */
+
+@media (max-width: 640px) {
+  body {
+    padding: 56px 20px 48px;
+  }
+
+  .site-header {
+    margin-bottom: 48px;
+  }
+
+  .site-footer {
+    margin-top: 80px;
+  }
+
+  .soundmat-hero {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .soundmat-hero__links {
+    order: 2;
+  }
+
+  .soundmat-hero__media {
+    order: 1;
+  }
+
+  .soundmat-gallery__photos {
+    grid-template-columns: 1fr;
+  }
+}

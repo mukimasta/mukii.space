@@ -1,0 +1,4 @@
+name = "mukii"
+license = "MIT"
+description = "mukii.space 的主题。从 dario（https://github.com/GrantBirki/dario，MIT）改出来，原许可见 LICENSE。"
+min_version = "0.119.0"

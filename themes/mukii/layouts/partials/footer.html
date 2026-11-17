@@ -1,0 +1,8 @@
+<footer class="site-footer">
+    {{- with .Site.Copyright }}
+    <span>{{ . }}</span>
+    {{- else }}
+    <span>&copy; {{ now.Year }} {{ .Site.Title }}</span>
+    {{- end }}
+    <a href="mailto:mukimasta@outlook.com">mukimasta@outlook.com</a>
+</footer>

@@ -1,0 +1,8 @@
+{{- if and (not .IsHome) .Parent -}}
+  {{- $parent := .Parent -}}
+  {{- $name := $parent.Title | plainify -}}
+  {{- if or $parent.IsHome (not $name) }}{{ $name = site.Title }}{{ end -}}
+<nav class="back-to-parent" aria-label="上一级">
+  <a href="{{ $parent.RelPermalink }}">← {{ $name }}</a>
+</nav>
+{{- end -}}

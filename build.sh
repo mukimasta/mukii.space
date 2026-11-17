@@ -62,6 +62,15 @@ main() {
   # Initialize git submodules (e.g. themes)
   git submodule update --init --recursive
 
+  # Subset the site fonts to the characters in use (the committed fonts
+  # stay if this fails)
+  echo "Subsetting fonts..."
+  if pip install --quiet fonttools brotli; then
+    python3 scripts/build_fonts.py || echo "font subsetting failed; using committed fonts"
+  else
+    echo "fonttools unavailable; using committed fonts"
+  fi
+
   # Build the site
   echo "Building the site..."
   hugo build --gc --minify

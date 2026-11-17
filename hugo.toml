@@ -14,3 +14,7 @@ enable = true
 [markup.goldmark.extensions.passthrough.delimiters]
 block = [['$$', '$$']]
 inline = [['$', '$']]
+
+[params]
+# name in the footer copyright (the site title is mukii.space)
+copyrightName = 'MUKIMASTA'

@@ -2,7 +2,7 @@
     {{- with .Site.Copyright }}
     <p>{{ . }}</p>
     {{- else }}
-    <p>&copy; {{ now.Year }} {{ .Site.Title }}</p>
+    <p>&copy; {{ now.Year }} {{ .Site.Params.copyrightName | default .Site.Title }}</p>
     {{- end }}
     {{- if .IsHome }}
     <p><a href="mailto:mukimasta@outlook.com">mukimasta@outlook.com</a></p>

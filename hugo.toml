@@ -1,6 +1,6 @@
 baseURL = 'https://mukii.space/'
 languageCode = 'en-us'
-title = 'MUKIMASTA'
+title = 'mukii.space'
 mainSections = []
 
 theme = 'mukii'

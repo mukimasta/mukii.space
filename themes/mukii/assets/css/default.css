@@ -237,12 +237,13 @@ h6 {
   opacity: 0.4;
 }
 
-h1:hover .anchor,
-h2:hover .anchor,
-h3:hover .anchor,
-h4:hover .anchor,
-h5:hover .anchor,
-h6:hover .anchor {
+/* only in articles; on the homepage and list pages headings are just labels */
+.kind-page h1:hover .anchor,
+.kind-page h2:hover .anchor,
+.kind-page h3:hover .anchor,
+.kind-page h4:hover .anchor,
+.kind-page h5:hover .anchor,
+.kind-page h6:hover .anchor {
   display: inline;
 }
 

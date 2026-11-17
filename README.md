@@ -2,6 +2,8 @@
 
 Hanlin 的个人网站。Hugo 构建，主题是仓库自己的 `themes/mukii`（从 [dario](https://github.com/GrantBirki/dario) 改出来）。
 
+项目文档在 [mukidoc/](mukidoc/OVERVIEW.md)：网站是什么、视觉规则（[VISUAL_DESIGN](mukidoc/design/VISUAL_DESIGN.md)）、构建细节（[BUILD](mukidoc/implementation/BUILD.md)）。
+
 ## 发布
 
 推到 `master`，Cloudflare Workers 自动跑 `build.sh`（装 Hugo 等，裁剪字体，再 `hugo build`），发布 `public/`。配置在 `wrangler.toml`。

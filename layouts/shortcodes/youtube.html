@@ -1,0 +1,14 @@
+{{- /* Replaces Hugo's built-in youtube shortcode so it sits like the others.
+       {{< youtube vNwYtllyt3Q >}}  or  {{< youtube id="..." start="30" caption="..." >}} */ -}}
+{{- $id := .Get "id" | default (.Get 0) -}}
+{{- $start := .Get "start" | default "0" -}}
+{{- $caption := .Get "caption" -}}
+<figure class="video-embed">
+  <iframe src="https://www.youtube-nocookie.com/embed/{{ $id }}?start={{ $start }}"
+          title="{{ $caption | default "YouTube" | plainify }}" loading="lazy"
+          allow="encrypted-media; fullscreen; picture-in-picture" allowfullscreen
+          referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  {{- with $caption }}
+  <figcaption>{{ . | markdownify }}</figcaption>
+  {{- end }}
+</figure>

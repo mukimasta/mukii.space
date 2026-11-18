@@ -26,6 +26,20 @@ Jetson 上的 Hugo 在 `~/.local/hugo-0.156/hugo`（和 Cloudflare 同版本）�
 
 绑在 Jetson 的 Tailscale 地址上，Hanlin 在 Mac 上用 `http://100.124.252.60:1313/` 打开；只在 Jetson 本机看可以绑 `127.0.0.1`。
 
+### 视频
+
+文章里的 HTML 会被 Hugo 删掉（没开 `unsafe`），视频用短代码嵌入，模板在 `layouts/shortcodes/`：
+
+```
+{{< video src="https://media.mukii.space/目录/文件.mp4" poster="封面图" caption="说明" >}}
+{{< bilibili BV1k14y1U7LQ >}}
+{{< youtube vNwYtllyt3Q >}}
+```
+
+`poster`、`caption` 可以不写；`bilibili` 可以加 `page="2"` 选分 P，`youtube` 可以加 `start="30"` 从第几秒开始。`youtube` 覆盖了 Hugo 自带的同名短代码，好让三种的版式一样。
+
+视频文件放在 `media.mukii.space`（Cloudflare R2），不放进仓库：Cloudflare Workers 的静态文件单个上限 25 MiB，大了构建会失败，而且仓库会一直背着它。文件名用英文，免得网址被转码。
+
 ### 主题的来源
 
 `themes/mukii` 是从 dario（GrantBirki/dario，MIT）复制进来改的，原许可保留在 `themes/mukii/LICENSE`。模板骨架、深色模式和脚注脚本、分享预览图沿用 dario 的结构；样式整份重写。

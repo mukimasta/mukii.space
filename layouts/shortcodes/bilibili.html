@@ -1,0 +1,14 @@
+{{- /* A bilibili player, 16:9, full text width.
+       {{< bilibili BV1k14y1U7LQ >}}  or  {{< bilibili id="BV..." page="2" caption="..." >}} */ -}}
+{{- $id := .Get "id" | default (.Get 0) -}}
+{{- $page := .Get "page" | default "1" -}}
+{{- $caption := .Get "caption" -}}
+<figure class="video-embed">
+  <iframe src="https://player.bilibili.com/player.html?bvid={{ $id }}&p={{ $page }}&autoplay=0&high_quality=1&danmaku=0"
+          title="{{ $caption | default "bilibili" | plainify }}" loading="lazy"
+          allow="fullscreen; picture-in-picture" allowfullscreen
+          sandbox="allow-scripts allow-same-origin allow-popups allow-presentation"></iframe>
+  {{- with $caption }}
+  <figcaption>{{ . | markdownify }}</figcaption>
+  {{- end }}
+</figure>

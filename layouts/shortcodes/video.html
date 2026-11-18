@@ -1,0 +1,15 @@
+{{- /* A video file, full text width.
+       {{< video src="https://media.mukii.space/..." poster="..." caption="..." >}}
+       src may be a full URL or a path under static/. */ -}}
+{{- $src := .Get "src" | default (.Get 0) -}}
+{{- $poster := .Get "poster" -}}
+{{- $caption := .Get "caption" -}}
+{{- $type := .Get "type" | default "video/mp4" -}}
+<figure class="video-embed">
+  <video controls playsinline preload="metadata"{{ with $poster }} poster="{{ . | safeURL }}"{{ end }}>
+    <source src="{{ $src | safeURL }}" type="{{ $type }}">
+  </video>
+  {{- with $caption }}
+  <figcaption>{{ . | markdownify }}</figcaption>
+  {{- end }}
+</figure>

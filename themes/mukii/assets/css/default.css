@@ -345,6 +345,21 @@ figcaption {
   margin-top: 8px;
 }
 
+/* {{< video >}} and {{< bilibili >}} shortcodes */
+.video-embed video,
+.video-embed iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: var(--radius);
+  background: #000;
+}
+
+.video-embed iframe {
+  aspect-ratio: 16 / 9;
+  height: auto;
+}
+
 .katex {
   font-size: 1em;
 }

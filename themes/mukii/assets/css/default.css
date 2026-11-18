@@ -449,11 +449,35 @@ sup[id^="fnref"] a {
 }
 
 .back-to-parent a {
+  display: inline-flex;
+  gap: 8px;
   text-decoration: none;
 }
 
-.back-to-parent a:hover {
-  text-decoration: underline 1px;
+.back-to-parent__arrow {
+  width: 16px;
+}
+
+/* wide screens: only the arrow, inside the text edge; where it goes
+   shows on hover, out in the margin to the arrow's left. Below 960px the
+   margin may be too narrow for a long name, so it stays visible there */
+@media (min-width: 960px) and (hover: hover) {
+  .back-to-parent a {
+    position: relative;
+  }
+
+  .back-to-parent__name {
+    position: absolute;
+    right: calc(100% + 8px);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+
+  .back-to-parent a:hover .back-to-parent__name,
+  .back-to-parent a:focus-visible .back-to-parent__name {
+    opacity: 1;
+  }
 }
 
 .site-footer {

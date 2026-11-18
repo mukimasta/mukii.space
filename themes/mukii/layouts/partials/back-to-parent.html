@@ -3,6 +3,6 @@
   {{- $name := $parent.Title | plainify -}}
   {{- if or $parent.IsHome (not $name) }}{{ $name = site.Title }}{{ end -}}
 <nav class="back-to-parent" aria-label="上一级">
-  <a href="{{ $parent.RelPermalink }}">← {{ $name }}</a>
+  <a href="{{ $parent.RelPermalink }}" aria-label="返回{{ $name }}"><span class="back-to-parent__arrow">←</span><span class="back-to-parent__name">{{ $name }}</span></a>
 </nav>
 {{- end -}}

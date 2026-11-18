@@ -234,24 +234,6 @@ h6 {
   margin-top: 0;
 }
 
-/* section headings inside text, with the theme's # anchor on hover */
-.anchor {
-  display: none;
-  margin-left: 8px;
-  text-decoration: none;
-  opacity: 0.4;
-}
-
-/* only in articles; on the homepage and list pages headings are just labels */
-.kind-page h1:hover .anchor,
-.kind-page h2:hover .anchor,
-.kind-page h3:hover .anchor,
-.kind-page h4:hover .anchor,
-.kind-page h5:hover .anchor,
-.kind-page h6:hover .anchor {
-  display: inline;
-}
-
 /* ---------------------------------------------------------------- text blocks */
 
 ul,
@@ -482,6 +464,8 @@ sup[id^="fnref"] a {
 
 .site-footer {
   margin-top: 120px;
+  font-size: 14px;
+  line-height: 24px;
   text-align: center;
 }
 

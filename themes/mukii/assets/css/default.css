@@ -100,8 +100,10 @@ p {
   margin: 0 0 28px;
 }
 
-strong {
-  font-weight: 600;
+/* two weights on the whole site: 400 for text, 500 for everything set apart */
+strong,
+b {
+  font-weight: 500;
 }
 
 img,
@@ -183,9 +185,8 @@ h6 {
 }
 
 /* inside long texts a heading sits close to the text it introduces;
-   levels differ by weight and space, not size */
+   levels differ by space, not size or weight */
 .kind-page .content-container h2 {
-  font-weight: 600;
   margin: 56px 0 12px;
 }
 

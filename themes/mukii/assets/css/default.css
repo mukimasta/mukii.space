@@ -123,6 +123,7 @@ video {
 
 .site-title {
   font-weight: 500;
+  font-size: 18px;
   text-decoration: none;
 }
 
@@ -204,9 +205,13 @@ h6 {
   margin-top: 0;
 }
 
-/* page title on articles: same size, set apart by space */
+/* page title on articles: one step up from the text, like the site name */
 .content-container > h1 {
   margin-bottom: 0;
+}
+
+.content-container > h1:not(.smaller) {
+  font-size: 18px;
 }
 
 /* the description under a title (h4 in single.html) */
@@ -216,7 +221,6 @@ h6 {
 }
 
 .author-date {
-  font-size: 14px;
   margin: 0 0 56px;
 }
 
@@ -318,8 +322,7 @@ pre code {
 table {
   border-collapse: collapse;
   margin: 0 0 28px;
-  font-size: 14px;
-  line-height: 22px;
+  line-height: 26px;
   display: block;
   overflow-x: auto;
 }
@@ -385,6 +388,15 @@ figcaption {
   margin: 0 0 24px;
 }
 
+/* the text already ended with its own divider: keep just that one */
+hr + .footnotes {
+  margin-top: 0;
+}
+
+hr + .footnotes > hr:first-child {
+  display: none;
+}
+
 .footnotes-list {
   list-style: none;
   padding-left: 0;
@@ -432,7 +444,6 @@ sup[id^="fnref"] a {
 /* ---------------------------------------------------------------- back link, footer */
 
 .back-to-parent {
-  font-size: 14px;
   margin: 0 0 28px;
 }
 
@@ -446,8 +457,6 @@ sup[id^="fnref"] a {
 
 .site-footer {
   margin-top: 120px;
-  font-size: 14px;
-  line-height: 24px;
   text-align: center;
 }
 

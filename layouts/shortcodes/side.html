@@ -1,0 +1,22 @@
+{{- /* Text beside an image on a project page.
+       {{< side img="x.jpg" pos="left" width="65%" align="center" caption="..." dark="invert|none" >}}
+       **One bold line.**
+       A line or two.
+       {{< /side >}}
+       Image on the right, 50% wide, text top-aligned by default. Stacks on phones, text first. */ -}}
+{{- $w := .Get "width" | default "50%" -}}
+{{- $i := partial "project/image.html" (dict "page" .Page "src" (.Get "img") "dark" (.Get "dark") "alt" (.Get "alt")
+      "sizes" (printf "(max-width: 640px) 100vw, calc(800px * %s / 100)" (strings.TrimSuffix "%" $w))) -}}
+{{- $class := slice "side" -}}
+{{- if eq (.Get "pos") "left" }}{{ $class = $class | append "left" }}{{ end -}}
+{{- if eq (.Get "align") "center" }}{{ $class = $class | append "middle" }}{{ end -}}
+{{- with $i.dark }}{{ $class = $class | append . }}{{ end -}}
+<div class="{{ delimit $class " " }}" style="--w:{{ $w | safeCSS }}">
+  <div class="side__text">
+{{ .Inner | .Page.RenderString (dict "display" "block") }}
+  </div>
+  <figure>
+    {{ $i.html | safeHTML }}
+    {{- partial "project/caption.html" (.Get "caption") }}
+  </figure>
+</div>

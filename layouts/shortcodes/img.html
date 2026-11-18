@@ -1,0 +1,18 @@
+{{- /* One image on a project page (content/projects/<name>/).
+       {{< img src="x.jpg" width="60%" height="480px" pos="left|center|right" ratio="16:9"
+               focus="top" caption="..." dark="invert|none" >}}
+       All but src optional. See mukidoc/design/VISUAL_DESIGN.md. */ -}}
+{{- $src := .Get "src" | default (.Get 0) -}}
+{{- $i := partial "project/image.html" (dict "page" .Page "src" $src "dark" (.Get "dark") "alt" (.Get "alt")) -}}
+{{- $style := slice -}}
+{{- with .Get "width" }}{{ $style = $style | append (printf "--w:%s" .) }}{{ end -}}
+{{- with .Get "height" }}{{ $style = $style | append (printf "--w:calc(%s * %.4f)" . $i.ratio) }}{{ end -}}
+{{- with .Get "ratio" }}{{ $style = $style | append (printf "--r:%s" (replace . ":" "/")) }}{{ end -}}
+{{- with .Get "focus" }}{{ $style = $style | append (printf "--f:%s" .) }}{{ end -}}
+{{- $class := slice "pimg" (.Get "pos" | default "center") -}}
+{{- with .Get "ratio" }}{{ $class = $class | append "crop" }}{{ end -}}
+{{- with $i.dark }}{{ $class = $class | append . }}{{ end -}}
+<figure class="{{ delimit $class " " }}"{{ with $style }} style="{{ delimit . ";" | safeCSS }}"{{ end }}>
+  {{ $i.html | safeHTML }}
+  {{- partial "project/caption.html" (.Get "caption") }}
+</figure>

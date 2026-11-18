@@ -44,6 +44,11 @@
     {{- $darkmodeJS := resources.Get "js/darkmode.js" | minify | fingerprint }}
     <script src="{{ $darkmodeJS.RelPermalink }}" integrity="{{ $darkmodeJS.Data.Integrity }}" defer></script>
 
+    {{- if and .IsPage (eq .Section "projects") }}
+        {{- $lightboxJS := resources.Get "js/lightbox.js" | minify | fingerprint }}
+    <script src="{{ $lightboxJS.RelPermalink }}" integrity="{{ $lightboxJS.Data.Integrity }}" defer></script>
+    {{- end }}
+
     {{- with .Content }}
         {{- if or (in . "id=\"fnref") (in . "class=\"footnote-ref\"") }}
             {{- $footnotesJS := resources.Get "js/footnotes.js" | minify | fingerprint }}

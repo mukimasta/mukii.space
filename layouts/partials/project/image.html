@@ -1,0 +1,44 @@
+{{- /* One image on a project page.
+       In:  dict "page" "src" ["sizes"] ["dark"] ["alt"]
+       Out: dict "html" (the <img> tag), "ratio" (width / height), "dark" (class: dim, invert or "")
+       A file in the page bundle becomes WebP in a few widths with srcset;
+       a URL, a GIF/SVG or a file not in the bundle is used as is (ratio 1.5 as a guess). */ -}}
+{{- $src := .src -}}
+{{- $sizes := .sizes | default "(max-width: 848px) 100vw, 800px" -}}
+{{- $alt := .alt | default "" | htmlEscape -}}
+{{- $res := .page.Resources.Get $src -}}
+{{- $out := dict "ratio" 1.5 "dark" "" -}}
+{{- $raster := false -}}
+{{- with $res -}}
+  {{- if and (eq .ResourceType "image") (in (slice "jpeg" "png" "webp" "tiff" "bmp") .MediaType.SubType) }}{{ $raster = true }}{{ end -}}
+{{- end -}}
+{{- if $raster -}}
+  {{- $img := $res.Filter images.AutoOrient -}}
+  {{- $srcset := slice -}}
+  {{- $fallback := "" -}}
+  {{- $full := "" -}}
+  {{- range slice 480 800 1200 1600 2400 -}}
+    {{- if or (lt . $img.Width) (not $srcset) -}}
+      {{- $w := cond (lt . $img.Width) . $img.Width -}}
+      {{- $r := $img.Resize (printf "%dx webp q82" $w) -}}
+      {{- $srcset = $srcset | append (printf "%s %dw" $r.RelPermalink $r.Width) -}}
+      {{- if or (not $fallback) (le $r.Width 1200) }}{{ $fallback = $r.RelPermalink }}{{ end -}}
+      {{- $full = $r.RelPermalink -}}
+    {{- end -}}
+  {{- end -}}
+  {{- /* bright images (white-ground charts, pale photos) are dimmed in dark mode */ -}}
+  {{- $lum := 0.0 -}}
+  {{- range $img.Colors }}{{ $lum = add $lum .Luminance }}{{ end -}}
+  {{- with $img.Colors }}{{ $lum = div $lum (len .) }}{{ end -}}
+  {{- $html := printf `<img src="%s" srcset="%s" sizes="%s" width="%d" height="%d" loading="lazy" decoding="async" alt="%s" data-full="%s">`
+      $fallback (delimit $srcset ", ") $sizes $img.Width $img.Height $alt $full -}}
+  {{- $out = dict "html" $html "ratio" (div (float $img.Width) $img.Height) "dark" (cond (gt $lum 0.75) "dim" "") "lum" $lum -}}
+{{- else -}}
+  {{- $url := $src -}}
+  {{- with $res }}{{ $url = .RelPermalink }}{{ end -}}
+  {{- $out = merge $out (dict "html" (printf `<img src="%s" loading="lazy" decoding="async" alt="%s">` ($url | htmlEscape) $alt)) -}}
+{{- end -}}
+{{- with .dark -}}
+  {{- $out = merge $out (dict "dark" (cond (eq . "none") "" .)) -}}
+{{- end -}}
+{{- return $out -}}

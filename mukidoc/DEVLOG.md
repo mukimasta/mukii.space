@@ -15,3 +15,4 @@
 2. 网站标题改为 mukii.space，页脚保留 © MUKIMASTA。页头暂时去掉 Professional 和 Journey 的入口。
 3. 项目开始用 MukiDoc 维护文档。
 4. 加了 `video`、`bilibili` 短代码，并覆盖了自带的 `youtube`，三种视频版式一样。视频文件放在 `media.mukii.space`。
+5. 项目介绍页（`content/projects/`）的版式进了主题：内容宽 800px，`img`、`side`、`row` 三个图片短代码，图片自动转 WebP 并按宽度挑选，深色模式下偏亮的图自动压暗，点图看大图。版式是 Hanlin 和 Career Bot 定的，规格在 Career Bot 的示例页。

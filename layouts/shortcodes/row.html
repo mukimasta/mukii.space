@@ -1,0 +1,44 @@
+{{- /* Several images in one row on a project page.
+       {{< row img="a.jpg b.jpg c.jpg" >}}            same height, widths by each image's own ratio, no crop
+       {{< row img="..." ratio="1:1" focus="top" >}}  each cropped to the ratio, same width
+       {{< row img="..." ratio="4:3" fit="contain" >}} not cropped, fitted into equal boxes on a pale plate
+       {{< row img="a.jpg b.jpg" widths="2 1" >}}     widths in this proportion, cropped to the same height
+       caption="..." under the whole row; dark="invert|none" for all. One per line on phones. */ -}}
+{{- $srcs := split (.Get "img") " " -}}
+{{- $ratio := .Get "ratio" -}}
+{{- $widths := split (.Get "widths" | default "") " " -}}
+{{- $n := len $srcs -}}
+{{- $imgs := slice -}}
+{{- $sumAr := 0.0 -}}
+{{- range $srcs -}}
+  {{- $i := partial "project/image.html" (dict "page" $.Page "src" . "dark" ($.Get "dark")
+        "sizes" (printf "(max-width: 640px) 100vw, %dpx" (div 800 $n))) -}}
+  {{- $imgs = $imgs | append $i -}}
+  {{- $sumAr = add $sumAr $i.ratio -}}
+{{- end -}}
+{{- $mode := "natural" -}}
+{{- if $ratio }}{{ $mode = "crop" }}{{ else if .Get "widths" }}{{ $mode = "weights" }}{{ end -}}
+{{- $sumW := 0.0 -}}
+{{- if eq $mode "weights" }}{{ range $widths }}{{ $sumW = add $sumW (float .) }}{{ end }}{{ end -}}
+{{- $class := slice "row" $mode -}}
+{{- if and $ratio (eq (.Get "fit") "contain") }}{{ $class = $class | append "contain" }}{{ end -}}
+{{- $style := slice -}}
+{{- with $ratio }}{{ $style = $style | append (printf "--r:%s" (replace . ":" "/")) }}{{ end -}}
+{{- with .Get "focus" }}{{ $style = $style | append (printf "--f:%s" .) }}{{ end -}}
+<figure class="{{ delimit $class " " }}"{{ with $style }} style="{{ delimit . ";" | safeCSS }}"{{ end }}>
+  <div class="row__items">
+  {{- range $k, $i := $imgs }}
+    {{- $item := "" -}}
+    {{- if eq $mode "natural" -}}
+      {{- $item = printf "flex:%.4f" $i.ratio -}}
+    {{- else if eq $mode "weights" -}}
+      {{- /* weight w with image ratio w / H gives every image the same height;
+             H chosen so the row is as tall as it would be uncropped */ -}}
+      {{- $w := float (index $widths $k | default "1") -}}
+      {{- $item = printf "flex:%g;--r:%.4f" $w (div $w (div $sumW $sumAr)) -}}
+    {{- end }}
+    <div class="row__item{{ with $i.dark }} {{ . }}{{ end }}"{{ with $item }} style="{{ . | safeCSS }}"{{ end }}>{{ $i.html | safeHTML }}</div>
+  {{- end }}
+  </div>
+  {{- partial "project/caption.html" (.Get "caption") }}
+</figure>

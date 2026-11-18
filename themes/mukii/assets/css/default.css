@@ -561,6 +561,159 @@ sup[id^="fnref"] a {
   margin: 0;
 }
 
+/* ---------------------------------------------------------------- project pages
+   content/projects/<name>/: 800px wide, mostly images; text paragraphs stay
+   600px. {{< img >}}, {{< side >}}, {{< row >}} and stand-alone markdown
+   images (layouts/_markup/render-image.html). See VISUAL_DESIGN.md. */
+
+.section-projects.kind-page {
+  --measure: 800px;
+  --plate: #f3f3f3;
+}
+
+.section-projects.kind-page .content-container > :is(p, ul, ol, blockquote, pre, table, h2, h3, h4, h5, h6, h4 + .author-date) {
+  max-width: 600px;
+}
+
+.section-projects.kind-page .content-container > :is(figure, .side) {
+  margin-top: 0;
+  margin-bottom: 64px;
+}
+
+.section-projects.kind-page :is(.pimg, .side, .row) img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  cursor: zoom-in;
+}
+
+/* img: width / height / pos, ratio + focus */
+.section-projects .pimg {
+  width: var(--w, 100%);
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+.section-projects .pimg.left {
+  margin-left: 0;
+}
+
+.section-projects .pimg.right {
+  margin-right: 0;
+}
+
+.pimg.crop img {
+  aspect-ratio: var(--r);
+  object-fit: cover;
+  object-position: var(--f, center);
+}
+
+/* side: text beside an image */
+.side {
+  display: grid;
+  grid-template-columns: 1fr var(--w, 50%);
+  gap: 24px;
+  align-items: start;
+}
+
+.side.left {
+  grid-template-columns: var(--w, 50%) 1fr;
+}
+
+.side.left .side__text {
+  order: 2;
+}
+
+.side.middle {
+  align-items: center;
+}
+
+.side figure {
+  margin: 0;
+}
+
+.side__text > :last-child {
+  margin-bottom: 0;
+}
+
+.side__text p {
+  margin: 0;
+}
+
+/* row: several images in a line */
+.row__items {
+  display: flex;
+  gap: 16px;
+}
+
+.row__item {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.row.crop img,
+.row.weights img {
+  aspect-ratio: var(--r);
+  object-fit: cover;
+  object-position: var(--f, center);
+}
+
+.row.contain img {
+  object-fit: contain;
+  background: var(--plate);
+}
+
+/* dark mode: bright images dimmed (decided at build time), line art inverted */
+:root[data-theme="dark"] .dim img {
+  filter: brightness(0.8);
+}
+
+:root[data-theme="dark"] .invert img {
+  filter: invert(0.9) hue-rotate(180deg);
+}
+
+:root[data-theme="dark"].section-projects.kind-page {
+  --plate: #1c1c1c;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .dim img {
+    filter: brightness(0.8);
+  }
+
+  :root:not([data-theme="light"]) .invert img {
+    filter: invert(0.9) hue-rotate(180deg);
+  }
+
+  :root.section-projects.kind-page:not([data-theme="light"]) {
+    --plate: #1c1c1c;
+  }
+}
+
+/* click to see large (assets/js/lightbox.js) */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background: color-mix(in srgb, var(--bg) 94%, transparent);
+  cursor: zoom-out;
+}
+
+.lightbox.is-open {
+  display: flex;
+}
+
+.lightbox img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: var(--radius);
+}
+
 /* ---------------------------------------------------------------- small screens */
 
 @media (max-width: 640px) {
@@ -591,5 +744,32 @@ sup[id^="fnref"] a {
 
   .soundmat-gallery__photos {
     grid-template-columns: 1fr;
+  }
+
+  /* project pages: side stacks with text first, row goes one per line,
+     img ignores width / height */
+  .side,
+  .side.left {
+    grid-template-columns: 1fr;
+  }
+
+  .side.left .side__text {
+    order: 0;
+  }
+
+  .row__items {
+    flex-direction: column;
+  }
+
+  .row__item {
+    flex: none !important;
+  }
+
+  .row.weights img {
+    aspect-ratio: auto;
+  }
+
+  .section-projects .pimg {
+    width: 100%;
   }
 }

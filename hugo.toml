@@ -5,6 +5,10 @@ mainSections = []
 
 theme = 'mukii'
 
+[markup.goldmark.parser]
+# lets layouts/_markup/render-image.html see stand-alone images (.IsBlock)
+wrapStandAloneImageWithinParagraph = false
+
 [markup.goldmark.renderer]
 hardWraps = true
 relativeURLs = true
@@ -18,3 +22,11 @@ inline = [['$', '$']]
 [params]
 # name in the footer copyright (the site title is mukii.space)
 copyrightName = 'MUKIMASTA'
+
+# project pages may keep camera originals in their folder; only the resized
+# copies the shortcodes make are published (Workers caps a file at 25 MiB)
+[[cascade]]
+[cascade.build]
+publishResources = false
+[cascade.target]
+path = '{/projects/**}'

@@ -1,0 +1,14 @@
+{{- /* Markdown images. On project pages (content/projects/) a stand-alone image
+       from the page bundle becomes a full-width figure like {{< img >}};
+       elsewhere this is Hugo's plain <img>, wrapped in <p> when it stands alone
+       (wrapStandAloneImageWithinParagraph is off in hugo.toml so this hook can tell). */ -}}
+{{- if and (eq .Page.Section "projects") .IsBlock -}}
+{{- $i := partial "project/image.html" (dict "page" .Page "src" .Destination "alt" .PlainText) -}}
+<figure class="pimg center{{ with $i.dark }} {{ . }}{{ end }}">
+  {{ $i.html | safeHTML }}
+  {{- with .Title }}<figcaption>{{ . }}</figcaption>{{ end }}
+</figure>
+{{- else -}}
+{{- $img := printf `<img src="%s" alt="%s"%s>` (.Destination | htmlEscape) (.PlainText | htmlEscape) (cond (ne .Title "") (printf ` title="%s"` (.Title | htmlEscape)) "") -}}
+{{- if .IsBlock }}<p>{{ $img | safeHTML }}</p>{{ else }}{{ $img | safeHTML }}{{ end -}}
+{{- end -}}

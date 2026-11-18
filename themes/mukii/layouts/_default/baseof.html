@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{- .Site.Language.LanguageCode -}}" class="kind-{{ .Kind }}">
+<html lang="{{- .Site.Language.LanguageCode -}}" class="kind-{{ .Kind }}{{ with .Section }} section-{{ . }}{{ end }}">
 
 {{ partial "head.html" . }}
 

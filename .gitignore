@@ -3,3 +3,4 @@ __pycache__/
 soundmat-home/fonts/
 public/
 .fontcache/
+resources/_gen/

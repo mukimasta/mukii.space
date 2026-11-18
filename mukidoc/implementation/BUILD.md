@@ -40,6 +40,31 @@ Jetson 上的 Hugo 在 `~/.local/hugo-0.156/hugo`（和 Cloudflare 同版本）�
 
 视频文件放在 `media.mukii.space`（Cloudflare R2），不放进仓库：Cloudflare Workers 的静态文件单个上限 25 MiB，大了构建会失败，而且仓库会一直背着它。文件名用英文，免得网址被转码。
 
+### 项目页的图
+
+`content/projects/<名>/` 是 page bundle：图片和 `index.md` 放在一起，可以直接放相机原图。构建时每张图转正方向（EXIF）、压成几种宽度（480 到 2400）的 WebP，用 srcset 和 lazy 加载；原图本身不发布（`hugo.toml` 里对 `/projects/**` 设了 `publishResources = false`），所以也碰不到 Cloudflare 单文件 25 MiB 的上限。GIF、SVG 和网址原样使用。转换结果缓存在 `resources/_gen/`（不进 git）。版式规则见 `design/VISUAL_DESIGN.md` 的「项目页」。
+
+```
+![](x.jpg)                                     撑满一行；"引号里的标题" 会成为说明
+{{< img src="x.jpg" width="60%" pos="left" caption="说明" >}}
+{{< img src="x.jpg" height="480px" >}}          限高，宽度按比例算（竖图）
+{{< img src="x.jpg" ratio="16:9" focus="top" >}}  裁成这个比例，focus 是裁切重心
+
+{{< side img="x.jpg" pos="left" width="35%" align="center" >}}
+**一句粗体。**
+一两行字。
+{{< /side >}}                                   字配图：默认图在右、宽 50%、字顶端对齐
+
+{{< row img="a.jpg b.jpg c.jpg" >}}             等高，按原图比例分宽，不裁
+{{< row img="a.jpg b.jpg" ratio="1:1" >}}       都裁成 1:1，等宽；可加 focus
+{{< row img="a.jpg b.jpg" ratio="4:3" fit="contain" >}}  不裁，放进等大的格子，空处补淡底
+{{< row img="a.jpg b.jpg" widths="2 1" >}}      按 2:1 分宽，裁成同高
+```
+
+`img`、`side`、`row` 都可以加 `caption`，以及 `dark="invert"`（深色模式下反色，给线稿、框图）或 `dark="none"`（不自动压暗）。是否压暗看图片的 `.Colors` 平均亮度，大于 0.75 的压暗；实测照片在 0.25–0.70，白底图表 0.89–0.99。视频照用 `video`，宽 800。
+
+模板：`layouts/shortcodes/{img,side,row}.html`，图片处理在 `layouts/partials/project/image.html`，markdown 图片走 `layouts/_markup/render-image.html`（只在项目页处理，别处输出和原来一样；为此 `hugo.toml` 关了 `wrapStandAloneImageWithinParagraph`，独立成行的图片由这个模板自己包 `<p>`）。样式在 `default.css` 的 project pages 一节，看大图的脚本 `assets/js/lightbox.js` 只在项目页加载。
+
 ### 主题的来源
 
 `themes/mukii` 是从 dario（GrantBirki/dario，MIT）复制进来改的，原许可保留在 `themes/mukii/LICENSE`。模板骨架、深色模式和脚注脚本、分享预览图沿用 dario 的结构；样式整份重写。

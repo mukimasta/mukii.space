@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="1760" class="fig" viewBox="0 0 640 880" role="img" aria-label="架构设计"><style>:root{--bg:#fff;--fg:#1a1a1a;--line:rgba(26,26,26,.14);--sans:"Inter","PingFang SC","Noto Sans SC","Microsoft YaHei",sans-serif;--mono:ui-monospace,Menlo,Consolas,"Noto Sans Mono CJK SC",monospace}
+:root{--red:#e5484d;--green:#30a46c;--amber:#e8a23a;--acc:#3e63dd;--faint:color-mix(in srgb,var(--fg) 48%,transparent);--plateC:#f6f6f5}
+
+
+figure{margin:0 0 48px} figcaption{font-size:14px;color:var(--faint);margin-top:8px}
+svg.fig{display:block;width:100%;height:auto;font-family:var(--sans)}
+svg.fig text{fill:var(--fg)}
+.t9{font-size:9px}.t11{font-size:11px}.t12{font-size:12px}.t13{font-size:13px}.t14{font-size:14px}.t15{font-size:15px}.t24{font-size:24px}
+svg.fig .m{font-weight:500} svg.fig .mut{fill:var(--faint)} svg.fig .wt{fill:var(--bg)} svg.fig .acc{fill:var(--acc)}
+svg.fig .amberT{fill:var(--amber)} svg.fig .link{fill:var(--fg);text-decoration:underline}
+.plate{fill:var(--plateC)} .frame{fill:none;stroke:var(--line);stroke-width:1}
+.hair{stroke:var(--line);stroke-width:1}
+.tgOff{fill:color-mix(in srgb,var(--fg) 18%,transparent)}
+.noC{fill:none;stroke:color-mix(in srgb,var(--fg) 35%,transparent)} .noX{stroke:var(--faint);stroke-width:2;stroke-linecap:round}
+.t40{font-size:40px}
+.bubL{fill:color-mix(in srgb,var(--fg) 6%,var(--bg))}
+.arr{stroke:color-mix(in srgb,var(--fg) 35%,transparent);stroke-width:1.3;fill:none} svg.fig .arr.acc{stroke:var(--acc);stroke-width:1.6;fill:none}
+.ahd{fill:color-mix(in srgb,var(--fg) 45%,transparent)} .ahdA{fill:var(--acc)}
+.srv{fill:var(--bg);stroke:color-mix(in srgb,var(--fg) 30%,transparent)} .srvOn{fill:var(--bg);stroke:var(--acc);stroke-width:1.6}
+.led{fill:var(--green)} .ledOff{fill:color-mix(in srgb,var(--fg) 18%,transparent)} .vent{stroke:color-mix(in srgb,var(--fg) 22%,transparent);stroke-width:2;stroke-linecap:round}
+.icoS{fill:none;stroke:var(--fg);stroke-width:1.4;stroke-linecap:round}
+.accF{fill:var(--acc)}
+.cloud{fill:var(--bg);stroke:color-mix(in srgb,var(--fg) 30%,transparent);stroke-width:1.2}
+.cyl{fill:var(--bg);stroke:color-mix(in srgb,var(--fg) 45%,transparent)} .cylTop{fill:color-mix(in srgb,var(--fg) 6%,var(--bg));stroke:color-mix(in srgb,var(--fg) 45%,transparent)}
+.sync{stroke:var(--acc);stroke-width:1.4;stroke-dasharray:3 3} .syncH{stroke:var(--acc);stroke-width:1.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.tick{stroke:color-mix(in srgb,var(--fg) 40%,transparent);stroke-width:1.2} .hand{stroke:var(--fg);stroke-width:2.2;stroke-linecap:round} .handA{stroke:var(--acc);stroke-width:2;stroke-linecap:round}
+.cursor{fill:var(--fg);stroke:var(--bg);stroke-width:1.2;stroke-linejoin:round}
+.bubA{fill:color-mix(in srgb,var(--acc) 14%,var(--bg))}
+.t10{font-size:10px}
+.frameD{fill:none;stroke:color-mix(in srgb,var(--fg) 30%,transparent);stroke-dasharray:4 3}
+.dbBar{fill:var(--bg);stroke:color-mix(in srgb,var(--fg) 30%,transparent)} .dbLink{stroke:var(--acc);stroke-width:1.2;stroke-dasharray:2 3}
+.mono{font-family:var(--mono)} .chip{fill:var(--bg);stroke:color-mix(in srgb,var(--fg) 22%,transparent)} .bgF{fill:var(--bg)} .msgI{fill:color-mix(in srgb,var(--acc) 55%,var(--bg))}
+.nodeL{fill:var(--bg);stroke:var(--line)} .comp{fill:none;stroke:color-mix(in srgb,var(--fg) 55%,transparent)}
+.lineI{fill:none;stroke:var(--fg);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round} .lineI.thick{stroke-width:1.8}
+.cursorL{fill:var(--fg);stroke:var(--plateC);stroke-width:1.2;stroke-linejoin:round} .compB{fill:none;stroke:var(--fg);stroke-width:1}
+.inBox{fill:none;stroke:var(--fg);stroke-width:1}
+.srvOnL{fill:none;stroke:var(--acc);stroke-width:1.6} .srvDead{fill:none;stroke:color-mix(in srgb,var(--fg) 25%,transparent);stroke-width:1.5}
+.xRed{stroke:var(--red);stroke-width:2;stroke-linecap:round} .arrFaint{stroke:color-mix(in srgb,var(--fg) 15%,transparent);stroke-width:1.2;fill:none;stroke-dasharray:3 4}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0 0 48px}.pair figure{margin:0}
+.sideP{display:grid;grid-template-columns:1fr 1.25fr;gap:32px;align-items:center;margin:0 0 48px}
+.sideP figure{margin:0} .sideT p{margin:0 0 12px;font-size:15px;line-height:26px} .sideT ul{margin:0;padding-left:1.1em;font-size:14px;line-height:24px} .sideT li{margin:0 0 6px}
+@media(max-width:700px){.sideP{grid-template-columns:1fr}}
+.keyNew{fill:none;stroke:var(--acc);stroke-width:1.5;stroke-linecap:round}
+svg.fig .greenT{fill:var(--green)}
+.loopS{stroke:var(--acc);stroke-width:1.3;fill:none;stroke-linecap:round}
+.loop{stroke:var(--acc);stroke-width:1.6;fill:none;stroke-linecap:round}
+.book0{fill:color-mix(in srgb,var(--fg) 55%,var(--bg))} .book1{fill:color-mix(in srgb,var(--fg) 35%,var(--bg))} .book2{fill:color-mix(in srgb,var(--fg) 20%,var(--bg))}
+.blueC{fill:var(--acc)} .amberC{fill:var(--amber)} .greyC{fill:color-mix(in srgb,var(--fg) 30%,transparent)}
+.stepC{fill:none;stroke:color-mix(in srgb,var(--fg) 45%,transparent)}
+.win{fill:var(--bg);stroke:var(--line)} .side{fill:color-mix(in srgb,var(--fg) 3%,var(--bg))} .ico{fill:color-mix(in srgb,var(--fg) 9%,transparent)} .dotd{fill:var(--faint)}
+.barD{fill:color-mix(in srgb,var(--fg) 40%,transparent)} .barL{fill:color-mix(in srgb,var(--fg) 10%,transparent)}
+.redF{fill:var(--red)} .greenF{fill:var(--green)} .amberF{fill:var(--amber)} .fgF{fill:var(--fg)}
+.ck{stroke:var(--bg);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.line{fill:none;stroke:color-mix(in srgb,var(--fg) 35%,transparent)}
+.lk{stroke:var(--fg);stroke-width:1.5;fill:none}
+.chev{stroke:var(--faint);stroke-width:1.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.ul{stroke:var(--fg);stroke-width:1.2}
+.dash{stroke:color-mix(in srgb,var(--acc) 60%,transparent);stroke-width:1.5}
+.btnF{fill:var(--fg)} .btnO{fill:none;stroke:color-mix(in srgb,var(--fg) 30%,transparent)}
+.dk{fill:#18191b} svg.fig .dkT{fill:#ececec} svg.fig .dkM{fill:rgba(236,236,236,.5)}
+.dkBar{fill:rgba(236,236,236,.2)} .dkA{fill:#8ea5ff} .dkUl{stroke:#ececec;stroke-width:1.2}
+.dkGrid{stroke:rgba(236,236,236,.2);stroke-dasharray:2 4}
+
+
+@media(prefers-color-scheme:dark){:root{--bg:#111;--fg:#d4d4d4;--line:rgba(212,212,212,.18);--plateC:#1b1b1b;--acc:#8ea5ff}.dk{fill:#242528}}</style><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="ahd"/></marker><marker id="ahA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="ahdA"/></marker><linearGradient id="fg1" x1="0" y1="0" x2="0" y2="1"><stop offset=".55" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient><mask id="fadeDown" maskUnits="userSpaceOnUse" x="0" y="0" width="640" height="400"><rect width="640" height="400" fill="url(#fg1)"/></mask></defs><defs><clipPath id="k7"><rect width="640" height="880" rx="6"/></clipPath></defs><g clip-path="url(#k7)"><rect class="plate" width="640" height="880"/><text class="t15 m" x="48" y="58" text-anchor="start">架构设计</text><circle class="lineI" cx="150" cy="122" r="24"/><path class="lineI" d="M150.0 104.0 L150.0 101.0"/><path class="lineI" d="M168.0 122.0 L171.0 122.0"/><path class="lineI" d="M150.0 140.0 L150.0 143.0"/><path class="lineI" d="M132.0 122.0 L129.0 122.0"/><path class="lineI" d="M150 122 V109 M150 122 L159 127"/><path class="lineI" d="M183 110 A35 35 0 0 1 180 140"/><path class="lineI" d="M175 137 l5 3.5 l1.5 -6"/><text class="t12 m" x="150" y="168" text-anchor="middle">定时任务</text><path class="arr" d="M150 176 V198" marker-end="url(#ah)"/><path class="lineI" d="M104.0 212 V276 A46.0 8 0 0 0 196.0 276 V212"/><ellipse class="lineI" cx="150" cy="212" rx="46.0" ry="8"/><path class="lineI" d="M120 230 h16.0 a3.0 3.0 0 0 1 3.0 3.0 v7.0 a3.0 3.0 0 0 1 -3.0 3.0 h-9.0 l-4.0 3.5 v-3.5 h-3.0 a3.0 3.0 0 0 1 -3.0 -3.0 v-7.0 a3.0 3.0 0 0 1 3.0 -3.0z"/><path class="lineI" d="M152 238 h16.0 a3.0 3.0 0 0 1 3.0 3.0 v7.0 a3.0 3.0 0 0 1 -3.0 3.0 h-9.0 l-4.0 3.5 v-3.5 h-3.0 a3.0 3.0 0 0 1 -3.0 -3.0 v-7.0 a3.0 3.0 0 0 1 3.0 -3.0z"/><path class="lineI" d="M132 256 h16.0 a3.0 3.0 0 0 1 3.0 3.0 v7.0 a3.0 3.0 0 0 1 -3.0 3.0 h-9.0 l-4.0 3.5 v-3.5 h-3.0 a3.0 3.0 0 0 1 -3.0 -3.0 v-7.0 a3.0 3.0 0 0 1 3.0 -3.0z"/><text class="t12 m" x="150" y="308" text-anchor="middle">消息池</text><path class="arr" d="M150 316 V334" marker-end="url(#ah)"/><circle class="fgF" cx="134" cy="352" r="4"/><circle class="fgF" cx="150" cy="352" r="4"/><circle class="fgF" cx="166" cy="352" r="4"/><text class="t12 m" x="150" y="382" text-anchor="middle">静默期</text><text class="t11 mut" x="150" y="399" text-anchor="middle">等商家说完</text><path class="arr" d="M150 406 V418" marker-end="url(#ah)"/><rect class="inBox" x="30" y="424" width="76" height="28" rx="6"/><text class="t11" x="68.0" y="442.5" text-anchor="middle">会话上下文</text><path class="arr" d="M68.0 452 C 68.0 468, 150 464, 150 478"/><rect class="inBox" x="120" y="424" width="60" height="28" rx="6"/><text class="t11" x="150.0" y="442.5" text-anchor="middle">提示词</text><path class="arr" d="M150.0 452 C 150.0 468, 150 464, 150 478"/><rect class="inBox" x="190" y="424" width="68" height="28" rx="6"/><text class="t11" x="224.0" y="442.5" text-anchor="middle">运营配置</text><path class="arr" d="M224.0 452 C 224.0 468, 150 464, 150 478"/><path class="arr" d="M150 478 V498" marker-end="url(#ah)"/><path class="lineI thick" d="M150 504 q4 18 24 24 q-20 4 -24 24 q-4 -20 -24 -24 q20 -6 24 -24z"/><path class="lineI" d="M176 508 q1.4 5.6 7 7 q-5.6 1.4 -7 7 q-1.4 -5.6 -7 -7 q5.6 -1.4 7 -7z"/><text class="t12 m" x="150" y="576" text-anchor="middle">上游 AI</text><path class="lineI" d="M270 518 C 262 514, 252 514, 246 518 V542 C 252 538, 262 538, 270 542 Z"/><path class="lineI" d="M270 518 C 278 514, 288 514, 294 518 V542 C 288 538, 278 538, 270 542 Z"/><text class="t12 m" x="270" y="564" text-anchor="middle">知识库</text><path class="arr" d="M238 530 H184" marker-end="url(#ah)"/><path class="arr" d="M150 586 V618" marker-end="url(#ah)"/><path class="lineI" d="M104.0 632 V688 A46.0 8 0 0 0 196.0 688 V632"/><ellipse class="lineI" cx="150" cy="632" rx="46.0" ry="8"/><path class="lineI" d="M128 667 v-3 a5 5 0 0 0 -5 -5 h-8 m4 -4 l-4 4 l4 4"/><circle class="lineI" cx="150" cy="658" r="4"/><path class="lineI" d="M143 670 q7 -8 14 0"/><circle class="lineI" cx="176" cy="662" r="7"/><path class="lineI" d="M171 657 l10 10"/><text class="t12 m" x="150" y="720" text-anchor="middle">AI 回复</text><path class="arr" d="M150 730 V766" marker-end="url(#ah)"/><text class="t10 mut" x="158" y="754" text-anchor="start">待确认</text><rect class="lineI" x="116" y="772" width="68" height="50" rx="5"/><path class="lineI" d="M126 784 H166 M126 793 H154"/><rect class="lineI" x="126" y="802" width="34" height="13" rx="3"/><path class="cursorL" d="M156 808 l0 15 l4 -4 l3.4 6.8 l2.6 -1.3 l-3.4 -6.8 l5.4 0 z"/><text class="t12 m" x="150" y="844" text-anchor="middle">工作台</text><rect class="compB" x="420" y="96" width="80" height="730" rx="6"/><text class="t12 m" x="460.0" y="446.0" text-anchor="middle">分布式</text><text class="t12 m" x="460.0" y="464.0" text-anchor="middle">聊天软件</text><text class="t12 m" x="460.0" y="482.0" text-anchor="middle">CLI 服务</text><rect class="lineI" x="548" y="441.0" width="48" height="40" rx="5"/><path class="lineI" d="M558 455.0 l7 6 l-7 6 M570 469.0 H584"/><text class="t12 m" x="572" y="503.0" text-anchor="middle">聊天软件 CLI</text><path class="arr" d="M504 461.0 H542" marker-start="url(#ah)" marker-end="url(#ah)"/><path class="arr" d="M194 114 C 274 114, 340 116, 416 116" marker-end="url(#ah)"/><text class="t11 mono" x="307.0" y="109.0" text-anchor="middle">pull</text><path class="arr" d="M194 130 C 274 130, 340 146, 416 146" marker-end="url(#ah)"/><text class="t11 mono" x="307.0" y="132.0" text-anchor="middle">refresh</text><text class="t10 mut" x="307.0" y="162" text-anchor="middle">刷新 OAuth token</text><path class="arr acc" d="M416 242 C 340 242, 274 242, 204 242" marker-end="url(#ahA)"/><text class="t10 mut" x="307.0" y="234" text-anchor="middle">新消息</text><path class="arr acc" d="M194 660 C 274 660, 340 660, 416 660" marker-end="url(#ahA)"/><text class="t11 mono" x="307.0" y="654.0" text-anchor="middle">send</text><text class="t10 mut" x="307.0" y="678" text-anchor="middle">自动发送</text><path class="arr" d="M194 788 C 274 788, 340 782, 416 782" marker-end="url(#ah)"/><text class="t11 mono" x="307.0" y="779.0" text-anchor="middle">send</text><path class="arr" d="M194 808 C 274 808, 340 814, 416 814" marker-end="url(#ah)"/><text class="t11 mono" x="307.0" y="805.0" text-anchor="middle">login</text></g></svg>

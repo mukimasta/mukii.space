@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="872" height="654" class="fig" viewBox="66 69.5 436 327.0" role="img" aria-label="分布式聊天软件 CLI 服务"><style>:root{--bg:#fff;--fg:#1a1a1a;--line:rgba(26,26,26,.14);--sans:"Inter","PingFang SC","Noto Sans SC","Microsoft YaHei",sans-serif;--mono:ui-monospace,Menlo,Consolas,"Noto Sans Mono CJK SC",monospace}
+:root{--red:#e5484d;--green:#30a46c;--amber:#e8a23a;--acc:#3e63dd;--faint:color-mix(in srgb,var(--fg) 48%,transparent);--plateC:#f6f6f5}
+
+
+figure{margin:0 0 48px} figcaption{font-size:14px;color:var(--faint);margin-top:8px}
+svg.fig{display:block;width:100%;height:auto;font-family:var(--sans)}
+svg.fig text{fill:var(--fg)}
+.t9{font-size:9px}.t11{font-size:11px}.t12{font-size:12px}.t13{font-size:13px}.t14{font-size:14px}.t15{font-size:15px}.t24{font-size:24px}
+svg.fig .m{font-weight:500} svg.fig .mut{fill:var(--faint)} svg.fig .wt{fill:var(--bg)} svg.fig .acc{fill:var(--acc)}
+svg.fig .amberT{fill:var(--amber)} svg.fig .link{fill:var(--fg);text-decoration:underline}
+.plate{fill:var(--plateC)} .frame{fill:none;stroke:var(--line);stroke-width:1}
+.hair{stroke:var(--line);stroke-width:1}
+.tgOff{fill:color-mix(in srgb,var(--fg) 18%,transparent)}
+.noC{fill:none;stroke:color-mix(in srgb,var(--fg) 35%,transparent)} .noX{stroke:var(--faint);stroke-width:2;stroke-linecap:round}
+.t40{font-size:40px}
+.bubL{fill:color-mix(in srgb,var(--fg) 6%,var(--bg))}
+.arr{stroke:color-mix(in srgb,var(--fg) 35%,transparent);stroke-width:1.3;fill:none} svg.fig .arr.acc{stroke:var(--acc);stroke-width:1.6;fill:none}
+.ahd{fill:color-mix(in srgb,var(--fg) 45%,transparent)} .ahdA{fill:var(--acc)}
+.srv{fill:var(--bg);stroke:color-mix(in srgb,var(--fg) 30%,transparent)} .srvOn{fill:var(--bg);stroke:var(--acc);stroke-width:1.6}
+.led{fill:var(--green)} .ledOff{fill:color-mix(in srgb,var(--fg) 18%,transparent)} .vent{stroke:color-mix(in srgb,var(--fg) 22%,transparent);stroke-width:2;stroke-linecap:round}
+.icoS{fill:none;stroke:var(--fg);stroke-width:1.4;stroke-linecap:round}
+.accF{fill:var(--acc)}
+.cloud{fill:var(--bg);stroke:color-mix(in srgb,var(--fg) 30%,transparent);stroke-width:1.2}
+.cyl{fill:var(--bg);stroke:color-mix(in srgb,var(--fg) 45%,transparent)} .cylTop{fill:color-mix(in srgb,var(--fg) 6%,var(--bg));stroke:color-mix(in srgb,var(--fg) 45%,transparent)}
+.sync{stroke:var(--acc);stroke-width:1.4;stroke-dasharray:3 3} .syncH{stroke:var(--acc);stroke-width:1.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.tick{stroke:color-mix(in srgb,var(--fg) 40%,transparent);stroke-width:1.2} .hand{stroke:var(--fg);stroke-width:2.2;stroke-linecap:round} .handA{stroke:var(--acc);stroke-width:2;stroke-linecap:round}
+.cursor{fill:var(--fg);stroke:var(--bg);stroke-width:1.2;stroke-linejoin:round}
+.bubA{fill:color-mix(in srgb,var(--acc) 14%,var(--bg))}
+.t10{font-size:10px}
+.frameD{fill:none;stroke:color-mix(in srgb,var(--fg) 30%,transparent);stroke-dasharray:4 3}
+.dbBar{fill:var(--bg);stroke:color-mix(in srgb,var(--fg) 30%,transparent)} .dbLink{stroke:var(--acc);stroke-width:1.2;stroke-dasharray:2 3}
+.mono{font-family:var(--mono)} .chip{fill:var(--bg);stroke:color-mix(in srgb,var(--fg) 22%,transparent)} .bgF{fill:var(--bg)} .msgI{fill:color-mix(in srgb,var(--acc) 55%,var(--bg))}
+.nodeL{fill:var(--bg);stroke:var(--line)} .comp{fill:none;stroke:color-mix(in srgb,var(--fg) 55%,transparent)}
+.lineI{fill:none;stroke:var(--fg);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round} .lineI.thick{stroke-width:1.8}
+.cursorL{fill:var(--fg);stroke:var(--plateC);stroke-width:1.2;stroke-linejoin:round} .compB{fill:none;stroke:var(--fg);stroke-width:1}
+.inBox{fill:none;stroke:var(--fg);stroke-width:1}
+.srvOnL{fill:none;stroke:var(--acc);stroke-width:1.6} .srvDead{fill:none;stroke:color-mix(in srgb,var(--fg) 25%,transparent);stroke-width:1.5}
+.xRed{stroke:var(--red);stroke-width:2;stroke-linecap:round} .arrFaint{stroke:color-mix(in srgb,var(--fg) 15%,transparent);stroke-width:1.2;fill:none;stroke-dasharray:3 4}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0 0 48px}.pair figure{margin:0}
+.sideP{display:grid;grid-template-columns:1fr 1.25fr;gap:32px;align-items:center;margin:0 0 48px}
+.sideP figure{margin:0} .sideT p{margin:0 0 12px;font-size:15px;line-height:26px} .sideT ul{margin:0;padding-left:1.1em;font-size:14px;line-height:24px} .sideT li{margin:0 0 6px}
+@media(max-width:700px){.sideP{grid-template-columns:1fr}}
+.keyNew{fill:none;stroke:var(--acc);stroke-width:1.5;stroke-linecap:round}
+svg.fig .greenT{fill:var(--green)}
+.loopS{stroke:var(--acc);stroke-width:1.3;fill:none;stroke-linecap:round}
+.loop{stroke:var(--acc);stroke-width:1.6;fill:none;stroke-linecap:round}
+.book0{fill:color-mix(in srgb,var(--fg) 55%,var(--bg))} .book1{fill:color-mix(in srgb,var(--fg) 35%,var(--bg))} .book2{fill:color-mix(in srgb,var(--fg) 20%,var(--bg))}
+.blueC{fill:var(--acc)} .amberC{fill:var(--amber)} .greyC{fill:color-mix(in srgb,var(--fg) 30%,transparent)}
+.stepC{fill:none;stroke:color-mix(in srgb,var(--fg) 45%,transparent)}
+.win{fill:var(--bg);stroke:var(--line)} .side{fill:color-mix(in srgb,var(--fg) 3%,var(--bg))} .ico{fill:color-mix(in srgb,var(--fg) 9%,transparent)} .dotd{fill:var(--faint)}
+.barD{fill:color-mix(in srgb,var(--fg) 40%,transparent)} .barL{fill:color-mix(in srgb,var(--fg) 10%,transparent)}
+.redF{fill:var(--red)} .greenF{fill:var(--green)} .amberF{fill:var(--amber)} .fgF{fill:var(--fg)}
+.ck{stroke:var(--bg);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.line{fill:none;stroke:color-mix(in srgb,var(--fg) 35%,transparent)}
+.lk{stroke:var(--fg);stroke-width:1.5;fill:none}
+.chev{stroke:var(--faint);stroke-width:1.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.ul{stroke:var(--fg);stroke-width:1.2}
+.dash{stroke:color-mix(in srgb,var(--acc) 60%,transparent);stroke-width:1.5}
+.btnF{fill:var(--fg)} .btnO{fill:none;stroke:color-mix(in srgb,var(--fg) 30%,transparent)}
+.dk{fill:#18191b} svg.fig .dkT{fill:#ececec} svg.fig .dkM{fill:rgba(236,236,236,.5)}
+.dkBar{fill:rgba(236,236,236,.2)} .dkA{fill:#8ea5ff} .dkUl{stroke:#ececec;stroke-width:1.2}
+.dkGrid{stroke:rgba(236,236,236,.2);stroke-dasharray:2 4}
+
+
+@media(prefers-color-scheme:dark){:root{--bg:#111;--fg:#d4d4d4;--line:rgba(212,212,212,.18);--plateC:#1b1b1b;--acc:#8ea5ff}.dk{fill:#242528}}</style><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="ahd"/></marker><marker id="ahA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="ahdA"/></marker><linearGradient id="fg1" x1="0" y1="0" x2="0" y2="1"><stop offset=".55" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient><mask id="fadeDown" maskUnits="userSpaceOnUse" x="0" y="0" width="640" height="400"><rect width="640" height="400" fill="url(#fg1)"/></mask></defs><defs><clipPath id="k10"><rect x="66" y="69.5" width="436" height="327.0" rx="6"/></clipPath></defs><g clip-path="url(#k10)"><rect class="plate" x="66" y="69.5" width="436" height="327.0"/><text class="t12 mono" x="132" y="116" text-anchor="end">login</text><path class="arr" d="M140 112 H214" marker-end="url(#ah)"/><text class="t12 mono" x="132" y="160" text-anchor="end">logout</text><path class="arr" d="M140 156 H214" marker-end="url(#ah)"/><text class="t12 mono" x="132" y="204" text-anchor="end">refresh</text><path class="arr" d="M140 200 H214" marker-end="url(#ah)"/><text class="t12 mono" x="132" y="248" text-anchor="end">invoke</text><path class="arr" d="M140 244 H214" marker-end="url(#ah)"/><rect class="compB" x="220" y="94" width="120" height="168" rx="6"/><text class="t12 m" x="280" y="163" text-anchor="middle">分布式</text><text class="t12 m" x="280" y="181" text-anchor="middle">聊天软件</text><text class="t12 m" x="280" y="199" text-anchor="middle">CLI 服务</text><rect class="lineI" x="420" y="158" width="52" height="40" rx="5"/><path class="lineI" d="M430 172 l7 6 l-7 6 M442 186 H456"/><text class="t11 mut" x="446" y="220" text-anchor="middle">聊天软件 CLI</text><path class="arr" d="M344 178 H414" marker-end="url(#ah)"/><path class="lineI" d="M250 312 V340 A30 7 0 0 0 310 340 V312"/><ellipse class="lineI" cx="280" cy="312" rx="30" ry="7"/><text class="t11 mut" x="280" y="370" text-anchor="middle">云端凭证</text><path class="arr acc" d="M280 266 V300" marker-start="url(#ahA)" marker-end="url(#ahA)"/></g></svg>

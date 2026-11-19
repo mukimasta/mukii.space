@@ -9,6 +9,12 @@ subtitle: ""
 
 ---
 
+### Projects
+
+- [系统设计：AI 私聊答疑助手](/projects/ai-chat-assistant/)
+
+---
+
 [青叶树](/qingyeshu/)
 
 [在西雅图的写作](/articles/seattle-writing/)

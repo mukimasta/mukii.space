@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="896" height="672" class="fig" viewBox="-4 2.5 448 336.0" role="img" aria-label="没有这个服务时"><style>:root{--bg:#fff;--fg:#1a1a1a;--line:rgba(26,26,26,.14);--sans:"Inter","PingFang SC","Noto Sans SC","Microsoft YaHei",sans-serif;--mono:ui-monospace,Menlo,Consolas,"Noto Sans Mono CJK SC",monospace}
+:root{--red:#e5484d;--green:#30a46c;--amber:#e8a23a;--acc:#3e63dd;--faint:color-mix(in srgb,var(--fg) 48%,transparent);--plateC:#f6f6f5}
+
+
+figure{margin:0 0 48px} figcaption{font-size:14px;color:var(--faint);margin-top:8px}
+svg.fig{display:block;width:100%;height:auto;font-family:var(--sans)}
+svg.fig text{fill:var(--fg)}
+.t9{font-size:9px}.t11{font-size:11px}.t12{font-size:12px}.t13{font-size:13px}.t14{font-size:14px}.t15{font-size:15px}.t24{font-size:24px}
+svg.fig .m{font-weight:500} svg.fig .mut{fill:var(--faint)} svg.fig .wt{fill:var(--bg)} svg.fig .acc{fill:var(--acc)}
+svg.fig .amberT{fill:var(--amber)} svg.fig .link{fill:var(--fg);text-decoration:underline}
+.plate{fill:var(--plateC)} .frame{fill:none;stroke:var(--line);stroke-width:1}
+.hair{stroke:var(--line);stroke-width:1}
+.tgOff{fill:color-mix(in srgb,var(--fg) 18%,transparent)}
+.noC{fill:none;stroke:color-mix(in srgb,var(--fg) 35%,transparent)} .noX{stroke:var(--faint);stroke-width:2;stroke-linecap:round}
+.t40{font-size:40px}
+.bubL{fill:color-mix(in srgb,var(--fg) 6%,var(--bg))}
+.arr{stroke:color-mix(in srgb,var(--fg) 35%,transparent);stroke-width:1.3;fill:none} svg.fig .arr.acc{stroke:var(--acc);stroke-width:1.6;fill:none}
+.ahd{fill:color-mix(in srgb,var(--fg) 45%,transparent)} .ahdA{fill:var(--acc)}
+.srv{fill:var(--bg);stroke:color-mix(in srgb,var(--fg) 30%,transparent)} .srvOn{fill:var(--bg);stroke:var(--acc);stroke-width:1.6}
+.led{fill:var(--green)} .ledOff{fill:color-mix(in srgb,var(--fg) 18%,transparent)} .vent{stroke:color-mix(in srgb,var(--fg) 22%,transparent);stroke-width:2;stroke-linecap:round}
+.icoS{fill:none;stroke:var(--fg);stroke-width:1.4;stroke-linecap:round}
+.accF{fill:var(--acc)}
+.cloud{fill:var(--bg);stroke:color-mix(in srgb,var(--fg) 30%,transparent);stroke-width:1.2}
+.cyl{fill:var(--bg);stroke:color-mix(in srgb,var(--fg) 45%,transparent)} .cylTop{fill:color-mix(in srgb,var(--fg) 6%,var(--bg));stroke:color-mix(in srgb,var(--fg) 45%,transparent)}
+.sync{stroke:var(--acc);stroke-width:1.4;stroke-dasharray:3 3} .syncH{stroke:var(--acc);stroke-width:1.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.tick{stroke:color-mix(in srgb,var(--fg) 40%,transparent);stroke-width:1.2} .hand{stroke:var(--fg);stroke-width:2.2;stroke-linecap:round} .handA{stroke:var(--acc);stroke-width:2;stroke-linecap:round}
+.cursor{fill:var(--fg);stroke:var(--bg);stroke-width:1.2;stroke-linejoin:round}
+.bubA{fill:color-mix(in srgb,var(--acc) 14%,var(--bg))}
+.t10{font-size:10px}
+.frameD{fill:none;stroke:color-mix(in srgb,var(--fg) 30%,transparent);stroke-dasharray:4 3}
+.dbBar{fill:var(--bg);stroke:color-mix(in srgb,var(--fg) 30%,transparent)} .dbLink{stroke:var(--acc);stroke-width:1.2;stroke-dasharray:2 3}
+.mono{font-family:var(--mono)} .chip{fill:var(--bg);stroke:color-mix(in srgb,var(--fg) 22%,transparent)} .bgF{fill:var(--bg)} .msgI{fill:color-mix(in srgb,var(--acc) 55%,var(--bg))}
+.nodeL{fill:var(--bg);stroke:var(--line)} .comp{fill:none;stroke:color-mix(in srgb,var(--fg) 55%,transparent)}
+.lineI{fill:none;stroke:var(--fg);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round} .lineI.thick{stroke-width:1.8}
+.cursorL{fill:var(--fg);stroke:var(--plateC);stroke-width:1.2;stroke-linejoin:round} .compB{fill:none;stroke:var(--fg);stroke-width:1}
+.inBox{fill:none;stroke:var(--fg);stroke-width:1}
+.srvOnL{fill:none;stroke:var(--acc);stroke-width:1.6} .srvDead{fill:none;stroke:color-mix(in srgb,var(--fg) 25%,transparent);stroke-width:1.5}
+.xRed{stroke:var(--red);stroke-width:2;stroke-linecap:round} .arrFaint{stroke:color-mix(in srgb,var(--fg) 15%,transparent);stroke-width:1.2;fill:none;stroke-dasharray:3 4}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0 0 48px}.pair figure{margin:0}
+.sideP{display:grid;grid-template-columns:1fr 1.25fr;gap:32px;align-items:center;margin:0 0 48px}
+.sideP figure{margin:0} .sideT p{margin:0 0 12px;font-size:15px;line-height:26px} .sideT ul{margin:0;padding-left:1.1em;font-size:14px;line-height:24px} .sideT li{margin:0 0 6px}
+@media(max-width:700px){.sideP{grid-template-columns:1fr}}
+.keyNew{fill:none;stroke:var(--acc);stroke-width:1.5;stroke-linecap:round}
+svg.fig .greenT{fill:var(--green)}
+.loopS{stroke:var(--acc);stroke-width:1.3;fill:none;stroke-linecap:round}
+.loop{stroke:var(--acc);stroke-width:1.6;fill:none;stroke-linecap:round}
+.book0{fill:color-mix(in srgb,var(--fg) 55%,var(--bg))} .book1{fill:color-mix(in srgb,var(--fg) 35%,var(--bg))} .book2{fill:color-mix(in srgb,var(--fg) 20%,var(--bg))}
+.blueC{fill:var(--acc)} .amberC{fill:var(--amber)} .greyC{fill:color-mix(in srgb,var(--fg) 30%,transparent)}
+.stepC{fill:none;stroke:color-mix(in srgb,var(--fg) 45%,transparent)}
+.win{fill:var(--bg);stroke:var(--line)} .side{fill:color-mix(in srgb,var(--fg) 3%,var(--bg))} .ico{fill:color-mix(in srgb,var(--fg) 9%,transparent)} .dotd{fill:var(--faint)}
+.barD{fill:color-mix(in srgb,var(--fg) 40%,transparent)} .barL{fill:color-mix(in srgb,var(--fg) 10%,transparent)}
+.redF{fill:var(--red)} .greenF{fill:var(--green)} .amberF{fill:var(--amber)} .fgF{fill:var(--fg)}
+.ck{stroke:var(--bg);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.line{fill:none;stroke:color-mix(in srgb,var(--fg) 35%,transparent)}
+.lk{stroke:var(--fg);stroke-width:1.5;fill:none}
+.chev{stroke:var(--faint);stroke-width:1.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.ul{stroke:var(--fg);stroke-width:1.2}
+.dash{stroke:color-mix(in srgb,var(--acc) 60%,transparent);stroke-width:1.5}
+.btnF{fill:var(--fg)} .btnO{fill:none;stroke:color-mix(in srgb,var(--fg) 30%,transparent)}
+.dk{fill:#18191b} svg.fig .dkT{fill:#ececec} svg.fig .dkM{fill:rgba(236,236,236,.5)}
+.dkBar{fill:rgba(236,236,236,.2)} .dkA{fill:#8ea5ff} .dkUl{stroke:#ececec;stroke-width:1.2}
+.dkGrid{stroke:rgba(236,236,236,.2);stroke-dasharray:2 4}
+
+
+@media(prefers-color-scheme:dark){:root{--bg:#111;--fg:#d4d4d4;--line:rgba(212,212,212,.18);--plateC:#1b1b1b;--acc:#8ea5ff}.dk{fill:#242528}}</style><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="ahd"/></marker><marker id="ahA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="ahdA"/></marker><linearGradient id="fg1" x1="0" y1="0" x2="0" y2="1"><stop offset=".55" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient><mask id="fadeDown" maskUnits="userSpaceOnUse" x="0" y="0" width="640" height="400"><rect width="640" height="400" fill="url(#fg1)"/></mask></defs><defs><clipPath id="k11"><rect x="-4" y="2.5" width="448" height="336.0" rx="6"/></clipPath></defs><g clip-path="url(#k11)"><rect class="plate" x="-4" y="2.5" width="448" height="336.0"/><text class="t12 m" x="20" y="52" text-anchor="start">只在 A 上登录过</text><rect class="lineI" x="30" y="72" width="110" height="36" rx="4"/><path class="lineI" d="M30 90.0 H140"/><circle class="fgF" cx="40" cy="81.0" r="2"/><path class="lineI" d="M106 81.0 H130"/><circle class="fgF" cx="40" cy="99.0" r="2"/><path class="lineI" d="M106 99.0 H130"/><circle class="lineI" cx="60" cy="124" r="5.5"/><path class="lineI" d="M65.5 124 H80 M75 124 v4.5 M79 124 v3.5"/><text class="t10 mut" x="85" y="152" text-anchor="middle">A · 有凭证</text><rect class="lineI" x="230" y="72" width="110" height="36" rx="4"/><path class="lineI" d="M230 90.0 H340"/><circle class="fgF" cx="240" cy="81.0" r="2"/><path class="lineI" d="M306 81.0 H330"/><circle class="fgF" cx="240" cy="99.0" r="2"/><path class="lineI" d="M306 99.0 H330"/><text class="t10 mut" x="285" y="152" text-anchor="middle">B · 没有凭证</text><path class="arr" d="M190 40 C 230 40, 250 52, 268 66" marker-end="url(#ah)"/><text class="t10 mut" x="178" y="36" text-anchor="end">请求</text><circle class="redF" cx="360" cy="90" r="9"/><path class="ck" d="M356.5 86.5 l7 7 M363.5 86.5 l-7 7"/><text class="t11 redT" x="376" y="94.5" text-anchor="start">未登录</text><path class="hair" d="M20 178 L420 178"/><text class="t12 m" x="20" y="212" text-anchor="start">A 续期了，B 还拿着旧的</text><rect class="lineI" x="30" y="232" width="110" height="36" rx="4"/><path class="lineI" d="M30 250.0 H140"/><circle class="fgF" cx="40" cy="241.0" r="2"/><path class="lineI" d="M106 241.0 H130"/><circle class="fgF" cx="40" cy="259.0" r="2"/><path class="lineI" d="M106 259.0 H130"/><circle class="keyNew" cx="60" cy="284" r="5.5"/><path class="keyNew" d="M65.5 284 H80 M75 284 v4.5 M79 284 v3.5"/><text class="t10 mut" x="85" y="312" text-anchor="middle">A · 新凭证</text><rect class="lineI" x="230" y="232" width="110" height="36" rx="4"/><path class="lineI" d="M230 250.0 H340"/><circle class="fgF" cx="240" cy="241.0" r="2"/><path class="lineI" d="M306 241.0 H330"/><circle class="fgF" cx="240" cy="259.0" r="2"/><path class="lineI" d="M306 259.0 H330"/><circle class="lineI" cx="260" cy="284" r="5.5"/><path class="lineI" d="M265.5 284 H280 M275 284 v4.5 M279 284 v3.5"/><text class="t10 mut" x="285" y="312" text-anchor="middle">B · 旧凭证</text><circle class="redF" cx="360" cy="250" r="9"/><path class="ck" d="M356.5 246.5 l7 7 M363.5 246.5 l-7 7"/><text class="t11 redT" x="376" y="254.5" text-anchor="start">已失效</text></g></svg>

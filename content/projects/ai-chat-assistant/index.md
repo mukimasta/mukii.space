@@ -1,5 +1,5 @@
 ---
-title: "系统设计：AI 私聊答疑助手"
+title: "AI 私聊答疑助手"
 date: 2026-11-18
 draft: false
 ---

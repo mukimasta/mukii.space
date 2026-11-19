@@ -11,6 +11,7 @@ subtitle: ""
 
 ### Projects
 
+- [SoundMat](/projects/soundmat/)
 - [系统设计：AI 私聊答疑助手](/projects/ai-chat-assistant/)
 
 ---
